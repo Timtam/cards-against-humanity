@@ -11,4 +11,6 @@ We aim to provide the following features:
 * multi-platform support (Windows Linux, OS X, maybe mobile devices like Android too)
 # Dependencies
 Server and client are written in Python 2 and depend on multiple packages, which need to be installed before running the game. You can use the following command to do so while you're in the project directory:
+```
 pip install -r requirements.txt
+```
