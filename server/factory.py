@@ -10,6 +10,7 @@ class ServerFactory(Factory):
   cardsDatabaseVersion = 0
   log = Logger()
   serverDatabase = None
+  users=[]
 
   def buildProtocol(self, addr):
     return ServerProtocol(self)
