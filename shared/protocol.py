@@ -14,6 +14,6 @@ class JSONReceiver(LineReceiver):
   def messageReceived(self, code, data):
     pass
 
-  def sendMessage(self, code, data={}):
+  def sendMessage(self, code, **data):
     data["code"] = int(code)
     self.sendLine(json.dumps(data))
