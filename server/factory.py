@@ -27,7 +27,7 @@ class ServerFactory(Factory):
     cursor.execute("SELECT value FROM config WHERE key = ?", ("version",))
     self.cardsDatabaseVersion=int(cursor.fetchone()[0])
     database.close()
-    self.log.info("Loaded database version {log_source.cardsDatabaseVersion!r}")
+    self.log.info("Loaded card database version {log_source.cardsDatabaseVersion!r}")
 
     self.openServerDatabase()
 

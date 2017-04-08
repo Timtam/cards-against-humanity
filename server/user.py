@@ -7,6 +7,7 @@ class User(object):
     self.id = 0
     self.name = ""
     self.protocol = protocol
+    self.protocol.factory.users.append(self)
 
   def exists(self, name):
     cursor = self.protocol.factory.serverDatabase.cursor()
@@ -17,6 +18,11 @@ class User(object):
     return id > 0
 
   def login(self, name, password):
+
+    if self.loggedIn():
+      self.log.warn("user {log_source.name}:{log_source.id} already logged in, not able to log in once more")
+      return False
+
     cursor = self.protocol.factory.serverDatabase.cursor()
     cursor.execute("SELECT id FROM users WHERE name = ? AND password = ?", (name, password, ))
     result = cursor.fetchone()
