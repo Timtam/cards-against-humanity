@@ -12,7 +12,7 @@ class ServerProtocol(JSONReceiver):
 
   def connectionMade(self):
     self.log.info("Connection established from {connection}", connection=self.transport.getPeer())
-    self.sendMessage(MSG_SERVER_AUTHENTIFICATION, version={"major": version.MAJOR, "minor": version.MINOR, "revision": version.REVISION}, databaseVersion=self.factory.databaseVersion)
+    self.sendMessage(MSG_SERVER_AUTHENTIFICATION, version={"major": version.MAJOR, "minor": version.MINOR, "revision": version.REVISION}, databaseVersion=self.factory.cardsDatabaseVersion)
 
   def messageReceived(self, code, data):
     if not code in self.callbacks:
