@@ -11,7 +11,7 @@ class ServerFactory(Factory):
   log = Logger()
 
   def buildProtocol(self, addr):
-    return ServerProtocol()
+    return ServerProtocol(self)
 
   def startFactory(self):
     database = sqlite3.connect(os.path.join(getScriptDirectory(), "cards.db"))
@@ -20,3 +20,6 @@ class ServerFactory(Factory):
     self.databaseVersion=int(cursor.fetchone()[0])
     database.close()
     self.log.info("Loaded database version {log_source.databaseVersion!r}")
+
+    # after doing all the startup stuff
+    self.log.info("Server up and running, waiting for incoming connections")
