@@ -4,35 +4,35 @@
 import wx
 
 
-class mainWindow(wx.Frame):
+class MainWindow(wx.Frame):
   def __init__(self, *args, **kwargs):
-    super(mainWindow, self).__init__(*args, **kwargs)
+    super(MainWindow, self).__init__(*args, **kwargs)
 
-    self.InitUI()
+    self.initUI()
 
-  def InitUI(self):
+  def initUI(self):
     menubar = wx.MenuBar()
-    fileMenu = wx.Menu()
-    fitem = fileMenu.Append(wx.ID_EXIT, 'Schließen',
-                            'Karteneditor schließen')
-    menubar.Append(fileMenu, '&File')
+    file_menu = wx.Menu()
+    menu_item = file_menu.Append(wx.ID_EXIT, 'Quit',
+                                 'Quit application')
+    menubar.Append(file_menu, '&File')
     self.SetMenuBar(menubar)
 
-    self.Bind(wx.EVT_MENU, self.OnQuit, fitem)
+    self.Bind(wx.EVT_MENU, self.onQuit, menu_item)
 
     self.SetSize((1280, 720))
-    self.SetTitle('Karteneditor')
+    self.SetTitle('Card-Editor')
     self.Centre()
     self.Show(True)
 
-  def OnQuit(self, e):
+  def onQuit(self, e):
     self.Close()
 
 
 def main():
-  mainApp = wx.App()
-  mainWindow(None)
-  mainApp.MainLoop()
+  app = wx.App()
+  MainWindow(None)
+  app.MainLoop()
 
 
 if __name__ == '__main__':
