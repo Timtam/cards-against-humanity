@@ -92,4 +92,4 @@ ENV/
 server.db
 
 # PyCharm settings
-.idea
+.idea/
