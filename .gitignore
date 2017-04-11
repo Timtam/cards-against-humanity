@@ -90,3 +90,6 @@ ENV/
 
 # databases
 server.db
+
+# PyCharm settings
+.idea
