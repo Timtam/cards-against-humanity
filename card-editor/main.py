@@ -3,20 +3,17 @@
 
 import wx
 
+from cardlist import CardListWindow
+
 APP_EXIT = 1
 
 
-class CardListPanel(wx.Panel):
+class CurrCardWindow(wx.Window):
   def __init__(self, parent):
-    wx.Panel.__init__(self, parent=parent)
+    wx.Window.__init__(self, parent=parent,
+                       name="current card (this is a name)")
 
-    self.SetBackgroundColour("white")
-
-
-class CurrCardPanel(wx.Panel):
-  def __init__(self, parent):
-    wx.Panel.__init__(self, parent=parent)
-
+    self.SetLabel("current card (this is a label)")
     self.SetBackgroundColour("white")
 
 
@@ -29,15 +26,15 @@ class MainFrame(wx.Frame):
     self.Centre()
 
     splitter = wx.SplitterWindow(self,
-                                 style=wx.SP_LIVE_UPDATE)
-    left_panel = CardListPanel(splitter)
-    right_panel = CurrCardPanel(splitter)
+                                 style=wx.SP_LIVE_UPDATE,
+                                 name="vertical splitter")
+    left_window = CardListWindow(splitter)
+    right_window = CurrCardWindow(splitter)
 
     # split the window
-    splitter.SplitVertically(left_panel, right_panel, 320)
+    splitter.SplitVertically(left_window, right_window, 320)
     splitter.SetMinimumPaneSize(160)
     splitter.SetSashGravity(0.5)
-
 
   def initUI(self):
     menubar = wx.MenuBar()
@@ -45,11 +42,11 @@ class MainFrame(wx.Frame):
     # menu_item = file_menu.Append(wx.ID_EXIT, 'Quit',
     #                              'Quit application')
     menu_item = wx.MenuItem(file_menu, APP_EXIT,
-                            '&Quit\tCtrl+Q')
+                            "&Quit\tCtrl+Q")
     file_menu.AppendItem(menu_item)
 
     self.Bind(wx.EVT_MENU, self.onQuit, id=APP_EXIT)
-    menubar.Append(file_menu, '&File')
+    menubar.Append(file_menu, "&File")
     self.SetMenuBar(menubar)
 
     # self.Bind(wx.EVT_MENU, self.onQuit, menu_item)
@@ -65,5 +62,5 @@ def main():
   app.MainLoop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
   main()
