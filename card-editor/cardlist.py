@@ -3,6 +3,9 @@
 
 import wx
 
+STYLE = wx.ALL
+BORDER = 0
+
 
 class CardListWindow(wx.Window):
   def __init__(self, parent):
@@ -12,38 +15,25 @@ class CardListWindow(wx.Window):
     self.SetLabel("card list (this is a label)")
     self.SetBackgroundColour("white")
 
-    columns = 5
-
     box = wx.BoxSizer(wx.VERTICAL)
-    grid = wx.GridSizer(0, columns, 0, 0)
+    self.grid = wx.GridSizer(0, 9, 0, 0)
 
     # fill list with 12 dummy objects
-    item_list = [(wx.Window(self, size=(100, 100), name="Dummy 1"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 2"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 3"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 4"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 51"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 6"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 7"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 8"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 9"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 10"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 11"), 0,
-                  wx.ALIGN_CENTER),
-                 (wx.Window(self, size=(100, 100), name="Dummy 12"), 0,
-                  wx.ALIGN_CENTER)]
+    item_list = \
+      [(wx.Window(self, size=(100, 100), name="Dummy 1"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 2"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 3"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 4"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 5"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 6"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 7"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 8"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 9"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 10"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 11"), 0, STYLE, BORDER),
+       (wx.Window(self, size=(100, 100), name="Dummy 12"), 0, STYLE, BORDER)]
 
-    grid.AddMany(item_list)
+    self.grid.AddMany(item_list)
 
-    box.Add(grid, proportion=1, flag=wx.SHAPED)
+    box.Add(self.grid, proportion=1, flag=wx.EXPAND)
     self.SetSizer(box)

@@ -28,13 +28,16 @@ class MainFrame(wx.Frame):
     splitter = wx.SplitterWindow(self,
                                  style=wx.SP_LIVE_UPDATE,
                                  name="vertical splitter")
-    left_window = CardListWindow(splitter)
+    self.left_window = CardListWindow(splitter)
     right_window = CurrCardWindow(splitter)
 
     # split the window
-    splitter.SplitVertically(left_window, right_window, 320)
+    splitter.SplitVertically(self.left_window, right_window, 320)
     splitter.SetMinimumPaneSize(160)
     splitter.SetSashGravity(0.5)
+
+    splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
+
 
   def initUI(self):
     menubar = wx.MenuBar()
@@ -53,6 +56,13 @@ class MainFrame(wx.Frame):
 
   def onQuit(self, e):
     self.Close()
+
+  def onSashChanging(self, e):
+
+    columns = e.GetSashPosition() / 100
+
+    self.left_window.grid.SetCols(columns)
+    self.left_window.grid.CalcRowsCols()
 
 
 def main():
