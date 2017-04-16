@@ -4,6 +4,7 @@
 import wx
 
 from cardlist import CardListWindow
+from const import WIDTH, HEIGHT
 
 APP_EXIT = 1
 
@@ -19,7 +20,7 @@ class CurrCardWindow(wx.Window):
 
 class MainFrame(wx.Frame):
   def __init__(self):
-    wx.Frame.__init__(self, None, title="Card Editor", size=(1280, 720))
+    wx.Frame.__init__(self, None, title="Card Editor", size=(WIDTH, HEIGHT))
 
     # add menubar
     self.initUI()
@@ -30,23 +31,27 @@ class MainFrame(wx.Frame):
                                  name="vertical splitter")
     self.left_window = CardListWindow(splitter)
     right_window = CurrCardWindow(splitter)
+    self.left_window.initList()
 
     # split the frame
-    splitter.SplitVertically(self.left_window, right_window,
-                             320)  # TODO: calculate initial sash position 75 % of frame width
-    splitter.SetMinimumPaneSize(
-      160)  # just to prevent moving sash to the very right or left and so you can't move it back
-    splitter.SetSashGravity(0.5)
+    splitter.SplitVertically(self.left_window, right_window, (0.75 * WIDTH))
+    splitter.SetMinimumPaneSize((WIDTH / 8))  # just to prevent moving sash to
+    #   the very right or left and so
+    #   you can't move it back
+    splitter.SetSashGravity(0.0)
+    self.left_window.createGrid(self.ClientSize.height)
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
+
 
   def initUI(self):
     menubar = wx.MenuBar()
     file_menu = wx.Menu()
     # menu_item = file_menu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
     menu_item = wx.MenuItem(file_menu, APP_EXIT,
-                            "&Quit\tCtrl+Q")  # underlined Q
+                            "&Quit\tCtrl+Q")  # an underlined and linked Q (Ctrl
+    #   + Q also quits)
     file_menu.AppendItem(menu_item)
 
     self.Bind(wx.EVT_MENU, self.onQuit, id=APP_EXIT)
@@ -55,18 +60,13 @@ class MainFrame(wx.Frame):
 
     # self.Bind(wx.EVT_MENU, self.onQuit, menu_item)
 
+
   def onQuit(self, e):
     self.Close()
 
+
   def onSashChanging(self, e):
-    # calculate new number of columns through the window has been resized
-    columns = e.GetSashPosition() / 120  # TODO: calculate divisor from element size (+ border)
-
-    # there shouldn't be more columns than item in the list (otherwise there would be free columns with size of the other elements
-    if columns > self.left_window.item_list.__len__():
-      columns = self.left_window.item_list.__len__()
-
-    self.left_window.grid.SetCols(columns)
+    self.left_window.calcBestColumns(self.ClientSize.height)
 
 
 def main():
