@@ -1,10 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import wx
-
 from cardlist import CardListWindow
-from const import WIDTH, HEIGHT
+from const import *
 
 APP_EXIT = 1
 
@@ -12,20 +10,21 @@ APP_EXIT = 1
 class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
     wx.Panel.__init__(self, parent=parent,
-                       name="current card panel(this is a name)")
+                      name="current card panel(this is a name)")
 
     self.SetLabel("current card panel(this is a label)")
     self.SetBackgroundColour("white")
 
-    #self.current_card = wx.Panel(parent=self, size=(200, 200), name="current card (name)")
-    #self.current_card.SetLabel("current card (label)")
-    #self.current_card.SetBackgroundColour("black")
+    # self.current_card = wx.Panel(parent=self, size=(200, 200),
+    #                              name="current card (name)")
+    # self.current_card.SetLabel("current card (label)")
+    # self.current_card.SetBackgroundColour("black")
 
     self.box = wx.BoxSizer(wx.VERTICAL)
     self.box.Add(wx.RadioButton(self, label="black card"))
     self.box.Add(wx.RadioButton(self, label="white card"))
     self.box.AddStretchSpacer(1)
-    #self.box.Add(self.current_card, 0, wx.ALIGN_CENTER)
+    # self.box.Add(self.current_card, 0, wx.ALIGN_CENTER)
     self.box.AddStretchSpacer(1)
     self.hbox = wx.BoxSizer()
     self.hbox.Add(wx.Button(self, label="Delete Text"), 1)
@@ -46,13 +45,16 @@ class MainFrame(wx.Frame):
     self.Center()
 
     # create a splitter and the teo sub-windows
-    splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE | wx.SP_NO_XP_THEME | wx.SP_3D, name="vertical splitter")
+    splitter = wx.SplitterWindow(self,
+                                 style=wx.SP_LIVE_UPDATE | wx.SP_NO_XP_THEME | wx.SP_3D,
+                                 name="vertical splitter")
     self.left_window = CardListWindow(splitter)
     self.right_window = CurrCardWindow(splitter)
-    #self.left_window.card_grid.initList()
+    # self.left_window.card_grid.initList()
 
     # split the frame
-    splitter.SplitVertically(self.left_window, self.right_window, (0.70 * WIDTH))
+    splitter.SplitVertically(self.left_window, self.right_window,
+                             (0.70 * WIDTH))
     splitter.SetMinimumPaneSize((WIDTH / 8))  # just to prevent moving sash to
     #   the very right or left and so
     #   you can't move it back
@@ -79,7 +81,21 @@ class MainFrame(wx.Frame):
     # self.Bind(wx.EVT_MENU, self.onQuit, menu_item)
 
 
+  def Message(self, caption, text, style):
+    message = wx.MessageDialog(parent=self, caption=caption, message=text,
+                               style=style)
+    result = message.ShowModal()
+    message.Destroy()
+    return result
+
+
   def onQuit(self, e):
+    self.Message(caption="Test Error", text="This is a test for errors...",
+                 style=MSG_ERR)
+    self.Message(caption="Test Warning", text="This is a test for warnings...",
+                 style=MSG_WRN)
+    self.Message(caption="Test Information",
+                 text="This is a test for information...", style=MSG_INF)
     self.Close()
 
 

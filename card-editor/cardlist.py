@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import itertools
 import wx
 
-from const import ELEMENT_SIZE, BORDER, FULL_ELEMENT
+from const import FULL_ELEMENT
 
 # elements have the border on all sides and are centered only horizontally
 FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
@@ -21,7 +20,7 @@ class SearchCtrl(wx.SearchCtrl):
 class CardListWindow(wx.Panel):
   def __init__(self, parent):
     wx.Panel.__init__(self, parent=parent,
-                               name="card list panel (this is a name")
+                      name="card list panel (this is a name")
 
     self.toolbar = wx.ToolBar(self, -1)
     self.toolbar.SetToolBitmapSize((30, 30))
@@ -43,7 +42,6 @@ class CardListWindow(wx.Panel):
     self.toolbar.Realize()
 
     self.card_grid = ScrolledGrid(self)
-
 
     self.vbox = wx.BoxSizer(wx.VERTICAL)
     self.vbox.Add(self.toolbar, proportion=0, flag=wx.EXPAND)
@@ -68,13 +66,14 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.Height = 500
 
 
-  #def initList(self):
+    # def initList(self):
     # create list with dummy objects
-    #for _ in itertools.repeat(None, 55):
+    # for _ in itertools.repeat(None, 55):
     #  panel = wx.Panel(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
     #                                   name="Dummy")
     #  panel.SetBackgroundColour("black")
     #  self.item_list.append((panel, 0, FLAG, BORDER))
+
 
   def calcBestColumns(self, available_height):
     # this method calculates the number of columns depending on the existence of
@@ -102,6 +101,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     #   safe side
     self.grid.SetCols(columns)
     return columns
+
 
   def createGrid(self, available_height):
     # this method creates the actual grid with the items
