@@ -4,7 +4,7 @@ WIDTH = 1280
 HEIGHT = 720
 
 # size (width + height) of the (dummy?) elements
-ELEMENT_SIZE = 150
+ELEMENT_SIZE = 100
 # their border
 BORDER = 10
 # just for shorter and summarized code

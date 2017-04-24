@@ -27,11 +27,10 @@ class MainFrame(wx.Frame):
     self.Centre()
 
     # create a splitter and the teo sub-windows
-    splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE,
-                                 name="vertical splitter")
+    splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE | wx.SP_NO_XP_THEME | wx.SP_3D, name="vertical splitter")
     self.left_window = CardListWindow(splitter)
     right_window = CurrCardWindow(splitter)
-    self.left_window.initList()
+    self.left_window.card_grid.initList()
 
     # split the frame
     splitter.SplitVertically(self.left_window, right_window, (0.75 * WIDTH))
@@ -39,7 +38,7 @@ class MainFrame(wx.Frame):
     #   the very right or left and so
     #   you can't move it back
     splitter.SetSashGravity(0.0)
-    self.left_window.createGrid(self.ClientSize.height)
+    self.left_window.card_grid.createGrid(self.ClientSize.height)
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
@@ -66,7 +65,7 @@ class MainFrame(wx.Frame):
 
 
   def onSashChanging(self, e):
-    self.left_window.calcBestColumns(self.ClientSize.height)
+    self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
 
 
 def main():

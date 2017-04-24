@@ -11,23 +11,57 @@ from const import ELEMENT_SIZE, BORDER, FULL_ELEMENT
 FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
 
 
-class CardListWindow(wx.ScrolledWindow):
+class SearchCtrl(wx.SearchCtrl):
+  def __init__(self, *args, **kwargs):
+    wx.SearchCtrl.__init__(self, *args, **kwargs)
+
+
+class CardListWindow(wx.Panel):
+  def __init__(self, parent):
+    wx.Panel.__init__(self, parent=parent,
+                               name="card list panel (this is a name")
+
+    self.toolbar = wx.ToolBar(self, -1)
+    self.toolbar.SetToolBitmapSize((30, 30))
+
+    self.toolbar.AddStretchableSpace()
+    self.search_ctrl = SearchCtrl(parent=self.toolbar)
+    self.toolbar.AddControl(self.search_ctrl)
+    self.toolbar.Realize()
+
+    self.card_grid = ScrolledGrid(self)
+
+
+    self.vbox = wx.BoxSizer(wx.VERTICAL)
+    self.vbox.Add(self.toolbar, proportion=0, flag=wx.EXPAND)
+    self.vbox.Add(self.card_grid, proportion=1, flag=wx.EXPAND)
+
+    self.SetSizer(self.vbox)
+
+    self.SetLabel("card list panel(this is a label)")
+    self.SetBackgroundColour("black")
+
+
+class ScrolledGrid(wx.ScrolledWindow):
   def __init__(self, parent):
     wx.ScrolledWindow.__init__(self, parent=parent,
-                               name="card list (this is a name")
+                               name="card list grid(this is a name")
 
-    self.SetLabel("card list (this is a label)")
+    self.SetLabel("card list grid(this is a label)")
     self.SetBackgroundColour("white")
     self.item_list = []
     # next 2 just for initialization (don't ask about the numbers)
     self.grid = wx.GridSizer(0, 5, 0, 0)
     self.Height = 500
 
+
   def initList(self):
     # create list with dummy objects
     for _ in itertools.repeat(None, 55):
-      self.item_list.append((wx.Window(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
-                                       name="Dummy"), 0, FLAG, BORDER))
+      panel = wx.Panel(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
+                                       name="Dummy")
+      panel.SetBackgroundColour("black")
+      self.item_list.append((panel, 0, FLAG, BORDER))
 
   def calcBestColumns(self, available_height):
     # this method calculates the number of columns depending on the existence of
@@ -73,5 +107,4 @@ class CardListWindow(wx.ScrolledWindow):
     # otherwise the elements are also centered vertically
     box = wx.BoxSizer(wx.HORIZONTAL)
     box.Add(self.grid, proportion=1)
-
     self.SetSizer(box)
