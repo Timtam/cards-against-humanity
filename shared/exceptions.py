@@ -1,0 +1,2 @@
+class CardValidityError(Exception):
+  pass

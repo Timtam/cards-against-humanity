@@ -1,3 +1,5 @@
+from .exceptions import CardValidityError
+
 import string
 
 CARD_WHITE=0
@@ -9,7 +11,6 @@ class Card(object):
     self.text=text
     self.type=type
 
-  # TODO: no return values, but use exceptions with helpful texts instead
   def isValid(self):
     # implementing some safety
     # if the card is white, no wildcards are allowed
@@ -19,13 +20,13 @@ class Card(object):
     format_iterator = string.Formatter().parse(self.text)
     placeholders = [f[2] for f in format_iterator]
     if self.type==CARD_WHITE and len(placeholders)>0:
-      return False
+      raise CardValidityError({'id':self.id, 'text': 'White cards may not have any placeholders ( {...} ).'})
     elif self.type==CARD_BLACK:
       for i in range(len(placeholders)):
         try:
           if i != int(placeholders[i]):
-            return False
+            raise CardValidityError({'id': self.id, 'text': 'Black card's placeholders must follow a continuous scheme, starting from zero ( {0}, {1}, {2} ... )'})
         except ValueError:
           # occurs always if the placeholder isn't an integer, which may not happen
-          return False
+          raise CardValidityError({'id': self.id, 'text': 'Black cards may only contain placeholders which consist of integer enumerations ( {0}, {1}, {2}, ... )'})
     return True
