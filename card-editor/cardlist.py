@@ -26,6 +26,10 @@ class CardListWindow(wx.Panel):
     self.toolbar.AddControl(wx.CheckBox(self.toolbar, label="show black cards"))
     self.toolbar.AddControl(wx.CheckBox(self.toolbar, label="show white cards"))
 
+    self.toolbar.AddSeparator()
+
+    self.toolbar.AddControl(wx.Button(self.toolbar, label="new card"))
+
     self.toolbar.AddStretchableSpace()
     self.search_ctrl = SearchCtrl(parent=self.toolbar)
     self.toolbar.AddControl(self.search_ctrl)

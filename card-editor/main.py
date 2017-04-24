@@ -9,13 +9,29 @@ from const import WIDTH, HEIGHT
 APP_EXIT = 1
 
 
-class CurrCardWindow(wx.Window):
+class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
-    wx.Window.__init__(self, parent=parent,
-                       name="current card (this is a name)")
+    wx.Panel.__init__(self, parent=parent,
+                       name="current card panel(this is a name)")
 
-    self.SetLabel("current card (this is a label)")
+    self.SetLabel("current card panel(this is a label)")
     self.SetBackgroundColour("white")
+
+    self.current_card = wx.Panel(parent=self, size=(200, 200), name="current card (name)")
+    self.current_card.SetLabel("current card (label)")
+    self.current_card.SetBackgroundColour("black")
+
+    self.box = wx.BoxSizer(wx.VERTICAL)
+    self.box.Add(wx.RadioButton(self, label="black card"))
+    self.box.Add(wx.RadioButton(self, label="white card"))
+    self.box.AddStretchSpacer(1)
+    self.box.Add(self.current_card, 0, wx.ALIGN_CENTER)
+    self.box.AddStretchSpacer(1)
+    self.hbox = wx.BoxSizer()
+    self.hbox.Add(wx.Button(self, label="Delete All"), 0, wx.ALIGN_LEFT)
+    self.hbox.Add(wx.Button(self, label="Insert Placeholder"), 0, wx.ALIGN_RIGHT)
+    self.box.Add(self.hbox)
+    self.SetSizer(self.box)
 
 
 class MainFrame(wx.Frame):
@@ -24,16 +40,16 @@ class MainFrame(wx.Frame):
 
     # add menubar
     self.initUI()
-    self.Centre()
+    self.Center()
 
     # create a splitter and the teo sub-windows
     splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE | wx.SP_NO_XP_THEME | wx.SP_3D, name="vertical splitter")
     self.left_window = CardListWindow(splitter)
-    right_window = CurrCardWindow(splitter)
+    self.right_window = CurrCardWindow(splitter)
     self.left_window.card_grid.initList()
 
     # split the frame
-    splitter.SplitVertically(self.left_window, right_window, (0.75 * WIDTH))
+    splitter.SplitVertically(self.left_window, self.right_window, (0.75 * WIDTH))
     splitter.SetMinimumPaneSize((WIDTH / 8))  # just to prevent moving sash to
     #   the very right or left and so
     #   you can't move it back
