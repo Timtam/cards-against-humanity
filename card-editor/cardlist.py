@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import itertools
-
 import wx
 
 from const import ELEMENT_SIZE, BORDER, FULL_ELEMENT
@@ -23,6 +22,9 @@ class CardListWindow(wx.Panel):
 
     self.toolbar = wx.ToolBar(self, -1)
     self.toolbar.SetToolBitmapSize((30, 30))
+
+    self.toolbar.AddControl(wx.CheckBox(self.toolbar, label="show black cards"))
+    self.toolbar.AddControl(wx.CheckBox(self.toolbar, label="show white cards"))
 
     self.toolbar.AddStretchableSpace()
     self.search_ctrl = SearchCtrl(parent=self.toolbar)
