@@ -14,6 +14,9 @@ class SearchCtrl(wx.SearchCtrl):
   def __init__(self, *args, **kwargs):
     wx.SearchCtrl.__init__(self, *args, **kwargs)
 
+    self.ShowSearchButton(True)
+    self.ShowCancelButton(True)
+
 
 class CardListWindow(wx.Panel):
   def __init__(self, parent):
@@ -29,6 +32,10 @@ class CardListWindow(wx.Panel):
     self.toolbar.AddSeparator()
 
     self.toolbar.AddControl(wx.Button(self.toolbar, label="new card"))
+    self.toolbar.AddControl(wx.Button(self.toolbar, label="reset all"))
+    self.toolbar.AddControl(wx.Button(self.toolbar, label="undo all"))
+
+    self.toolbar.AddSeparator()
 
     self.toolbar.AddStretchableSpace()
     self.search_ctrl = SearchCtrl(parent=self.toolbar)
@@ -61,13 +68,13 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.Height = 500
 
 
-  def initList(self):
+  #def initList(self):
     # create list with dummy objects
-    for _ in itertools.repeat(None, 55):
-      panel = wx.Panel(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
-                                       name="Dummy")
-      panel.SetBackgroundColour("black")
-      self.item_list.append((panel, 0, FLAG, BORDER))
+    #for _ in itertools.repeat(None, 55):
+    #  panel = wx.Panel(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
+    #                                   name="Dummy")
+    #  panel.SetBackgroundColour("black")
+    #  self.item_list.append((panel, 0, FLAG, BORDER))
 
   def calcBestColumns(self, available_height):
     # this method calculates the number of columns depending on the existence of

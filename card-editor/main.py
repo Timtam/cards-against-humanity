@@ -17,19 +17,22 @@ class CurrCardWindow(wx.Panel):
     self.SetLabel("current card panel(this is a label)")
     self.SetBackgroundColour("white")
 
-    self.current_card = wx.Panel(parent=self, size=(200, 200), name="current card (name)")
-    self.current_card.SetLabel("current card (label)")
-    self.current_card.SetBackgroundColour("black")
+    #self.current_card = wx.Panel(parent=self, size=(200, 200), name="current card (name)")
+    #self.current_card.SetLabel("current card (label)")
+    #self.current_card.SetBackgroundColour("black")
 
     self.box = wx.BoxSizer(wx.VERTICAL)
     self.box.Add(wx.RadioButton(self, label="black card"))
     self.box.Add(wx.RadioButton(self, label="white card"))
     self.box.AddStretchSpacer(1)
-    self.box.Add(self.current_card, 0, wx.ALIGN_CENTER)
+    #self.box.Add(self.current_card, 0, wx.ALIGN_CENTER)
     self.box.AddStretchSpacer(1)
     self.hbox = wx.BoxSizer()
-    self.hbox.Add(wx.Button(self, label="Delete All"), 0, wx.ALIGN_LEFT)
-    self.hbox.Add(wx.Button(self, label="Insert Placeholder"), 0, wx.ALIGN_RIGHT)
+    self.hbox.Add(wx.Button(self, label="Delete Text"), 1)
+    self.hbox.AddStretchSpacer(5)
+    self.hbox.Add(wx.Button(self, label="Delete Card"), 1)
+    self.hbox.AddStretchSpacer(5)
+    self.hbox.Add(wx.Button(self, label="Insert Placeholder"), 1)
     self.box.Add(self.hbox)
     self.SetSizer(self.box)
 
@@ -46,10 +49,10 @@ class MainFrame(wx.Frame):
     splitter = wx.SplitterWindow(self, style=wx.SP_LIVE_UPDATE | wx.SP_NO_XP_THEME | wx.SP_3D, name="vertical splitter")
     self.left_window = CardListWindow(splitter)
     self.right_window = CurrCardWindow(splitter)
-    self.left_window.card_grid.initList()
+    #self.left_window.card_grid.initList()
 
     # split the frame
-    splitter.SplitVertically(self.left_window, self.right_window, (0.75 * WIDTH))
+    splitter.SplitVertically(self.left_window, self.right_window, (0.70 * WIDTH))
     splitter.SetMinimumPaneSize((WIDTH / 8))  # just to prevent moving sash to
     #   the very right or left and so
     #   you can't move it back
