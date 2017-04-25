@@ -1,3 +1,5 @@
 Twisted==17.1.0
 cx_Freeze==4.3.4
-wx==3.0.3
+hg+http://hg.q-continuum.net/libloader
+hg+http://hg.q-continuum.net/platform_utils
+hg+http://hg.q-continuum.net/accessible_output2
