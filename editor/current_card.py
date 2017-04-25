@@ -33,7 +33,7 @@ class CurrCardWindow(wx.Panel):
 
 
     self.button_del_text = wx.Button(self, label="delete text")
-    #self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)
+    self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)
     self.button_del_card = wx.Button(self, label="delete card")
     #self.button_del_card.Bind(wx.EVT_BUTTON, self.DeleteCard)
     self.button_save_card = wx.Button(self, label="save card")
@@ -77,8 +77,8 @@ class CurrCardWindow(wx.Panel):
     self.Refresh()
 
 
-  #def DeleteCardText(self, event):
-
+  def DeleteCardText(self, event):
+    self.current_card_text.SetValue('')
 
   #def DeleteCard(self, event):
 
