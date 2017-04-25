@@ -1,12 +1,12 @@
-from shared.path import getScriptDirectory
-
-import shutil
 # constants declaration
 
 NAME = 'cards-against-humanity'
 VERSION = '0.1'
 DESCRIPTION = 'Cards Against Humanity Online Game'
 
+from shared.path import getScriptDirectory
+
+import shutil
 import sys
 import os
 import os.path
