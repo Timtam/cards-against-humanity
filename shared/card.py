@@ -25,7 +25,7 @@ class Card(object):
       for i in range(len(placeholders)):
         try:
           if i != int(placeholders[i]):
-            raise CardValidityError({'id': self.id, 'text': 'Black card's placeholders must follow a continuous scheme, starting from zero ( {0}, {1}, {2} ... )'})
+            raise CardValidityError({'id': self.id, 'text': "Black card's placeholders must follow a continuous scheme, starting from zero ( {0}, {1}, {2} ... )"})
         except ValueError:
           # occurs always if the placeholder isn't an integer, which may not happen
           raise CardValidityError({'id': self.id, 'text': 'Black cards may only contain placeholders which consist of integer enumerations ( {0}, {1}, {2}, ... )'})
