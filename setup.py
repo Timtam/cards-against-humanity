@@ -1,6 +1,12 @@
 from shared.path import getScriptDirectory
 
 import shutil
+# constants declaration
+
+NAME = 'cards-against-humanity'
+VERSION = '0.1'
+DESCRIPTION = 'Cards Against Humanity Online Game'
+
 import sys
 import os
 import os.path
@@ -53,9 +59,9 @@ build_exe_options = {
 initialize_zope_package()
 
 setup(
-  name = "cards-against-humanity",
-  version = "0.1",
-  description = "Cards Against Humanity Online Game",
+  name = NAME,
+  version = VERSION,
+  description = DESCRIPTION,
   options = {
     'build_exe' : build_exe_options
   },
@@ -70,19 +76,19 @@ setup(
     )
   ]
 )
-"""
-build_dir = os.path.join(script.Path, 'build', os.listdir(os.path.join(script.Path, 'build'))[0])
+
+
+build_dir = os.path.join(getScriptDirectory(), 'build', os.listdir(os.path.join(getScriptDirectory(), 'build'))[0])
 
 if platform.system()=='Windows':
   import zipfile
-  zip=zipfile.ZipFile(os.path.join(script.Path, '%s-%s.zip'%(script.Name, script.Version)), "w")
+  zip=zipfile.ZipFile(os.path.join(getScriptDirectory(), '%s-%s.zip'%(NAME, VERSION)), "w")
   for file in list_all_files(build_dir):
-    zip.write(file,'%s-%s\\%s'%(script.Name, script.Version, os.path.relpath(file,build_dir)), zipfile.ZIP_DEFLATED)
+    zip.write(file,'%s-%s\\%s'%(NAME, VERSION, os.path.relpath(file,build_dir)), zipfile.ZIP_DEFLATED)
   zip.close()
 else:
   import tarfile
-  tar=tarfile.open('%s-%s.tar.gz'%(script.Name, script.Version),'w:gz')
-  tar.add(build_dir, '%s-%s'%(script.Name, script.Version))
+  tar=tarfile.open('%s-%s.tar.gz'%(NAME, VERSION),'w:gz')
+  tar.add(build_dir, '%s-%s'%(NAME, VERSION))
   tar.close()
-shutil.rmtree(os.path.join(script.Path, "build"))
-"""
+shutil.rmtree(os.path.join(getScriptDirectory(), "build"))
