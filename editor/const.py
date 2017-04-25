@@ -27,6 +27,7 @@ FULL_ELEMENT = ELEMENT_SIZE + 2 * BORDER
 # wx.ICON_INFORMATION	  Shows an information (i) icon.
 # wx.STAY_ON_TOP	      The message box stays on top of all other window, even
 #                         those of the other applications (Windows only).
-MSG_ERR = wx.ICON_ERROR | wx.STAY_ON_TOP | wx.CANCEL
-MSG_WRN = wx.ICON_EXCLAMATION | wx.OK | wx.CANCEL
-MSG_INF = wx.ICON_INFORMATION | wx.OK
+MSG_ERROR = wx.ICON_ERROR | wx.STAY_ON_TOP | wx.CANCEL
+MSG_WARN = wx.ICON_EXCLAMATION | wx.OK | wx.CANCEL
+MSG_INFO = wx.ICON_INFORMATION | wx.OK
+MSG_YES_NO = wx.ICON_QUESTION | wx.YES_NO

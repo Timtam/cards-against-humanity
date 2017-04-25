@@ -66,13 +66,15 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.Height = 500
 
 
-    # def initList(self):
+  #def buildList(self):
     # create list with dummy objects
     # for _ in itertools.repeat(None, 55):
     #  panel = wx.Panel(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
     #                                   name="Dummy")
     #  panel.SetBackgroundColour("black")
     #  self.item_list.append((panel, 0, FLAG, BORDER))
+
+
 
 
   def calcBestColumns(self, available_height):

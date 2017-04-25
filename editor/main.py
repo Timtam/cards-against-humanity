@@ -2,38 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from cardlist import CardListWindow
+from current_card import CurrCardWindow
 from const import *
 
 APP_EXIT = 1
 
-
-class CurrCardWindow(wx.Panel):
-  def __init__(self, parent):
-    wx.Panel.__init__(self, parent=parent,
-                      name="current card panel(this is a name)")
-
-    self.SetLabel("current card panel(this is a label)")
-    self.SetBackgroundColour("white")
-
-    # self.current_card = wx.Panel(parent=self, size=(200, 200),
-    #                              name="current card (name)")
-    # self.current_card.SetLabel("current card (label)")
-    # self.current_card.SetBackgroundColour("black")
-
-    self.box = wx.BoxSizer(wx.VERTICAL)
-    self.box.Add(wx.RadioButton(self, label="black card"))
-    self.box.Add(wx.RadioButton(self, label="white card"))
-    self.box.AddStretchSpacer(1)
-    # self.box.Add(self.current_card, 0, wx.ALIGN_CENTER)
-    self.box.AddStretchSpacer(1)
-    self.hbox = wx.BoxSizer()
-    self.hbox.Add(wx.Button(self, label="Delete Text"), 1)
-    self.hbox.AddStretchSpacer(5)
-    self.hbox.Add(wx.Button(self, label="Delete Card"), 1)
-    self.hbox.AddStretchSpacer(5)
-    self.hbox.Add(wx.Button(self, label="Insert Placeholder"), 1)
-    self.box.Add(self.hbox)
-    self.SetSizer(self.box)
 
 
 class MainFrame(wx.Frame):
@@ -50,7 +23,7 @@ class MainFrame(wx.Frame):
                                  name="vertical splitter")
     self.left_window = CardListWindow(splitter)
     self.right_window = CurrCardWindow(splitter)
-    # self.left_window.card_grid.initList()
+    #self.left_window.card_grid.buildList()
 
     # split the frame
     splitter.SplitVertically(self.left_window, self.right_window,
@@ -91,11 +64,13 @@ class MainFrame(wx.Frame):
 
   def onQuit(self, e):
     self.Message(caption="Test Error", text="This is a test for errors...",
-                 style=MSG_ERR)
+                 style=MSG_ERROR)
     self.Message(caption="Test Warning", text="This is a test for warnings...",
-                 style=MSG_WRN)
+                 style=MSG_WARN)
     self.Message(caption="Test Information",
-                 text="This is a test for information...", style=MSG_INF)
+                 text="This is a test for information...", style=MSG_INFO)
+    self.Message(caption="Test Question",
+                 text="This is a test for questions...", style=MSG_YES_NO)
     self.Close()
 
 
