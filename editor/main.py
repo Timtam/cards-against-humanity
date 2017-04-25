@@ -36,6 +36,7 @@ class MainFrame(wx.Frame):
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
+    splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.onSashChanged)
 
 
   def initUI(self):
@@ -76,6 +77,9 @@ class MainFrame(wx.Frame):
 
   def onSashChanging(self, e):
     self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
+
+  def onSashChanged(self, e):
+    self.Refresh()
 
 
 def main():

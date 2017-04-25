@@ -3,7 +3,8 @@
 
 import wx
 
-from const import FULL_ELEMENT
+from const import *
+from shared.card import *
 
 # elements have the border on all sides and are centered only horizontally
 FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
@@ -60,10 +61,15 @@ class ScrolledGrid(wx.ScrolledWindow):
 
     self.SetLabel("card list grid(this is a label)")
     self.SetBackgroundColour("white")
+    self.card_list = []
     self.item_list = []
     # next 2 just for initialization (don't ask about the numbers)
     self.grid = wx.GridSizer(0, 5, 0, 0)
     self.Height = 500
+
+
+    self.card_list = self.GetCardList()
+    self.item_list = self.BuildItemList(self.card_list)
 
 
   #def buildList(self):
@@ -75,6 +81,41 @@ class ScrolledGrid(wx.ScrolledWindow):
     #  self.item_list.append((panel, 0, FLAG, BORDER))
 
 
+  def GetCardList(self):
+    card_list = []
+
+    for i in range(1, 11):
+      card_list.append(Card(text=("test " + `i`), type=CARD_BLACK))
+
+    return card_list
+
+
+  def BuildItemList(self, card_list):
+    item_list = []
+
+    for i in range(len(card_list)):
+      card = card_list[i]
+      #panel = wx.Panel(parent=self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
+      #                            name=("card " + `i+1`),
+      #                            style=wx.SIMPLE_BORDER)
+      text = wx.TextCtrl(parent=self, id=i, size=(ELEMENT_SIZE, ELEMENT_SIZE),
+                                    style=wx.EXPAND | wx.TE_READONLY,
+                                    name=("text of card " + `i+1`),
+                                    value=card.text)
+      #card_texts[i].CenterOnParent()
+      if card.type == CARD_BLACK:
+        #panel.SetBackgroundColour("black")
+        text.SetBackgroundColour("black")
+        text.SetForegroundColour("white")
+      else:
+        #panel.SetBackgroundColour("white")
+        text.SetBackgroundColour("white")
+        text.SetForegroundColour("black")
+
+      item_list.append((text, 0, FLAG, BORDER))
+
+
+    return item_list
 
 
   def calcBestColumns(self, available_height):
@@ -113,7 +154,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     columns = self.calcBestColumns(available_height)
 
     # calc and set the virtual height to make the window scrollable
-    self.Height = (self.item_list.__len__() / columns) * FULL_ELEMENT
+    self.Height = (len(self.item_list) / columns) * FULL_ELEMENT
     self.SetVirtualSize((0, self.Height))
     self.SetScrollRate(10, 20)
 
