@@ -101,7 +101,7 @@ class ScrolledGrid(wx.ScrolledWindow):
       text = wx.TextCtrl(parent=self, id=i, size=(ELEMENT_SIZE, ELEMENT_SIZE),
                                     style=wx.EXPAND | wx.TE_READONLY,
                                     name=("text of card " + `i+1`),
-                                    value=card.text)
+                                    value=card.getCardText())
       #card_texts[i].CenterOnParent()
       if card.type == CARD_BLACK:
         #panel.SetBackgroundColour("black")

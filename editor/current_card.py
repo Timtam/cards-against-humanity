@@ -1,5 +1,6 @@
-import wx
+from shared.card import CARD_PLACEHOLDER_LENGTH
 
+import wx
 
 class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
@@ -93,5 +94,8 @@ class CurrCardWindow(wx.Panel):
     #bool = self.radio_black.GetValue()
 
   def InsertPlaceholder(self, event):
-    #print self.current_card_text.GetInsertionPoint()
-    pass
+    current_text = self.current_card_text.GetValue()
+    current_position = self.current_card_text.GetInsertionPoint()
+    current_text = current_text[:current_position]+"_"*CARD_PLACEHOLDER_LENGTH+current_text[current_position:]
+    self.current_card_text.SetValue(current_text)
+    self.current_card_text.SetInsertionPoint(current_position+CARD_PLACEHOLDER_LENGTH)
