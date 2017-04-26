@@ -25,8 +25,12 @@ class CardListWindow(wx.Panel):
     self.toolbar = wx.ToolBar(self, id=wx.ID_ANY)
     self.toolbar.SetToolBitmapSize((30, 30))
 
-    self.toolbar.AddControl(wx.CheckBox(self.toolbar, label="show black cards"))
-    self.toolbar.AddControl(wx.CheckBox(self.toolbar, label="show white cards"))
+    self.checkbox_black = wx.CheckBox(self.toolbar, label="show black cards")
+    self.checkbox_black.SetValue(True)
+    self.checkbox_white = wx.CheckBox(self.toolbar, label="show white cards")
+    self.checkbox_white.SetValue(True)
+    self.toolbar.AddControl(self.checkbox_black)
+    self.toolbar.AddControl(self.checkbox_white)
 
     self.toolbar.AddSeparator()
 
