@@ -33,7 +33,7 @@ class MainFrame(wx.Frame):
 
     # split the frame
     splitter.SplitVertically(self.left_window, self.right_window,
-                             (0.70 * WIDTH))
+                             (0.7 * WIDTH))
     splitter.SetMinimumPaneSize((WIDTH / 8))  # just to prevent moving sash to
     #   the very right or left and so
     #   you can't move it back

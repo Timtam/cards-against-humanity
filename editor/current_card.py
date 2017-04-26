@@ -23,7 +23,9 @@ class CurrCardWindow(wx.Panel):
     self.current_card_text.SetBackgroundColour(
       self.current_card_panel.GetBackgroundColour())
     self.current_card_text.SetForegroundColour("white")
-    self.current_card_text.CenterOnParent()
+    text_box = wx.BoxSizer()
+    text_box.Add(self.current_card_text, 1, wx.ALL | wx.EXPAND, 30)
+    self.current_card_panel.SetSizer(text_box)
 
 
     self.radio_black = wx.RadioButton(self, label="black card", )
@@ -43,14 +45,18 @@ class CurrCardWindow(wx.Panel):
     self.button_ins_ph.Bind(wx.EVT_BUTTON, self.InsertPlaceholder)
 
 
-    self.box = wx.BoxSizer(wx.VERTICAL)
+    self.vbox = wx.BoxSizer(wx.VERTICAL)
+    self.vbox.AddSpacer(20)
+    self.vbox.Add(self.radio_black)
+    self.vbox.Add(self.radio_white)
 
-    self.box.Add(self.radio_black)
-    self.box.Add(self.radio_white)
-
-    self.box.AddStretchSpacer(1)
-    self.box.Add(self.current_card_panel, 0, wx.ALIGN_CENTER)
-    self.box.AddStretchSpacer(1)
+    self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
+    self.vbox.Add(wx.StaticLine(self), 0, wx.TOP | wx.BOTTOM | wx.EXPAND, 20)
+    self.hbox2.AddSpacer(20)
+    self.hbox2.Add(self.current_card_panel, 1, wx.ALIGN_CENTER | wx.SHAPED)
+    self.hbox2.AddSpacer(20)
+    self.vbox.Add(self.hbox2, 1, wx.EXPAND)
+    self.vbox.Add(wx.StaticLine(self), 0, wx.TOP | wx.BOTTOM | wx.EXPAND, 20)
 
     self.hbox = wx.BoxSizer()
     self.grid = wx.GridBagSizer()
@@ -61,8 +67,8 @@ class CurrCardWindow(wx.Panel):
     self.grid.AddGrowableCol(1)
 
     self.hbox.Add(self.grid, 1, wx.EXPAND)
-    self.box.Add(self.hbox, 0, wx.EXPAND)
-    self.SetSizer(self.box)
+    self.vbox.Add(self.hbox, 0, wx.EXPAND)
+    self.SetSizer(self.vbox)
 
 
   def SetColors(self, event):

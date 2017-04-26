@@ -23,7 +23,7 @@ class CardListWindow(wx.Panel):
     wx.Panel.__init__(self, parent=parent,
                       name="card list panel (this is a name")
 
-    self.toolbar = wx.ToolBar(self, -1)
+    self.toolbar = wx.ToolBar(self, id=wx.ID_ANY)
     self.toolbar.SetToolBitmapSize((30, 30))
 
     self.toolbar.AddControl(wx.CheckBox(self.toolbar, label="show black cards"))
@@ -61,15 +61,13 @@ class ScrolledGrid(wx.ScrolledWindow):
 
     self.SetLabel("card list grid(this is a label)")
     self.SetBackgroundColour("white")
-    self.card_list = []
-    self.item_list = []
+    self.cards = []
+
     # next 2 just for initialization (don't ask about the numbers)
     self.grid = wx.GridSizer(0, 5, 0, 0)
     self.Height = 500
 
-
-    self.card_list = self.GetCardList()
-    self.item_list = self.BuildItemList(self.card_list)
+    self.cards = self.GetCards()
 
 
   #def buildList(self):
@@ -81,41 +79,44 @@ class ScrolledGrid(wx.ScrolledWindow):
     #  self.item_list.append((panel, 0, FLAG, BORDER))
 
 
-  def GetCardList(self):
+  def GetCards(self):
     card_list = []
 
     for i in range(1, 11):
-      card_list.append(Card(text=("test " + `i`), type=CARD_BLACK))
+      card = CardPanel(self, ID=i, text=("test " + `i`), card_type=CARD_BLACK)
+      #box = wx.BoxSizer()
+      #box.Add(card)
+      card_list.append((card, 1, wx.EXPAND | wx.ALL, BORDER)) #if no wx.EXPAND, you only see the texts in the first column
 
     return card_list
 
 
-  def BuildItemList(self, card_list):
-    item_list = []
-
-    for i in range(len(card_list)):
-      card = card_list[i]
-      #panel = wx.Panel(parent=self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
-      #                            name=("card " + `i+1`),
-      #                            style=wx.SIMPLE_BORDER)
-      text = wx.TextCtrl(parent=self, id=i, size=(ELEMENT_SIZE, ELEMENT_SIZE),
-                                    style=wx.EXPAND | wx.TE_READONLY,
-                                    name=("text of card " + `i+1`),
-                                    value=card.getCardText())
-      #card_texts[i].CenterOnParent()
-      if card.type == CARD_BLACK:
-        #panel.SetBackgroundColour("black")
-        text.SetBackgroundColour("black")
-        text.SetForegroundColour("white")
-      else:
-        #panel.SetBackgroundColour("white")
-        text.SetBackgroundColour("white")
-        text.SetForegroundColour("black")
-
-      item_list.append((text, 0, FLAG, BORDER))
-
-
-    return item_list
+  # def BuildItemList(self, card_list):
+  #   item_list = []
+  #
+  #   for i in range(len(card_list)):
+  #     card = card_list[i]
+  #     #panel = wx.Panel(parent=self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
+  #     #                            name=("card " + `i+1`),
+  #     #                            style=wx.SIMPLE_BORDER)
+  #     text = wx.TextCtrl(parent=self, id=i, size=(ELEMENT_SIZE, ELEMENT_SIZE),
+  #                                   style=wx.EXPAND | wx.TE_READONLY,
+  #                                   name=("text of card " + `i+1`),
+  #                                   value=card.getCardText())
+  #     #card_texts[i].CenterOnParent()
+  #     if card.type == CARD_BLACK:
+  #       #panel.SetBackgroundColour("black")
+  #       text.SetBackgroundColour("black")
+  #       text.SetForegroundColour("white")
+  #     else:
+  #       #panel.SetBackgroundColour("white")
+  #       text.SetBackgroundColour("white")
+  #       text.SetForegroundColour("black")
+  #
+  #     item_list.append((text, 0, FLAG, BORDER))
+  #
+  #
+  #   return item_list
 
 
   def calcBestColumns(self, available_height):
@@ -149,12 +150,12 @@ class ScrolledGrid(wx.ScrolledWindow):
   def createGrid(self, available_height):
     # this method creates the actual grid with the items
 
-    self.grid.AddMany(self.item_list)
+    self.grid.AddMany(self.cards)
 
     columns = self.calcBestColumns(available_height)
 
     # calc and set the virtual height to make the window scrollable
-    self.Height = (len(self.item_list) / columns) * FULL_ELEMENT
+    self.Height = (len(self.cards) / columns) * FULL_ELEMENT
     self.SetVirtualSize((0, self.Height))
     self.SetScrollRate(10, 20)
 
@@ -164,3 +165,4 @@ class ScrolledGrid(wx.ScrolledWindow):
     box = wx.BoxSizer(wx.HORIZONTAL)
     box.Add(self.grid, proportion=1)
     self.SetSizer(box)
+
