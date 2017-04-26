@@ -69,19 +69,23 @@ class MainFrame(wx.Frame):
       else:
         self.database = sqlite3.connect(os.path.join(getScriptDirectory(), 'cards.db'))
         cursor = self.database.cursor()
-        cursor.executescript("""
-                             CREATE TABLE 'cards' (
-                               'id' INTEGER PRIMARY KEY NOT NULL,
-                               'text' VARCHAR(1000),
-                               'type' TINYINT(1));
-                             CREATE TABLE 'config' (
-                               'key' VARCHAR(30),
-                               'value' VARCHAR(30));
-                             INSERT INTO 'config' (
-                               'key', 'value') VALUES (
-                               'version', '1');
-                             COMMIT;
-                             """)
+        cursor.execute("""
+                       CREATE TABLE 'cards' (
+                         'id' INTEGER PRIMARY KEY NOT NULL,
+                         'text' VARCHAR(1000),
+                         'type' TINYINT(1))
+                       """)
+        cursor.execute("""
+                       CREATE TABLE 'config' (
+                         'key' VARCHAR(30),
+                         'value' VARCHAR(30))
+                       """)
+        cursor.execute("""
+                       INSERT INTO 'config' (
+                         'key', 'value') VALUES (
+                         ?, ?)
+                       """, ('version', '1', ))
+        self.database.commit()
     else:
       self.database = sqlite3.connect(os.path.join(getScriptDirectory(), 'cards.db'))
 
