@@ -99,3 +99,4 @@ class CurrCardWindow(wx.Panel):
     current_text = current_text[:current_position]+"_"*CARD_PLACEHOLDER_LENGTH+current_text[current_position:]
     self.current_card_text.SetValue(current_text)
     self.current_card_text.SetInsertionPoint(current_position+CARD_PLACEHOLDER_LENGTH)
+    self.current_card_text.SetFocus()
