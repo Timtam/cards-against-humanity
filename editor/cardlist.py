@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import wx
-
+from card_panel import CardPanel
 from const import *
-from shared.card import *
+from shared.card import CARD_BLACK
 
 # elements have the border on all sides and are centered only horizontally
 FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
@@ -57,7 +56,8 @@ class CardListWindow(wx.Panel):
 class ScrolledGrid(wx.ScrolledWindow):
   def __init__(self, parent):
     wx.ScrolledWindow.__init__(self, parent=parent,
-                               name="card list grid(this is a name", style = wx.FULL_REPAINT_ON_RESIZE)
+                               name="card list grid(this is a name",
+                               style=wx.FULL_REPAINT_ON_RESIZE)
 
     self.SetLabel("card list grid(this is a label)")
     self.SetBackgroundColour("white")
@@ -70,7 +70,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.cards = self.GetCards()
 
 
-  #def buildList(self):
+    # def buildList(self):
     # create list with dummy objects
     # for _ in itertools.repeat(None, 55):
     #  panel = wx.Panel(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
@@ -78,18 +78,17 @@ class ScrolledGrid(wx.ScrolledWindow):
     #  panel.SetBackgroundColour("black")
     #  self.item_list.append((panel, 0, FLAG, BORDER))
 
-
   def GetCards(self):
     card_list = []
 
     for i in range(1, 11):
       card = CardPanel(self, ID=i, text=("test " + `i`), card_type=CARD_BLACK)
-      #box = wx.BoxSizer()
-      #box.Add(card)
-      card_list.append((card, 1, wx.EXPAND | wx.ALL, BORDER)) #if no wx.EXPAND, you only see the texts in the first column
+      # box = wx.BoxSizer()
+      # box.Add(card)
+      card_list.append((card, 1, wx.EXPAND | wx.ALL,
+                        BORDER))  # if no wx.EXPAND, you only see the texts in the first column
 
     return card_list
-
 
   # def BuildItemList(self, card_list):
   #   item_list = []
@@ -146,7 +145,6 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.grid.SetCols(columns)
     return columns
 
-
   def createGrid(self, available_height):
     # this method creates the actual grid with the items
 
@@ -165,4 +163,3 @@ class ScrolledGrid(wx.ScrolledWindow):
     box = wx.BoxSizer(wx.HORIZONTAL)
     box.Add(self.grid, proportion=1)
     self.SetSizer(box)
-

@@ -1,6 +1,7 @@
+import wx
+
 from shared.card import CARD_PLACEHOLDER_LENGTH
 
-import wx
 
 class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
@@ -9,7 +10,6 @@ class CurrCardWindow(wx.Panel):
 
     self.SetLabel("current card panel(this is a label)")
     self.SetBackgroundColour("white")
-
 
     self.current_card_panel = wx.Panel(parent=self, size=(200, 200),
                                        name="current card (name)",
@@ -27,23 +27,20 @@ class CurrCardWindow(wx.Panel):
     text_box.Add(self.current_card_text, 1, wx.ALL | wx.EXPAND, 30)
     self.current_card_panel.SetSizer(text_box)
 
-
     self.radio_black = wx.RadioButton(self, label="black card", )
     self.radio_black.SetValue(True)
     self.radio_black.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
     self.radio_white = wx.RadioButton(self, label="white card")
     self.radio_white.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
 
-
     self.button_del_text = wx.Button(self, label="delete text")
     self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)
     self.button_del_card = wx.Button(self, label="delete card")
-    #self.button_del_card.Bind(wx.EVT_BUTTON, self.DeleteCard)
+    # self.button_del_card.Bind(wx.EVT_BUTTON, self.DeleteCard)
     self.button_save_card = wx.Button(self, label="save card")
     self.button_save_card.Bind(wx.EVT_BUTTON, self.SaveCard)
     self.button_ins_ph = wx.Button(self, label="insert placeholder")
     self.button_ins_ph.Bind(wx.EVT_BUTTON, self.InsertPlaceholder)
-
 
     self.vbox = wx.BoxSizer(wx.VERTICAL)
     self.vbox.AddSpacer(20)
@@ -70,7 +67,6 @@ class CurrCardWindow(wx.Panel):
     self.vbox.Add(self.hbox, 0, wx.EXPAND)
     self.SetSizer(self.vbox)
 
-
   def SetColors(self, event):
     if self.radio_black.GetValue():
       self.current_card_panel.SetBackgroundColour("black")
@@ -85,24 +81,26 @@ class CurrCardWindow(wx.Panel):
 
     self.Refresh()
 
-
   def DeleteCardText(self, event):
     self.current_card_text.SetValue('')
 
-  #def DeleteCard(self, event):
+  # def DeleteCard(self, event):
 
 
   def SaveCard(self, event):
     # get value of textctrl with
     string = self.current_card_text.GetValue()
     # get value of radiobuttons with
-    #bool = self.radio_black.GetValue() and
-    #bool = self.radio_black.GetValue()
+    # bool = self.radio_black.GetValue() and
+    # bool = self.radio_black.GetValue()
 
   def InsertPlaceholder(self, event):
     current_text = self.current_card_text.GetValue()
     current_position = self.current_card_text.GetInsertionPoint()
-    current_text = current_text[:current_position]+"_"*CARD_PLACEHOLDER_LENGTH+current_text[current_position:]
+    current_text = current_text[
+                   :current_position] + "_" * CARD_PLACEHOLDER_LENGTH + current_text[
+                                                                        current_position:]
     self.current_card_text.SetValue(current_text)
-    self.current_card_text.SetInsertionPoint(current_position+CARD_PLACEHOLDER_LENGTH)
+    self.current_card_text.SetInsertionPoint(
+      current_position + CARD_PLACEHOLDER_LENGTH)
     self.current_card_text.SetFocus()

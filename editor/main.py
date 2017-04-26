@@ -1,16 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from cardlist import CardListWindow
-from current_card import CurrCardWindow
-from const import *
-from shared.path import getScriptDirectory
-
 import os.path
 import sqlite3
 
-APP_EXIT = 1
+from cardlist import CardListWindow
+from const import *
+from current_card import CurrCardWindow
+from shared.path import getScriptDirectory
 
+APP_EXIT = 1
 
 
 class MainFrame(wx.Frame):
@@ -29,7 +28,7 @@ class MainFrame(wx.Frame):
                                  name="vertical splitter")
     self.left_window = CardListWindow(splitter)
     self.right_window = CurrCardWindow(splitter)
-    #self.left_window.card_grid.buildList()
+    # self.left_window.card_grid.buildList()
 
     # split the frame
     splitter.SplitVertically(self.left_window, self.right_window,
@@ -42,7 +41,7 @@ class MainFrame(wx.Frame):
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
-    #splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.onSashChanged)
+    # splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.onSashChanged)
 
     # calling the database loading algorithm directly after the window appears
     wx.CallAfter(self.initDatabase)
@@ -63,11 +62,14 @@ class MainFrame(wx.Frame):
   def initDatabase(self):
     # if no database exists, we will ask to create a new one
     if not os.path.exists(os.path.join(getScriptDirectory(), 'cards.db')):
-      result = self.Message(caption="No database found", text="We couldn't find a cards.db file inside the editor's working directory. Do you want us to create a new one for you which you can edit directly afterwards?\nIf no, the editor will close immediately.", style=MSG_YES_NO)
+      result = self.Message(caption="No database found",
+                            text="We couldn't find a cards.db file inside the editor's working directory. Do you want us to create a new one for you which you can edit directly afterwards?\nIf no, the editor will close immediately.",
+                            style=MSG_YES_NO)
       if result == wx.ID_NO:
         self.Close()
       else:
-        self.database = sqlite3.connect(os.path.join(getScriptDirectory(), 'cards.db'))
+        self.database = sqlite3.connect(
+          os.path.join(getScriptDirectory(), 'cards.db'))
         cursor = self.database.cursor()
         cursor.execute("""
                        CREATE TABLE 'cards' (
@@ -84,10 +86,11 @@ class MainFrame(wx.Frame):
                        INSERT INTO 'config' (
                          'key', 'value') VALUES (
                          ?, ?)
-                       """, ('version', '1', ))
+                       """, ('version', '1',))
         self.database.commit()
     else:
-      self.database = sqlite3.connect(os.path.join(getScriptDirectory(), 'cards.db'))
+      self.database = sqlite3.connect(
+        os.path.join(getScriptDirectory(), 'cards.db'))
 
   def Message(self, caption, text, style):
     message = wx.MessageDialog(parent=self, caption=caption, message=text,
@@ -95,7 +98,6 @@ class MainFrame(wx.Frame):
     result = message.ShowModal()
     message.Destroy()
     return result
-
 
   def onQuit(self, e):
     self.Message(caption="Test Error", text="This is a test for errors...",
@@ -108,12 +110,11 @@ class MainFrame(wx.Frame):
                  text="This is a test for questions...", style=MSG_YES_NO)
     self.Close()
 
-
   def onSashChanging(self, e):
     self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
 
-  #def onSashChanged(self, e):
-    #self.Refresh()
+    # def onSashChanged(self, e):
+    # self.Refresh()
 
 
 def main():
