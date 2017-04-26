@@ -43,7 +43,7 @@ class Card(object):
 
   # retrieves the properly formatted card text
   def getCardText(self):
-    return re.sub("{}", "_"*CARD_PLACEHOLDER_LENGTH, self.__text)
+    return re.sub("{}", "_"*CARD_PLACEHOLDER_LENGTH, self.getInternalText())
 
   # parses the text and will set it internally too
   def setCardText(self, text):
