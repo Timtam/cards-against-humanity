@@ -25,7 +25,7 @@ class Card(object):
       text = self.getInternalText()
 
     format_iterator = string.Formatter().parse(text)
-    placeholders = map([f[2] for f in format_iterator], lambda x: x != None)
+    placeholders = map([p[2] for p in format_iterator], lambda x: x != None)
     if self.type==CARD_WHITE and len(placeholders)>0:
       raise CardValidityError({'id':self.id, 'text': 'White cards may not have any placeholders ( {...} ).'})
     elif self.type==CARD_BLACK and len(placeholders)==0:
@@ -47,5 +47,10 @@ class Card(object):
 
   # parses the text and will set it internally too
   def setCardText(self, text):
+    format_iterator = string.Formatter().parse(text)
+    placeholders = map([p[2] for p in format_iterator], lambda x: x != None)
+    # we don't accept already well formatted placeholders inside the actual card text
+    if len(placeholders)>0:
+       raise CardValidityError({'id':self.id, 'text': 'invalid text found inside the card text: {%s}'%(placeholders[0])})
     internal_text = re.sub(" __+ ", " {} ",text)
     self.setInternalText(internal_text)
