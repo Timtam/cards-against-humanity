@@ -39,7 +39,7 @@ class CurrCardWindow(wx.Panel):
     self.button_save_card = wx.Button(self, label="save card")
     self.button_save_card.Bind(wx.EVT_BUTTON, self.SaveCard)
     self.button_ins_ph = wx.Button(self, label="insert placeholder")
-    #self.button_ins_ph.Bind(wx.EVT_BUTTON, self.InsertPlacholder)
+    self.button_ins_ph.Bind(wx.EVT_BUTTON, self.InsertPlaceholder)
 
 
     self.box = wx.BoxSizer(wx.VERTICAL)
@@ -69,10 +69,12 @@ class CurrCardWindow(wx.Panel):
       self.current_card_panel.SetBackgroundColour("black")
       self.current_card_text.SetBackgroundColour("black")
       self.current_card_text.SetForegroundColour("white")
+      self.button_ins_ph.Enable()
     else:
       self.current_card_panel.SetBackgroundColour("white")
       self.current_card_text.SetBackgroundColour("white")
       self.current_card_text.SetForegroundColour("black")
+      self.button_ins_ph.Disable()
 
     self.Refresh()
 
@@ -90,5 +92,6 @@ class CurrCardWindow(wx.Panel):
     #bool = self.radio_black.GetValue() and
     #bool = self.radio_black.GetValue()
 
-  #def InsertPlaceholder(self, event):
-
+  def InsertPlaceholder(self, event):
+    #print self.current_card_text.GetInsertionPoint()
+    pass
