@@ -42,7 +42,7 @@ class MainFrame(wx.Frame):
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
-    splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.onSashChanged)
+    #splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.onSashChanged)
 
     # calling the database loading algorithm directly after the window appears
     wx.CallAfter(self.initDatabase)
@@ -108,8 +108,8 @@ class MainFrame(wx.Frame):
   def onSashChanging(self, e):
     self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
 
-  def onSashChanged(self, e):
-    self.Refresh()
+  #def onSashChanged(self, e):
+    #self.Refresh()
 
 
 def main():

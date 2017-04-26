@@ -57,7 +57,7 @@ class CardListWindow(wx.Panel):
 class ScrolledGrid(wx.ScrolledWindow):
   def __init__(self, parent):
     wx.ScrolledWindow.__init__(self, parent=parent,
-                               name="card list grid(this is a name")
+                               name="card list grid(this is a name", style = wx.FULL_REPAINT_ON_RESIZE)
 
     self.SetLabel("card list grid(this is a label)")
     self.SetBackgroundColour("white")
