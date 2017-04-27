@@ -37,7 +37,6 @@ class MainFrame(wx.Frame):
     #   the very right or left and so
     #   you can't move it back
     splitter.SetSashGravity(0.0)
-    self.left_window.card_grid.createGrid()
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
@@ -91,6 +90,17 @@ class MainFrame(wx.Frame):
     else:
       self.database = sqlite3.connect(
         os.path.join(getScriptDirectory(), 'cards.db'))
+
+    self.loadCards()
+
+  # parses the database and fills the grid with cards
+  def loadCards(self):
+    cursor = self.database.cursor()
+    cursor.execute('SELECT * FROM cards')
+    self.left_window.card_grid.clearCards()
+    for card in cursor.fetchall():
+      self.left_window.card_grid.addCard(card.id, card.text, card.type)
+    self.left_window.card_grid.createGrid()
 
   def Message(self, caption, text, style):
     message = wx.MessageDialog(parent=self, caption=caption, message=text,

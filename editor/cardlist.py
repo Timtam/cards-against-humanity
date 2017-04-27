@@ -42,8 +42,6 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.grid = wx.GridSizer(0, 5, 0, 0)
     self.Height = 500
 
-    self.getCards()
-
     # def buildList(self):
     # create list with dummy objects
     # for _ in itertools.repeat(None, 55):
@@ -51,11 +49,6 @@ class ScrolledGrid(wx.ScrolledWindow):
     #                                   name="Dummy")
     #  panel.SetBackgroundColour("black")
     #  self.item_list.append((panel, 0, FLAG, BORDER))
-
-  def getCards(self):
-
-    for i in range(1, 11):
-      self.addCard(i, "test %d"%(i), CARD_BLACK)
 
   # def BuildItemList(self, card_list):
   #   item_list = []
@@ -120,8 +113,6 @@ class ScrolledGrid(wx.ScrolledWindow):
     if available_height == -1:
       available_height = self.GetTopLevelParent().ClientSize.height
 
-    self.grid.Clear()
-
     self.grid.AddMany(self.cards)
 
     columns = self.calcBestColumns(available_height)
@@ -144,3 +135,6 @@ class ScrolledGrid(wx.ScrolledWindow):
     # box.Add(card)
     self.cards.append((card, 1, wx.EXPAND | wx.ALL,
                        BORDER))  # if no wx.EXPAND, you only see the texts in the first column
+  def clearCards(self):
+    self.cards = []
+    self.grid.Clear()
