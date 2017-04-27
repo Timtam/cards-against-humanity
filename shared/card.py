@@ -17,6 +17,7 @@ class Card(object):
   def isValid(self, text=None):
     # implementing some safety
     # if the card is white, no wildcards are allowed
+    # also the card may not be empty
     # if the card is black, wildcards are allowed
     # there must even be at least one present
     
@@ -28,6 +29,8 @@ class Card(object):
     placeholders = [p[2] for p in format_iterator if p[2] is not None]
     if self.type==CARD_WHITE and len(placeholders)>0:
       raise CardValidityError({'id':self.id, 'text': 'White cards may not have any placeholders ( {...} ).'})
+    elif self.type == CARD_WHITE and text.strip(' ')=='':
+      raise CardValidityError({'id': self.id, 'text': 'White cards need to contain some text'})
     elif self.type==CARD_BLACK and len(placeholders)==0:
       raise CardValidityError({'id': self.id, 'text': 'Black cards must contain at least one placeholder'})      
     return True
