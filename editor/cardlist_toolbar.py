@@ -48,3 +48,4 @@ class CardListToolbar(wx.ToolBar):
     frame.left_window.card_grid.createGrid()
     frame.left_window.card_grid.Refresh()
     frame.right_window.setCard(panel)
+    frame.database.commit()

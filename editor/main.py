@@ -95,12 +95,18 @@ class MainFrame(wx.Frame):
 
   # parses the database and fills the grid with cards
   def loadCards(self):
+    panel = None
     cursor = self.database.cursor()
-    cursor.execute('SELECT * FROM cards')
+    cursor.execute('SELECT id, text, type FROM cards')
     self.left_window.card_grid.clearCards()
     for card in cursor.fetchall():
-      self.left_window.card_grid.addCard(card.id, card.text, card.type)
+      new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
+      if panel == None:
+        panel = new_card
     self.left_window.card_grid.createGrid()
+    self.left_window.Refresh()
+    if panel != None:
+      panel.SetFocus()
 
   def Message(self, caption, text, style):
     message = wx.MessageDialog(parent=self, caption=caption, message=text,
