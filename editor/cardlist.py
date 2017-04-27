@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from cardlist_toolbar import CardListToolbar
 from card_panel import CardPanel
 from const import *
 from shared.card import CARD_BLACK
@@ -8,42 +9,12 @@ from shared.card import CARD_BLACK
 # elements have the border on all sides and are centered only horizontally
 FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
 
-
-class SearchCtrl(wx.SearchCtrl):
-  def __init__(self, *args, **kwargs):
-    wx.SearchCtrl.__init__(self, *args, **kwargs)
-
-    self.ShowSearchButton(True)
-    self.ShowCancelButton(True)
-
-
 class CardListWindow(wx.Panel):
   def __init__(self, parent):
     wx.Panel.__init__(self, parent=parent,
                       name="card list panel (this is a name")
 
-    self.toolbar = wx.ToolBar(self, id=wx.ID_ANY)
-    self.toolbar.SetToolBitmapSize((30, 30))
-
-    self.checkbox_black = wx.CheckBox(self.toolbar, label="show black cards")
-    self.checkbox_black.SetValue(True)
-    self.checkbox_white = wx.CheckBox(self.toolbar, label="show white cards")
-    self.checkbox_white.SetValue(True)
-    self.toolbar.AddControl(self.checkbox_black)
-    self.toolbar.AddControl(self.checkbox_white)
-
-    self.toolbar.AddSeparator()
-
-    self.toolbar.AddControl(wx.Button(self.toolbar, label="new card"))
-    self.toolbar.AddControl(wx.Button(self.toolbar, label="reset all"))
-    self.toolbar.AddControl(wx.Button(self.toolbar, label="undo all"))
-
-    self.toolbar.AddSeparator()
-
-    self.toolbar.AddStretchableSpace()
-    self.search_ctrl = SearchCtrl(parent=self.toolbar)
-    self.toolbar.AddControl(self.search_ctrl)
-    self.toolbar.Realize()
+    self.toolbar = CardListToolbar(self)
 
     self.card_grid = ScrolledGrid(self)
 
