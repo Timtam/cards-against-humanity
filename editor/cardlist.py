@@ -42,8 +42,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.grid = wx.GridSizer(0, 5, 0, 0)
     self.Height = 500
 
-    self.cards = self.GetCards()
-
+    self.getCards()
 
     # def buildList(self):
     # create list with dummy objects
@@ -53,17 +52,10 @@ class ScrolledGrid(wx.ScrolledWindow):
     #  panel.SetBackgroundColour("black")
     #  self.item_list.append((panel, 0, FLAG, BORDER))
 
-  def GetCards(self):
-    card_list = []
+  def getCards(self):
 
     for i in range(1, 11):
-      card = CardPanel(self, ID=i, text=("test " + `i`), card_type=CARD_BLACK)
-      # box = wx.BoxSizer()
-      # box.Add(card)
-      card_list.append((card, 1, wx.EXPAND | wx.ALL,
-                        BORDER))  # if no wx.EXPAND, you only see the texts in the first column
-
-    return card_list
+      self.addCard(i, "test %d"%(i), CARD_BLACK)
 
   # def BuildItemList(self, card_list):
   #   item_list = []
@@ -138,3 +130,10 @@ class ScrolledGrid(wx.ScrolledWindow):
     box = wx.BoxSizer(wx.HORIZONTAL)
     box.Add(self.grid, proportion=1)
     self.SetSizer(box)
+
+  def addCard(self, id, text, card_type):
+    card = CardPanel(self, id=id, text=text, card_type=card_type)
+    # box = wx.BoxSizer()
+    # box.Add(card)
+    self.cards.append((card, 1, wx.EXPAND | wx.ALL,
+                       BORDER))  # if no wx.EXPAND, you only see the texts in the first column
