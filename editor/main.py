@@ -104,7 +104,7 @@ class MainFrame(wx.Frame):
       if panel == None:
         panel = new_card
     self.left_window.card_grid.createGrid()
-    self.left_window.Refresh()
+    self.left_window.Layout()
     if panel != None:
       panel.SetFocus()
 
