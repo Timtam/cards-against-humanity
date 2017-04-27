@@ -37,7 +37,7 @@ class MainFrame(wx.Frame):
     #   the very right or left and so
     #   you can't move it back
     splitter.SetSashGravity(0.0)
-    self.left_window.card_grid.createGrid(self.ClientSize.height)
+    self.left_window.card_grid.createGrid()
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)

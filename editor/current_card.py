@@ -67,6 +67,9 @@ class CurrCardWindow(wx.Panel):
     self.vbox.Add(self.hbox, 0, wx.EXPAND)
     self.SetSizer(self.vbox)
 
+    # disable all elements at the very beginning
+    self.Disable()
+
   def SetColors(self, event):
     if self.radio_black.GetValue():
       self.current_card_panel.SetBackgroundColour("black")
@@ -104,3 +107,10 @@ class CurrCardWindow(wx.Panel):
     self.current_card_text.SetInsertionPoint(
       current_position + CARD_PLACEHOLDER_LENGTH)
     self.current_card_text.SetFocus()
+
+  # will disable all components
+  # will be default at creation time, since no card is actually selected
+  def Disable(self):
+    self.current_card_text.SetEditable(False)
+    for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
+      b.Disable()

@@ -112,8 +112,15 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.grid.SetCols(columns)
     return columns
 
-  def createGrid(self, available_height):
+  def createGrid(self, available_height=-1):
     # this method creates the actual grid with the items
+
+    # if available_hight isn't given we automatically use the top-level frame's
+    # client size
+    if available_height == -1:
+      available_height = self.GetTopLevelParent().ClientSize.height
+
+    self.grid.Clear()
 
     self.grid.AddMany(self.cards)
 
