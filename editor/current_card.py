@@ -1,12 +1,13 @@
 import wx
 
-from shared.card import CARD_PLACEHOLDER_LENGTH
+from shared.card import CARD_PLACEHOLDER_LENGTH, CARD_BLACK, CARD_WHITE
 
 
 class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
     wx.Panel.__init__(self, parent=parent,
                       name="current card panel(this is a name)")
+    self.related_card = None
 
     self.SetLabel("current card panel(this is a label)")
     self.SetBackgroundColour("white")
@@ -114,3 +115,22 @@ class CurrCardWindow(wx.Panel):
     self.current_card_panel.Hide()
     for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
       b.Disable()
+
+  def Enable(self):
+    self.current_card_panel.Show()
+    self.Layout()
+    for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
+      b.Enable()
+
+  def setCard(self, card):
+    self.related_card = card
+    self.current_card_text.SetValue(card.card.getCardText())
+    if card.card.type == CARD_BLACK:
+      self.radio_black.SetValue(True)
+      self.radio_white.SetValue(False)
+    elif card.card.type == CARD_WHITE:
+      self.radio_black.SetValue(False)
+      self.radio_white.SetValue(True)
+    self.SetColors(None)
+    self.Enable()
+    self.current_card_text.SetFocus()

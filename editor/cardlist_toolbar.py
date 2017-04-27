@@ -47,4 +47,4 @@ class CardListToolbar(wx.ToolBar):
     panel = frame.left_window.card_grid.addCard(id=cursor.lastrowid, text='', card_type=CARD_WHITE)
     frame.left_window.card_grid.createGrid()
     frame.left_window.card_grid.Refresh()
-    panel.SetFocus()
+    frame.right_window.setCard(panel)
