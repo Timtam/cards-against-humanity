@@ -36,11 +36,11 @@ class ScrolledGrid(wx.ScrolledWindow):
 
     self.SetLabel("card list grid(this is a label)")
     self.SetBackgroundColour("white")
-    self.cards = []
 
     # next 2 just for initialization (don't ask about the numbers)
     self.grid = wx.GridSizer(0, 5, 0, 0)
     self.Height = 500
+    self.card_count = 0
 
     # def buildList(self):
     # create list with dummy objects
@@ -113,12 +113,10 @@ class ScrolledGrid(wx.ScrolledWindow):
     if available_height == -1:
       available_height = self.GetTopLevelParent().ClientSize.height
 
-    self.grid.AddMany(self.cards)
-
     columns = self.calcBestColumns(available_height)
 
     # calc and set the virtual height to make the window scrollable
-    self.Height = (len(self.cards) / columns) * FULL_ELEMENT
+    self.Height = (self.card_count / columns) * FULL_ELEMENT
     self.SetVirtualSize((0, self.Height))
     self.SetScrollRate(10, 20)
 
@@ -127,14 +125,19 @@ class ScrolledGrid(wx.ScrolledWindow):
     # otherwise the elements are also centered vertically
     box = wx.BoxSizer(wx.HORIZONTAL)
     box.Add(self.grid, proportion=1)
-    self.SetSizer(box)
+    self.SetSizer(box, True)
 
   def addCard(self, id, text, card_type):
-    card = CardPanel(self, id=id, text=text, card_type=card_type)
+    card = CardPanel(self, card_id=id, text=text, card_type=card_type)
     # box = wx.BoxSizer()
     # box.Add(card)
-    self.cards.append((card, 1, wx.EXPAND | wx.ALL,
-                       BORDER))  # if no wx.EXPAND, you only see the texts in the first column
+    self.grid.Add(card, 1, wx.EXPAND | wx.ALL,
+                       BORDER)  # if no wx.EXPAND, you only see the texts in the first column
+
+    self.card_count += 1
+
+    return card
+
   def clearCards(self):
-    self.cards = []
+    self.card_count = 0
     self.grid.Clear()

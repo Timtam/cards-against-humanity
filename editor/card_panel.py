@@ -3,11 +3,11 @@ from shared.card import Card, CARD_BLACK, CARD_WHITE
 
 
 class CardPanel(wx.Panel):
-  def __init__(self, parent, id=-1, size=(ELEMENT_SIZE, ELEMENT_SIZE), text="",
+  def __init__(self, parent, card_id=-1, size=(ELEMENT_SIZE, ELEMENT_SIZE), text="",
                card_type=CARD_WHITE):
-    wx.Panel.__init__(self, parent=parent, id=id, size=size,
-                      name=("card " + `id`), style=wx.SIMPLE_BORDER)
-    self.card = Card(id=id, text=text, type=card_type)
+    wx.Panel.__init__(self, parent=parent, id=card_id, size=size,
+                      name=("card " + `card_id`), style=wx.SIMPLE_BORDER)
+    self.card = Card(id=card_id, text=text, type=card_type)
     self.box = wx.BoxSizer(wx.VERTICAL)
     self.text = CardText(parent=self, text=text)
 

@@ -111,6 +111,6 @@ class CurrCardWindow(wx.Panel):
   # will disable all components
   # will be default at creation time, since no card is actually selected
   def Disable(self):
-    self.current_card_text.SetEditable(False)
+    self.current_card_panel.Hide()
     for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
       b.Disable()
