@@ -135,7 +135,7 @@ class MainFrame(wx.Frame):
         e.Veto(True)
         return
       elif result == wx.ID_NO:
-        self.right_window.setCard(self.right_window.card)
+        self.right_window.setCard(self.right_window.related_card)
 
     if self.unsaved_changes:
       result = self.Message(caption="unsaved changes", text="You changed some cards without saving. Do you want us to save for you?", style=MSG_YES_NO)
