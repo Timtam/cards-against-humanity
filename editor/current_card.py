@@ -95,7 +95,7 @@ class CurrCardWindow(wx.Panel):
   def SaveCard(self, event):
 
     if self.saved:
-      return
+      return False
 
     frame = self.GetTopLevelParent()
 
@@ -111,7 +111,7 @@ class CurrCardWindow(wx.Panel):
     except CardValidityError as e:
       frame.Message(caption="card text error", text=e.message['text'], style=MSG_WARN)
       self.related_card.card.type = old_type
-      return
+      return False
 
     self.related_card.text.SetLabel(self.related_card.card.getCardText())
 
@@ -120,6 +120,7 @@ class CurrCardWindow(wx.Panel):
 
     frame.unsaved_changes = True
 
+    return True
 
   def InsertPlaceholder(self, event):
     current_text = self.current_card_text.GetValue()
@@ -147,13 +148,13 @@ class CurrCardWindow(wx.Panel):
 
   def setCard(self, card):
 
-    if self.related_card is card:
-      return
+    if self.related_card is not card:
 
-    if self.maySetCard()==False:
-      return
+      if self.maySetCard()==False:
+        return
 
-    self.related_card = card
+      self.related_card = card
+
     self.current_card_text.SetValue(card.card.getCardText())
     if card.card.type == CARD_BLACK:
       self.radio_black.SetValue(True)
@@ -161,6 +162,7 @@ class CurrCardWindow(wx.Panel):
     elif card.card.type == CARD_WHITE:
       self.radio_black.SetValue(False)
       self.radio_white.SetValue(True)
+
     self.SetColors(None)
     self.Enable()
     self.current_card_text.SetFocus()

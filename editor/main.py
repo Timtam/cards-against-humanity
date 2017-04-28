@@ -125,12 +125,27 @@ class MainFrame(wx.Frame):
   def closeIntervention(self, e):
 
     if not e.CanVeto():
+      self.Destroy()
       return
+
+    if not self.right_window.saved:
+      result = self.Message(caption="Unapplied changes", text="Your edit window contains unapplied changes. Do you want to apply them now?", style=MSG_YES_NO)
+
+      if result == wx.ID_YES and self.right_window.SaveCard(None)==False:
+        e.Veto(True)
+        return
+      elif result == wx.ID_NO:
+        self.right_window.setCard(self.right_window.card)
+
+    if self.unsaved_changes:
+      result = self.Message(caption="unsaved changes", text="You changed some cards without saving. Do you want us to save for you?", style=MSG_YES_NO)
+
+      if result == wx.ID_YES:
+        self.left_window.toolbar.onSaveAll(None)
 
     self.Destroy()
 
     e.Veto(False)
-
 
   def onSashChanging(self, e):
     self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
