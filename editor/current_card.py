@@ -1,5 +1,6 @@
 from .const import *
 from shared.card import CARD_PLACEHOLDER_LENGTH, CARD_BLACK, CARD_WHITE
+from shared.exceptions import CardValidityError
 
 import wx
 
@@ -38,7 +39,7 @@ class CurrCardWindow(wx.Panel):
     self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)
     self.button_del_card = wx.Button(self, label="delete card")
     # self.button_del_card.Bind(wx.EVT_BUTTON, self.DeleteCard)
-    self.button_save_card = wx.Button(self, label="save card")
+    self.button_save_card = wx.Button(self, label="apply card changes")
     self.button_save_card.Bind(wx.EVT_BUTTON, self.SaveCard)
     self.button_ins_ph = wx.Button(self, label="insert placeholder")
     self.button_ins_ph.Bind(wx.EVT_BUTTON, self.InsertPlaceholder)
@@ -92,11 +93,30 @@ class CurrCardWindow(wx.Panel):
 
 
   def SaveCard(self, event):
-    # get value of textctrl with
-    string = self.current_card_text.GetValue()
-    # get value of radiobuttons with
-    # bool = self.radio_black.GetValue() and
-    # bool = self.radio_black.GetValue()
+
+    if self.saved:
+      return
+
+    frame = self.GetTopLevelParent()
+
+    old_type = self.related_card.card.type
+
+    if self.radio_black.GetValue():
+      self.related_card.card.type = CARD_BLACK
+    elif self.radio_white.GetValue():
+      self.related_card.card.type = CARD_WHITE
+
+    try:
+      self.related_card.card.setCardText(self.current_card_text.GetValue())
+    except CardValidityError as e:
+      frame.Message(caption="Text error", text=e.message['text'], style=MSG_WARN)
+      self.related_card.card.type = old_type
+      return
+
+    self.related_card.card_text.SetValue(self.related_card.card.getCardText())
+
+    cursor = frame.database.cursor()
+    cursor.execute('UPDATE cards SET text = ? AND type = ? WHERE id = ?', (self.related_card.card.getInternalText(), self.related_card.card.type, self.related_card.card.id, ))
 
   def InsertPlaceholder(self, event):
     current_text = self.current_card_text.GetValue()
@@ -172,6 +192,10 @@ class CurrCardWindow(wx.Panel):
 
     if self.related_card == None:
       return True
+
+    # all cards without text can't be saved yet
+    if self.current_card_text.GetValue().strip(' ')=='':
+      return False
 
     if self.radio_black.GetValue():
       card_type = CARD_BLACK
