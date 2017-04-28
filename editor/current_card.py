@@ -38,7 +38,7 @@ class CurrCardWindow(wx.Panel):
     self.button_del_text = wx.Button(self, label="delete text")
     self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)
     self.button_del_card = wx.Button(self, label="delete card")
-    # self.button_del_card.Bind(wx.EVT_BUTTON, self.DeleteCard)
+    self.button_del_card.Bind(wx.EVT_BUTTON, self.DeleteCard)
     self.button_save_card = wx.Button(self, label="apply card changes")
     self.button_save_card.Bind(wx.EVT_BUTTON, self.SaveCard)
     self.button_ins_ph = wx.Button(self, label="insert placeholder")
@@ -89,8 +89,16 @@ class CurrCardWindow(wx.Panel):
   def DeleteCardText(self, event):
     self.current_card_text.SetValue('')
 
-  # def DeleteCard(self, event):
+  def DeleteCard(self, event):
 
+    frame = self.GetTopLevelParent()
+    cursor = frame.database.cursor()
+    cursor.execute('DELETE FROM cards WHERE id = ?', (self.related_card.card.id, ))
+
+    frame.loadCards()
+    self.Disable()
+
+    frame.unsaved_changes = True
 
   def SaveCard(self, event):
 
@@ -136,6 +144,7 @@ class CurrCardWindow(wx.Panel):
   # will disable all components
   # will be default at creation time, since no card is actually selected
   def Disable(self):
+    self.related_card = None
     self.current_card_panel.Hide()
     for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
       b.Disable()
@@ -185,7 +194,6 @@ class CurrCardWindow(wx.Panel):
         cursor = frame.database.cursor()
         cursor.execute('DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (self.related_card.card.id, self.related_card.card.getInternalText(), self.related_card.card.type, ))
         frame.loadCards()
-        frame.left_window.Layout()
       return True
 
     return False
