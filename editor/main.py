@@ -17,6 +17,7 @@ class MainFrame(wx.Frame):
     wx.Frame.__init__(self, None, title="Card Editor", size=(WIDTH, HEIGHT))
 
     self.database = None
+    self.unsaved_changes = False
 
     # add menubar
     self.initUI()

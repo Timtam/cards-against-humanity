@@ -1,3 +1,4 @@
+from .const import *
 from shared.card import CARD_BLACK, CARD_WHITE
 
 import wx
@@ -20,13 +21,17 @@ class CardListToolbar(wx.ToolBar):
     self.button_new_card = wx.Button(self, label="new card")
     self.button_new_card.Bind(wx.EVT_BUTTON, self.newCard)
 
+
+    self.button_save_all = wx.Button(self, label="save changes")
+    self.button_save_all.Bind(wx.EVT_BUTTON, self.onSaveAll)
     self.AddControl(self.checkbox_black)
+
     self.AddControl(self.checkbox_white)
 
     self.AddSeparator()
 
     self.AddControl(self.button_new_card)
-    self.AddControl(wx.Button(self, label="reset all"))
+    self.AddControl(self.button_save_all)
     self.AddControl(wx.Button(self, label="undo all"))
 
     self.AddSeparator()
@@ -51,3 +56,16 @@ class CardListToolbar(wx.ToolBar):
     #frame.left_window.card_grid.createGrid()
     frame.left_window.Layout()
     frame.right_window.setCard(panel)
+
+  def onSaveAll(self, e):
+
+    frame = self.GetTopLevelParent()
+
+    if frame.right_window.saved==False:
+      frame.Message(caption="unapplied changes", text="Apply your latest changes first before saving", style=MSG_INFO)
+      return
+
+    frame.database.cursor().execute('VACUUM')
+    frame.database.commit()
+
+    frame.unsaved_changes = False

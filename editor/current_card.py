@@ -109,14 +109,17 @@ class CurrCardWindow(wx.Panel):
     try:
       self.related_card.card.setCardText(self.current_card_text.GetValue())
     except CardValidityError as e:
-      frame.Message(caption="Text error", text=e.message['text'], style=MSG_WARN)
+      frame.Message(caption="card text error", text=e.message['text'], style=MSG_WARN)
       self.related_card.card.type = old_type
       return
 
-    self.related_card.card_text.SetValue(self.related_card.card.getCardText())
+    self.related_card.text.SetLabel(self.related_card.card.getCardText())
 
     cursor = frame.database.cursor()
     cursor.execute('UPDATE cards SET text = ? AND type = ? WHERE id = ?', (self.related_card.card.getInternalText(), self.related_card.card.type, self.related_card.card.id, ))
+
+    frame.unsaved_changes = True
+
 
   def InsertPlaceholder(self, event):
     current_text = self.current_card_text.GetValue()
