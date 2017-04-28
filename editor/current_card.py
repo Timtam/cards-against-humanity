@@ -184,8 +184,6 @@ class CurrCardWindow(wx.Panel):
       if self.related_card.card.getCardText()=='':
         cursor = frame.database.cursor()
         cursor.execute('DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (self.related_card.card.id, self.related_card.card.getInternalText(), self.related_card.card.type, ))
-        print "clearing"
-        frame.left_window.card_grid.clearCards()
         frame.loadCards()
         frame.left_window.Layout()
       return True
