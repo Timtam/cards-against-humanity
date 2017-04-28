@@ -55,6 +55,8 @@ class MainFrame(wx.Frame):
     file_menu.AppendItem(menu_item)
 
     self.Bind(wx.EVT_MENU, self.onQuit, id=APP_EXIT)
+    self.Bind(wx.EVT_CLOSE, self.closeIntervention)
+
     menubar.Append(file_menu, "&File")
     self.SetMenuBar(menubar)
 
@@ -117,15 +119,17 @@ class MainFrame(wx.Frame):
     return result
 
   def onQuit(self, e):
-    self.Message(caption="Test Error", text="This is a test for errors...",
-                 style=MSG_ERROR)
-    self.Message(caption="Test Warning", text="This is a test for warnings...",
-                 style=MSG_WARN)
-    self.Message(caption="Test Information",
-                 text="This is a test for information...", style=MSG_INFO)
-    self.Message(caption="Test Question",
-                 text="This is a test for questions...", style=MSG_YES_NO)
     self.Close()
+
+  def closeIntervention(self, e):
+
+    if not e.CanVeto():
+      return
+
+    self.Destroy()
+
+    e.Veto(False)
+
 
   def onSashChanging(self, e):
     self.left_window.card_grid.calcBestColumns(self.ClientSize.height)

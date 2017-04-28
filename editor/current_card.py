@@ -149,12 +149,7 @@ class CurrCardWindow(wx.Panel):
     if self.related_card == None:
       return True
 
-    if self.radio_black.GetValue():
-      card_type = CARD_BLACK
-    elif self.radio_white.GetValue():
-      card_type = CARD_WHITE
-
-    if self.related_card.card.formatInternalText(self.current_card_text.GetValue()) == self.related_card.card.getInternalText() and card_type == self.related_card.card.type:
+    if self.saved:
       return True
 
     frame = self.GetTopLevelParent()
@@ -172,3 +167,18 @@ class CurrCardWindow(wx.Panel):
 
     return False
 
+  @property
+  def saved(self):
+
+    if self.related_card == None:
+      return True
+
+    if self.radio_black.GetValue():
+      card_type = CARD_BLACK
+    elif self.radio_white.GetValue():
+      card_type = CARD_WHITE
+
+    if self.related_card.card.formatInternalText(self.current_card_text.GetValue()) != self.related_card.card.getInternalText() or card_type != self.related_card.card.type:
+      return False
+
+    return True
