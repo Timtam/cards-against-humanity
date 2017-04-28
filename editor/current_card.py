@@ -116,7 +116,7 @@ class CurrCardWindow(wx.Panel):
     self.related_card.text.SetLabel(self.related_card.card.getCardText())
 
     cursor = frame.database.cursor()
-    cursor.execute('UPDATE cards SET text = ? AND type = ? WHERE id = ?', (self.related_card.card.getInternalText(), self.related_card.card.type, self.related_card.card.id, ))
+    cursor.execute('UPDATE cards SET text = ?, type = ? WHERE id = ?', (self.related_card.card.getInternalText(), self.related_card.card.type, self.related_card.card.id, ))
 
     frame.unsaved_changes = True
 
