@@ -103,7 +103,8 @@ class MainFrame(wx.Frame):
       new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
       if panel == None:
         panel = new_card
-    self.left_window.card_grid.createGrid()
+    if self.left_window.card_grid.initialized == False:
+      self.left_window.card_grid.createGrid()
     self.left_window.Layout()
     if panel != None:
       panel.SetFocus()

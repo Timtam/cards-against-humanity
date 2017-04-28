@@ -38,6 +38,9 @@ class CardListToolbar(wx.ToolBar):
 
   def newCard(self, event):
     frame = self.GetTopLevelParent()
+    if frame.right_window.maySetCard()==False:
+      return
+    frame.right_window.related_card = None
     cursor = frame.database.cursor()
     cursor.execute("""
                    INSERT INTO cards (
@@ -48,4 +51,3 @@ class CardListToolbar(wx.ToolBar):
     #frame.left_window.card_grid.createGrid()
     frame.left_window.Layout()
     frame.right_window.setCard(panel)
-    frame.database.commit()

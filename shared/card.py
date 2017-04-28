@@ -46,7 +46,7 @@ class Card(object):
 
   # retrieves the properly formatted card text
   def getCardText(self):
-    return re.sub("{}", "_"*CARD_PLACEHOLDER_LENGTH, self.getInternalText())
+    return self.formatCardText(self.getInternalText())
 
   # parses the text and will set it internally too
   def setCardText(self, text):
@@ -55,5 +55,11 @@ class Card(object):
     # we don't accept already well formatted placeholders inside the actual card text
     if len(placeholders)>0:
        raise CardValidityError({'id':self.id, 'text': 'invalid text found inside the card text: {%s}'%(placeholders[0])})
-    internal_text = re.sub(" __+ ", " {} ",text)
+    internal_text = self.formatInternalText(text)
     self.setInternalText(internal_text)
+
+  def formatInternalText(self, text):
+    return re.sub(" __+ ", " {} ",text)
+
+  def formatCardText(self, text):
+    return re.sub("{}", "_"*CARD_PLACEHOLDER_LENGTH, text)

@@ -1,7 +1,7 @@
-import wx
-
+from .const import *
 from shared.card import CARD_PLACEHOLDER_LENGTH, CARD_BLACK, CARD_WHITE
 
+import wx
 
 class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
@@ -123,6 +123,10 @@ class CurrCardWindow(wx.Panel):
       b.Enable()
 
   def setCard(self, card):
+
+    if self.maySetCard()==False:
+      return
+
     self.related_card = card
     self.current_card_text.SetValue(card.card.getCardText())
     if card.card.type == CARD_BLACK:
@@ -134,3 +138,34 @@ class CurrCardWindow(wx.Panel):
     self.SetColors(None)
     self.Enable()
     self.current_card_text.SetFocus()
+
+  # this will check if the current card was saved already
+  # and if not, the user will be asked to dump his changes
+  def maySetCard(self):
+
+    if self.related_card == None:
+      return True
+
+    if self.radio_black.GetValue():
+      card_type = CARD_BLACK
+    elif self.radio_white.GetValue():
+      card_type = CARD_WHITE
+
+    if self.related_card.card.formatInternalText(self.current_card_text.GetValue()) == self.related_card.card.getInternalText() and card_type == self.related_card.card.type:
+      return True
+
+    frame = self.GetTopLevelParent()
+    if frame.Message(caption="Unsaved changes", text="You didn't save the currently editing card yet. Do you want to discard your changes?", style=MSG_YES_NO) == wx.ID_YES:
+      # that's a newly created card
+      # we can't leave them alive, since they would be blank
+      if self.related_card.card.getCardText()=='':
+        cursor = frame.database.cursor()
+        cursor.execute('DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (self.related_card.card.id, self.related_card.card.getInternalText(), self.related_card.card.type, ))
+        print "clearing"
+        frame.left_window.card_grid.clearCards()
+        frame.loadCards()
+        frame.left_window.Layout()
+      return True
+
+    return False
+

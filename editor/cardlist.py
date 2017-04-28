@@ -34,6 +34,8 @@ class ScrolledGrid(wx.ScrolledWindow):
                                name="card list grid(this is a name",
                                style=wx.FULL_REPAINT_ON_RESIZE)
 
+    self.initialized = False
+
     self.SetLabel("card list grid(this is a label)")
     self.SetBackgroundColour("white")
 
@@ -113,6 +115,8 @@ class ScrolledGrid(wx.ScrolledWindow):
     if available_height == -1:
       available_height = self.GetTopLevelParent().ClientSize.height
 
+    self.initialized = True
+
     columns = self.calcBestColumns(available_height)
 
     # calc and set the virtual height to make the window scrollable
@@ -141,3 +145,4 @@ class ScrolledGrid(wx.ScrolledWindow):
   def clearCards(self):
     self.card_count = 0
     self.grid.Clear()
+    self.grid.Layout()
