@@ -124,6 +124,9 @@ class CurrCardWindow(wx.Panel):
 
   def setCard(self, card):
 
+    if self.related_card is card:
+      return
+
     if self.maySetCard()==False:
       return
 

@@ -34,7 +34,9 @@ class CardPanel(wx.Panel):
     self.text.Bind(wx.EVT_LEAVE_WINDOW, self.onLeaving)
 
   def onClick(self, event):
-    print("clicked on " + self.GetName())
+    frame = self.GetTopLevelParent()
+    frame.right_window.setCard(self)
+    frame.right_window.current_card_text.SetFocus()
 
   def onEntering(self, event):
     print("entered " + self.GetName())
