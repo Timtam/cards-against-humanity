@@ -21,9 +21,11 @@ class CardListToolbar(wx.ToolBar):
     self.button_new_card = wx.Button(self, label="new card")
     self.button_new_card.Bind(wx.EVT_BUTTON, self.newCard)
 
-
     self.button_save_all = wx.Button(self, label="save changes")
     self.button_save_all.Bind(wx.EVT_BUTTON, self.onSaveAll)
+    self.button_undo_all = wx.Button(self, label="undo all")
+    self.button_undo_all.Bind(wx.EVT_BUTTON, self.onUndoAll)
+
     self.AddControl(self.checkbox_black)
 
     self.AddControl(self.checkbox_white)
@@ -32,7 +34,7 @@ class CardListToolbar(wx.ToolBar):
 
     self.AddControl(self.button_new_card)
     self.AddControl(self.button_save_all)
-    self.AddControl(wx.Button(self, label="undo all"))
+    self.AddControl(self.button_undo_all)
 
     self.AddSeparator()
 
@@ -67,5 +69,21 @@ class CardListToolbar(wx.ToolBar):
 
     frame.database.cursor().execute('VACUUM')
     frame.database.commit()
+
+    frame.unsaved_changes = False
+
+  def onUndoAll(self, e):
+
+    frame = self.GetTopLevelParent()
+
+    if not frame.right_window.saved:
+      frame.Message(caption="unapplied changes", text="Your edit window contains unapplied changes. You need to apply your changes or revert them in order to undo all your applied changes.", style=MSG_WARN)
+      return
+
+    frame.database.rollback()
+
+    frame.right_window.Disable()
+
+    frame.loadCards()
 
     frame.unsaved_changes = False
