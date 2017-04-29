@@ -7,8 +7,61 @@ class SearchCtrl(wx.SearchCtrl):
   def __init__(self, *args, **kwargs):
     wx.SearchCtrl.__init__(self, *args, **kwargs)
 
+    self.search_card_types = [CARD_BLACK, CARD_WHITE]
+    self.search_text = ''
+
     self.ShowSearchButton(True)
     self.ShowCancelButton(True)
+
+    self.Bind(wx.EVT_SEARCHCTRL_SEARCH_BTN, self.onSearch)
+    self.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN, self.onCancel)
+    self.Bind(wx.EVT_TEXT_ENTER, self.onSearch)
+
+  def onSearch(self, e):
+
+    if not self.searchCheck():
+      return
+
+    self.search_card_types=[]
+
+    self.search_text = self.GetValue()
+
+    if self.GetParent().checkbox_black.GetValue():
+      self.search_card_types.append(CARD_BLACK)
+
+    if self.GetParent().checkbox_white.GetValue():
+      self.search_card_types.append(CARD_WHITE)
+
+    self.GetTopLevelParent().loadCards()
+
+    self.GetParent().button_new_card.Disable()
+
+  def onCancel(self, e):
+    
+    if not self.searchCheck():
+      return
+
+    self.search_card_types = [CARD_BLACK, CARD_WHITE]
+
+    self.search_text = ''
+
+    self.SetValue(self.search_text)
+    self.GetParent().checkbox_black.SetValue(True)
+    self.GetParent().checkbox_white.SetValue(True)
+
+    self.GetTopLevelParent().loadCards()
+
+    self.GetParent().button_new_card.Enable()
+
+  def searchCheck(self):
+
+    frame = self.GetTopLevelParent()
+
+    if not frame.right_window.saved:
+      frame.Message(caption="unapplied changes", text="Apply your changes before changing search parameters.", style=MSG_WARN)
+      return False
+
+    return True
 
 class CardListToolbar(wx.ToolBar):
   def __init__(self, parent, id=wx.ID_ANY):
@@ -39,7 +92,7 @@ class CardListToolbar(wx.ToolBar):
     self.AddSeparator()
 
     self.AddStretchableSpace()
-    self.search_ctrl = SearchCtrl(parent=self)
+    self.search_ctrl = SearchCtrl(parent=self, style=wx.TE_PROCESS_ENTER)
     self.AddControl(self.search_ctrl)
     self.Realize()
 

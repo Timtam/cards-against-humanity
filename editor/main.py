@@ -103,9 +103,10 @@ class MainFrame(wx.Frame):
     cursor.execute('SELECT id, text, type FROM cards')
     self.left_window.card_grid.clearCards()
     for card in cursor.fetchall():
-      new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
-      if panel == None:
-        panel = new_card
+      if self.left_window.toolbar.search_ctrl.search_text in card[1] and card[2] in self.left_window.toolbar.search_ctrl.search_card_types:
+        new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
+        if panel == None:
+          panel = new_card
     if self.left_window.card_grid.initialized == False:
       self.left_window.card_grid.createGrid()
     self.left_window.Layout()
