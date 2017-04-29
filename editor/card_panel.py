@@ -35,7 +35,7 @@ class CardPanel(wx.Panel):
 
   def onClick(self, event):
     frame = self.GetTopLevelParent()
-    frame.right_window.setCard(self)
+    frame.right_window.setCard(self.card)
     frame.right_window.current_card_text.SetFocus()
 
   def onEntering(self, event):

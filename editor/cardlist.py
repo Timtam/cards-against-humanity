@@ -149,3 +149,23 @@ class ScrolledGrid(wx.ScrolledWindow):
       child.Window.Destroy()
       del child
     self.grid.Layout()
+
+  # retrieves the panel related to a Card object
+  def getCard(self, card):
+
+    for child in self.grid.GetChildren():
+      if isinstance(child.Window, CardPanel) and child.Window.card.id == card.id:
+        return child.Window
+
+    return None
+
+  # deletes the panel related to a card object
+  def deleteCard(self, card):
+
+    panel = self.getCard(card)
+
+    if panel is not None:
+      self.grid.Remove(panel)
+      panel.Destroy()
+      del panel
+      self.grid.Layout()

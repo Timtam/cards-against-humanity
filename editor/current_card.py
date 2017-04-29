@@ -93,9 +93,9 @@ class CurrCardWindow(wx.Panel):
 
     frame = self.GetTopLevelParent()
     cursor = frame.database.cursor()
-    cursor.execute('DELETE FROM cards WHERE id = ?', (self.related_card.card.id, ))
+    cursor.execute('DELETE FROM cards WHERE id = ?', (self.related_card.id, ))
 
-    frame.loadCards()
+    frame.left_window.card_grid.deleteCard(self.related_card)
     self.Disable()
 
     frame.unsaved_changes = True
@@ -107,24 +107,24 @@ class CurrCardWindow(wx.Panel):
 
     frame = self.GetTopLevelParent()
 
-    old_type = self.related_card.card.type
+    old_type = self.related_card.type
 
     if self.radio_black.GetValue():
-      self.related_card.card.type = CARD_BLACK
+      self.related_card.type = CARD_BLACK
     elif self.radio_white.GetValue():
-      self.related_card.card.type = CARD_WHITE
+      self.related_card.type = CARD_WHITE
 
     try:
-      self.related_card.card.setCardText(self.current_card_text.GetValue())
+      self.related_card.setCardText(self.current_card_text.GetValue())
     except CardValidityError as e:
       frame.Message(caption="card text error", text=e.message['text'], style=MSG_WARN)
-      self.related_card.card.type = old_type
+      self.related_card.type = old_type
       return False
 
-    self.related_card.text.SetLabel(self.related_card.card.getCardText())
+    frame.left_window.card_grid.getCard(self.related_card).text.SetLabel(self.related_card.getCardText())
 
     cursor = frame.database.cursor()
-    cursor.execute('UPDATE cards SET text = ?, type = ? WHERE id = ?', (self.related_card.card.getInternalText(), self.related_card.card.type, self.related_card.card.id, ))
+    cursor.execute('UPDATE cards SET text = ?, type = ? WHERE id = ?', (self.related_card.getInternalText(), self.related_card.type, self.related_card.id, ))
 
     frame.unsaved_changes = True
 
@@ -164,11 +164,11 @@ class CurrCardWindow(wx.Panel):
 
       self.related_card = card
 
-    self.current_card_text.SetValue(card.card.getCardText())
-    if card.card.type == CARD_BLACK:
+    self.current_card_text.SetValue(card.getCardText())
+    if card.type == CARD_BLACK:
       self.radio_black.SetValue(True)
       self.radio_white.SetValue(False)
-    elif card.card.type == CARD_WHITE:
+    elif card.type == CARD_WHITE:
       self.radio_black.SetValue(False)
       self.radio_white.SetValue(True)
 
@@ -190,10 +190,10 @@ class CurrCardWindow(wx.Panel):
     if frame.Message(caption="Unsaved changes", text="You didn't save the currently editing card yet. Do you want to discard your changes?", style=MSG_YES_NO) == wx.ID_YES:
       # that's a newly created card
       # we can't leave them alive, since they would be blank
-      if self.related_card.card.getCardText()=='':
+      if self.related_card.getCardText()=='':
         cursor = frame.database.cursor()
-        cursor.execute('DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (self.related_card.card.id, self.related_card.card.getInternalText(), self.related_card.card.type, ))
-        frame.loadCards()
+        cursor.execute('DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (self.related_card.id, self.related_card.getInternalText(), self.related_card.type, ))
+        frame.left_window.card_grid.deleteCard(self.related_card)
       return True
 
     return False
@@ -213,7 +213,7 @@ class CurrCardWindow(wx.Panel):
     elif self.radio_white.GetValue():
       card_type = CARD_WHITE
 
-    if self.related_card.card.formatInternalText(self.current_card_text.GetValue()) != self.related_card.card.getInternalText() or card_type != self.related_card.card.type:
+    if self.related_card.formatInternalText(self.current_card_text.GetValue()) != self.related_card.getInternalText() or card_type != self.related_card.type:
       return False
 
     return True
