@@ -145,13 +145,16 @@ class CurrCardWindow(wx.Panel):
   def Disable(self):
     self.related_card = None
     self.current_card_panel.Hide()
+
+    self.GetTopLevelParent().getMenuItem("&File", "Apply changes").Enable(False)
+
     for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
       b.Disable()
 
   def Enable(self):
     self.current_card_panel.Show()
     self.Layout()
-    for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
+    for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph, self.GetTopLevelParent().getMenuItem("&File", "Apply changes")]:
       b.Enable()
 
   def setCard(self, card):

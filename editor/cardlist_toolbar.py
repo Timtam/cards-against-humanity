@@ -72,7 +72,7 @@ class CardListToolbar(wx.ToolBar):
     self.checkbox_white = wx.CheckBox(self, label="show white cards")
     self.checkbox_white.SetValue(True)
     self.button_new_card = wx.Button(self, label="new card")
-    self.button_new_card.Bind(wx.EVT_BUTTON, self.newCard)
+    self.button_new_card.Bind(wx.EVT_BUTTON, self.onNewCard)
 
     self.button_save_all = wx.Button(self, label="save changes")
     self.button_save_all.Bind(wx.EVT_BUTTON, self.onSaveAll)
@@ -96,7 +96,7 @@ class CardListToolbar(wx.ToolBar):
     self.AddControl(self.search_ctrl)
     self.Realize()
 
-  def newCard(self, event):
+  def onNewCard(self, event):
     frame = self.GetTopLevelParent()
     if frame.right_window.maySetCard()==False:
       return

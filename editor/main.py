@@ -9,8 +9,11 @@ from const import *
 from current_card import CurrCardWindow
 from shared.path import getScriptDirectory
 
-APP_EXIT = 1
-
+MENU_NEW_CARD = 1
+MENU_APPLY_CHANGES = 2
+MENU_SAVE_ALL = 3
+MENU_UNDO_ALL = 4
+MENU_EXIT = 5
 
 class MainFrame(wx.Frame):
   def __init__(self):
@@ -49,13 +52,29 @@ class MainFrame(wx.Frame):
   def initUI(self):
     menubar = wx.MenuBar()
     file_menu = wx.Menu()
-    # menu_item = file_menu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
-    menu_item = wx.MenuItem(file_menu, APP_EXIT,
+
+    menu_item = wx.MenuItem(file_menu, MENU_NEW_CARD, "&New card\tCtrl+N")
+    file_menu.AppendItem(menu_item)
+
+    menu_item = wx.MenuItem(file_menu, MENU_APPLY_CHANGES, "&Apply changes\tCtrl+C")
+    file_menu.AppendItem(menu_item)
+
+    menu_item = wx.MenuItem(file_menu, MENU_SAVE_ALL, "&Save all\tCtrl+S")
+    file_menu.AppendItem(menu_item)
+
+    menu_item = wx.MenuItem(file_menu, MENU_UNDO_ALL, "&Undo all\tCtrl+U")
+    file_menu.AppendItem(menu_item)
+
+    menu_item = wx.MenuItem(file_menu, MENU_EXIT,
                             "&Quit\tCtrl+Q")  # an underlined and linked Q (Ctrl
     #   + Q also quits)
     file_menu.AppendItem(menu_item)
 
-    self.Bind(wx.EVT_MENU, self.onQuit, id=APP_EXIT)
+    self.Bind(wx.EVT_MENU, self.onNewCard, id=MENU_NEW_CARD)
+    self.Bind(wx.EVT_MENU, self.onApplyChanges, id=MENU_APPLY_CHANGES)
+    self.Bind(wx.EVT_MENU, self.onSaveAll, id=MENU_SAVE_ALL)
+    self.Bind(wx.EVT_MENU, self.onUndoAll, id=MENU_UNDO_ALL)
+    self.Bind(wx.EVT_MENU, self.onQuit, id=MENU_EXIT)
     self.Bind(wx.EVT_CLOSE, self.closeIntervention)
 
     menubar.Append(file_menu, "&File")
@@ -120,6 +139,17 @@ class MainFrame(wx.Frame):
     message.Destroy()
     return result
 
+  # will retrieve a menu item from any menu you want
+  def getMenuItem(self, menu, item):
+
+    for m in self.MenuBar.GetMenus():
+      if m[1] == menu:
+        for i in m[0].GetMenuItems():
+          if i.Label == item:
+            return i
+
+    return None
+
   def onQuit(self, e):
     self.Close()
 
@@ -154,6 +184,21 @@ class MainFrame(wx.Frame):
     # def onSashChanged(self, e):
     # self.Refresh()
 
+  def onNewCard(self, e):
+
+    self.left_window.toolbar.onNewCard(None)
+
+  def onApplyChanges(self, e):
+
+    self.right_window.SaveCard(None)
+
+  def onSaveAll(self, e):
+
+    self.left_window.toolbar.onSaveAll(None)
+
+  def onUndoAll(self, e):
+
+    self.left_window.toolbar.onUndoAll(None)
 
 def main():
   app = wx.App(False)
