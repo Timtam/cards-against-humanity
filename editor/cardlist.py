@@ -144,5 +144,8 @@ class ScrolledGrid(wx.ScrolledWindow):
 
   def clearCards(self):
     self.card_count = 0
-    self.grid.Clear()
+    for child in self.grid.GetChildren():
+      self.grid.Remove(child.Window)
+      child.Window.Destroy()
+      del child
     self.grid.Layout()
