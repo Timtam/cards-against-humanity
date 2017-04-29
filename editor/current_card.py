@@ -10,7 +10,7 @@ class CurrCardWindow(wx.Panel):
                       name="current card panel(this is a name)")
     self.related_card = None
 
-    self.SetLabel("current card panel(this is a label)")
+    self.SetLabel("no card to be edited")
     self.SetBackgroundColour("white")
 
     self.current_card_panel = wx.Panel(parent=self, size=(200, 200),
@@ -31,9 +31,8 @@ class CurrCardWindow(wx.Panel):
 
     self.radio_black = wx.RadioButton(self, label="black card", )
     self.radio_black.SetValue(True)
-    self.radio_black.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
+    self.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
     self.radio_white = wx.RadioButton(self, label="white card")
-    self.radio_white.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
 
     self.button_del_text = wx.Button(self, label="delete text")
     self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)

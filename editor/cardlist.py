@@ -36,7 +36,7 @@ class ScrolledGrid(wx.ScrolledWindow):
 
     self.initialized = False
 
-    self.SetLabel("card list grid(this is a label)")
+    self.SetLabel("no cards found")
     self.SetBackgroundColour("white")
 
     # next 2 just for initialization (don't ask about the numbers)

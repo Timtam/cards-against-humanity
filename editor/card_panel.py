@@ -23,7 +23,6 @@ class CardPanel(wx.Panel):
     self.box.Add(self.text, 1, wx.ALL | wx.EXPAND, 3)
     self.SetSizer(self.box)
 
-
     self.color = self.GetBackgroundColour()
 
     self.Bind(wx.EVT_LEFT_UP, self.onClick)
@@ -32,6 +31,8 @@ class CardPanel(wx.Panel):
     #self.Bind(wx.EVT_LEAVE_WINDOW, self.onLeaving)
     self.text.Bind(wx.EVT_ENTER_WINDOW, self.onEntering)
     self.text.Bind(wx.EVT_LEAVE_WINDOW, self.onLeaving)
+
+    self.Bind(wx.EVT_KEY_UP, self.onKeyPress)
 
   def onClick(self, event):
     frame = self.GetTopLevelParent()
@@ -48,6 +49,16 @@ class CardPanel(wx.Panel):
     self.SetBackgroundColour(self.color)
     self.Refresh()
 
+  def onKeyPress(self, e):
+
+    key_code = e.GetKeyCode()
+
+    frame = self.GetTopLevelParent()
+
+    if key_code == wx.WXK_RETURN:
+      frame.right_window.setCard(self.card)
+
+    e.Skip()
 
 class CardText(wx.StaticText):
   def __init__(self, parent, text):
