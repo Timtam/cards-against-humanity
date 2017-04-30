@@ -122,7 +122,6 @@ class CurrCardWindow(wx.Panel):
 
     grid_card_panel = frame.left_window.card_grid.getCard(self.related_card)
     grid_card_panel.text.SetLabel(self.related_card.getCardText())
-    grid_card_panel.card_type = self.related_card.type
     grid_card_panel.setColors()
     frame.left_window.Layout()
     frame.left_window.Refresh()

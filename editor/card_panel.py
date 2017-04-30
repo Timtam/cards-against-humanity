@@ -7,10 +7,9 @@ class CardPanel(wx.Panel):
                card_type=CARD_WHITE):
     wx.Panel.__init__(self, parent=parent, id=card_id, size=size,
                       name=("card " + `card_id`), style=wx.SIMPLE_BORDER)
-    self.card_type = card_type
     self.card = Card(id=card_id, text=text, type=card_type)
     self.box = wx.BoxSizer(wx.VERTICAL)
-    self.text = CardText(parent=self, text=text)
+    self.text = CardText(parent=self, text=self.card.getCardText())
 
     self.setColors()
 
@@ -58,7 +57,7 @@ class CardPanel(wx.Panel):
 
 
   def setColors(self):
-    if self.card_type is CARD_BLACK:
+    if self.card.type is CARD_BLACK:
       self.SetBackgroundColour("black")
       self.text.SetBackgroundColour("black")
       self.text.SetForegroundColour("white")
