@@ -101,13 +101,19 @@ class CardListToolbar(wx.ToolBar):
     if frame.right_window.maySetCard()==False:
       return
     frame.right_window.related_card = None
+
+    if frame.right_window.radio_black.GetValue():
+      card_type = CARD_BLACK
+    else:
+      card_type = CARD_WHITE
+
     cursor = frame.database.cursor()
     cursor.execute("""
                    INSERT INTO cards (
                      text, type) VALUES (
                      ?,?)
-                   """, ('', CARD_WHITE, ))
-    panel = frame.left_window.card_grid.addCard(id=cursor.lastrowid, text='', card_type=CARD_WHITE)
+                   """, ('', card_type, ))
+    panel = frame.left_window.card_grid.addCard(id=cursor.lastrowid, text='', card_type=card_type)
     #frame.left_window.card_grid.createGrid()
     frame.left_window.Layout()
     frame.right_window.setCard(panel.card)
