@@ -7,6 +7,7 @@ import sqlite3
 from cardlist import CardListWindow
 from const import *
 from current_card import CurrCardWindow
+from shared.card import CARD_BLACK, CARD_WHITE
 from shared.path import getScriptDirectory
 
 MENU_NEW_CARD = 1
@@ -117,15 +118,40 @@ class MainFrame(wx.Frame):
 
   # parses the database and fills the grid with cards
   def loadCards(self):
+
+    # we need to construct the sql command here
+    sql = 'SELECT id, text, type FROM cards'
+
+    filter_cmd = []
+    filter_prm = []
+
+    if self.left_window.toolbar.checkbox_black.GetValue():
+      filter_cmd.append('type = ?')
+      filter_prm.append(CARD_BLACK)
+
+    if self.left_window.toolbar.checkbox_white.GetValue():
+      filter_cmd.append('type = ?')
+      filter_prm.append(CARD_WHITE)
+
+    if len(filter_cmd) > 0:
+      sql += ' WHERE ' + ' OR '.join(filter_cmd)
+
+    if self.left_window.toolbar.search_ctrl.GetValue() != '':
+      if len(filter_cmd) == 0:
+        sql += ' WHERE '
+      else:
+        sql += ' AND '
+      sql += 'text LIKE ?'
+      filter_prm.append('%'+self.left_window.toolbar.search_ctrl.GetValue()+'%')
+    
     panel = None
     cursor = self.database.cursor()
-    cursor.execute('SELECT id, text, type FROM cards')
+    cursor.execute(sql, tuple(filter_prm))
     self.left_window.card_grid.clearCards()
     for card in cursor.fetchall():
-      if self.left_window.toolbar.search_ctrl.search_text in card[1] and card[2] in self.left_window.toolbar.search_ctrl.search_card_types:
-        new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
-        if panel == None:
-          panel = new_card
+      new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
+      if panel == None:
+        panel = new_card
     if self.left_window.card_grid.initialized == False:
       self.left_window.card_grid.createGrid()
     self.left_window.Layout()
