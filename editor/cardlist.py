@@ -89,11 +89,14 @@ class ScrolledGrid(wx.ScrolledWindow):
   #   return item_list
   
   
-  def calcBestColumns(self, available_height):
+  def calcBestColumns(self, available_height=-1):
     # this method calculates the number of columns depending on the existence of
     #   a scrollbar, which again depends on the number of elements that fits the
     #   available screen
     # it's kind of a mastermind-method^^ ;)
+    
+    if available_height == -1:
+      available_height = self.GetTopLevelParent().ClientSize.height
     
     # at first calculate columns from the available width and let the grid calc
     #   the rows

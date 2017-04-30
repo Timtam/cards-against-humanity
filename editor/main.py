@@ -29,6 +29,7 @@ class MainFrame(wx.Frame):
     # add menubar
     self.initUI()
     self.Center()
+    self.SetMinSize((1067, 463))
     
     # create a splitter and the teo sub-windows
     splitter = wx.SplitterWindow(self,
@@ -236,9 +237,9 @@ class MainFrame(wx.Frame):
   
   def onSashChanging(self, e):
     self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
-    # print(e.GetSashPosition()) # debug, please don't delete
-    print(self.right_window.GetClientSize().width)
-  
+    #print(e.GetSashPosition()) # debug, please don't delete
+    #print(self.right_window.GetClientSize().width) # also debug
+    
   
   def onNewCard(self, e):
     self.left_window.toolbar.onNewCard(None)
