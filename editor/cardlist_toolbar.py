@@ -30,6 +30,7 @@ class SearchCtrl(wx.SearchCtrl):
     parent.EvtHandlerEnabled = True
 
     frame.loadCards()
+    frame.right_window.Disable()
 
     frame.getMenuItem("&File", "New card").Enable(True)
     parent.button_new_card.Enable()
@@ -132,7 +133,9 @@ class CardListToolbar(wx.ToolBar):
   def onSearch(self, event):
 
     if self.searchCheck():
-      self.GetTopLevelParent().loadCards(False)
+      frame = self.GetTopLevelParent()
+      frame.loadCards(False)
+      frame.right_window.Disable()
       if self.search_ctrl.GetValue() != '' or not self.checkbox_black.GetValue() or not self.checkbox_white.GetValue():
         self.GetTopLevelParent().getMenuItem("&File", "New card").Enable(False)
         self.button_new_card.Disable()
