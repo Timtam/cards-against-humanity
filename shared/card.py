@@ -28,7 +28,7 @@ class Card(object):
     format_iterator = string.Formatter().parse(text)
     placeholders = [p[2] for p in format_iterator if p[2] is not None]
     if self.type==CARD_WHITE and len(placeholders)>0:
-      raise CardValidityError({'id':self.id, 'text': 'White cards may not have any placeholders ( {...} ).'})
+      raise CardValidityError({'id':self.id, 'text': 'White cards may not have any placeholders'})
     elif self.type == CARD_WHITE and text.strip(' ')=='':
       raise CardValidityError({'id': self.id, 'text': 'White cards need to contain some text'})
     elif self.type==CARD_BLACK and len(placeholders)==0:
@@ -59,7 +59,7 @@ class Card(object):
     self.setInternalText(internal_text)
 
   def formatInternalText(self, text):
-    return re.sub(" __+ ", " {} ",text)
+    return re.sub("( ?)__+([.,?!:;\-/ ])", r"\1{}\2",text)
 
   def formatCardText(self, text):
     return re.sub("{}", "_"*CARD_PLACEHOLDER_LENGTH, text)
