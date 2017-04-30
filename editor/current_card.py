@@ -1,8 +1,7 @@
-from .const import *
 from shared.card import CARD_PLACEHOLDER_LENGTH, CARD_BLACK, CARD_WHITE
 from shared.exceptions import CardValidityError
+from .const import *
 
-import wx
 
 class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
@@ -13,6 +12,13 @@ class CurrCardWindow(wx.Panel):
     self.SetLabel("no card to be edited")
     self.SetBackgroundColour("white")
 
+    # radio buttons
+    self.radio_black = wx.RadioButton(self, label="black card", )
+    self.radio_black.SetValue(True)
+    self.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
+    self.radio_white = wx.RadioButton(self, label="white card")
+
+    # pane and text control for card
     self.current_card_panel = wx.Panel(parent=self, size=(200, 200),
                                        name="current card (name)",
                                        style=wx.SIMPLE_BORDER)
@@ -26,14 +32,10 @@ class CurrCardWindow(wx.Panel):
       self.current_card_panel.GetBackgroundColour())
     self.current_card_text.SetForegroundColour("white")
     text_box = wx.BoxSizer()
-    text_box.Add(self.current_card_text, 1, wx.ALL | wx.EXPAND, 30)
+    text_box.Add(self.current_card_text, 1, wx.ALL | wx.EXPAND, 20)
     self.current_card_panel.SetSizer(text_box)
 
-    self.radio_black = wx.RadioButton(self, label="black card", )
-    self.radio_black.SetValue(True)
-    self.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
-    self.radio_white = wx.RadioButton(self, label="white card")
-
+    # card edit buttons
     self.button_del_text = wx.Button(self, label="delete text")
     self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)
     self.button_del_card = wx.Button(self, label="delete card")
@@ -43,30 +45,44 @@ class CurrCardWindow(wx.Panel):
     self.button_ins_ph = wx.Button(self, label="insert placeholder")
     self.button_ins_ph.Bind(wx.EVT_BUTTON, self.InsertPlaceholder)
 
-    self.vbox = wx.BoxSizer(wx.VERTICAL)
-    self.vbox.AddSpacer(20)
-    self.vbox.Add(self.radio_black)
-    self.vbox.Add(self.radio_white)
+    # sizers:
+    # radio buttons
+    self.radiobox_black = wx.BoxSizer(wx.HORIZONTAL)
+    self.radiobox_black.AddSpacer(20)
+    self.radiobox_black.Add(self.radio_black)
+    self.radiobox_white = wx.BoxSizer(wx.HORIZONTAL)
+    self.radiobox_white.AddSpacer(20)
+    self.radiobox_white.Add(self.radio_white)
+    self.radios = wx.WrapSizer()
+    self.radios.AddMany([self.radiobox_black, self.radiobox_white])
 
-    self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-    self.vbox.Add(wx.StaticLine(self), 0, wx.TOP | wx.BOTTOM | wx.EXPAND, 20)
-    self.hbox2.AddSpacer(20)
-    self.hbox2.Add(self.current_card_panel, 1, wx.ALIGN_CENTER | wx.SHAPED)
-    self.hbox2.AddSpacer(20)
-    self.vbox.Add(self.hbox2, 1, wx.EXPAND)
-    self.vbox.Add(wx.StaticLine(self), 0, wx.TOP | wx.BOTTOM | wx.EXPAND, 20)
+    # card box
+    self.cardbox = wx.BoxSizer(wx.HORIZONTAL)
+    self.cardbox.AddSpacer(20)
+    self.cardbox.Add(self.current_card_panel, 1, wx.ALIGN_CENTER | wx.SHAPED)
+    self.cardbox.AddSpacer(20)
 
-    self.hbox = wx.BoxSizer()
-    self.grid = wx.GridBagSizer()
-    self.grid.Add(self.button_del_text, (0, 0))
-    self.grid.Add(self.button_ins_ph, (0, 2), flag=wx.ALIGN_RIGHT)
-    self.grid.Add(self.button_del_card, (1, 0))
-    self.grid.Add(self.button_save_card, (1, 2), flag=wx.ALIGN_RIGHT)
-    self.grid.AddGrowableCol(1)
+    # buttons
+    self.buttongrid = wx.GridBagSizer()
+    self.buttongrid.Add(self.button_del_text, (0, 0), flag=wx.ALIGN_LEFT)
+    self.buttongrid.Add(self.button_ins_ph, (0, 2), flag=wx.ALIGN_RIGHT)
+    self.buttongrid.Add(self.button_del_card, (1, 0), flag=wx.ALIGN_LEFT)
+    self.buttongrid.Add(self.button_save_card, (1, 2), flag=wx.ALIGN_RIGHT)
+    self.buttongrid.AddGrowableCol(1)
 
-    self.hbox.Add(self.grid, 1, wx.EXPAND)
-    self.vbox.Add(self.hbox, 0, wx.EXPAND)
-    self.SetSizer(self.vbox)
+    self.buttonbox = wx.BoxSizer(wx.HORIZONTAL)
+    self.buttonbox.Add(self.buttongrid, 1, wx.EXPAND | wx.ALIGN_CENTER)
+
+    # main sizer
+    self.mainbox = wx.BoxSizer(wx.VERTICAL)
+    self.mainbox.AddSpacer(20)
+    self.mainbox.Add(self.radios)
+    self.mainbox.Add(wx.StaticLine(self), 0, wx.TOP | wx.BOTTOM | wx.EXPAND, 20)
+    self.mainbox.Add(self.cardbox, 1, wx.EXPAND)
+    self.mainbox.Add(wx.StaticLine(self), 0, wx.TOP | wx.BOTTOM | wx.EXPAND, 20)
+    self.mainbox.Add(self.buttonbox, 0, wx.EXPAND)
+
+    self.SetSizer(self.mainbox)
 
     # disable all elements at the very beginning
     self.Disable()
@@ -92,7 +108,7 @@ class CurrCardWindow(wx.Panel):
 
     frame = self.GetTopLevelParent()
     cursor = frame.database.cursor()
-    cursor.execute('DELETE FROM cards WHERE id = ?', (self.related_card.id, ))
+    cursor.execute('DELETE FROM cards WHERE id = ?', (self.related_card.id,))
 
     frame.left_window.card_grid.deleteCard(self.related_card)
     self.Disable()
@@ -116,7 +132,8 @@ class CurrCardWindow(wx.Panel):
     try:
       self.related_card.setCardText(self.current_card_text.GetValue())
     except CardValidityError as e:
-      frame.Message(caption="card text error", text=e.message['text'], style=MSG_WARN)
+      frame.Message(caption="card text error", text=e.message['text'],
+                    style=MSG_WARN)
       self.related_card.type = old_type
       return False
 
@@ -127,7 +144,9 @@ class CurrCardWindow(wx.Panel):
     frame.left_window.Refresh()
 
     cursor = frame.database.cursor()
-    cursor.execute('UPDATE cards SET text = ?, type = ? WHERE id = ?', (self.related_card.getInternalText(), self.related_card.type, self.related_card.id, ))
+    cursor.execute('UPDATE cards SET text = ?, type = ? WHERE id = ?', (
+      self.related_card.getInternalText(), self.related_card.type,
+      self.related_card.id,))
 
     frame.unsaved_changes = True
 
@@ -152,20 +171,23 @@ class CurrCardWindow(wx.Panel):
 
     self.GetTopLevelParent().getMenuItem("&File", "Apply changes").Enable(False)
 
-    for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph]:
+    for b in [self.radio_black, self.radio_white, self.button_del_text,
+              self.button_del_card, self.button_save_card, self.button_ins_ph]:
       b.Disable()
 
   def Enable(self):
     self.current_card_panel.Show()
     self.Layout()
-    for b in [self.radio_black, self.radio_white, self.button_del_text, self.button_del_card, self.button_save_card, self.button_ins_ph, self.GetTopLevelParent().getMenuItem("&File", "Apply changes")]:
+    for b in [self.radio_black, self.radio_white, self.button_del_text,
+              self.button_del_card, self.button_save_card, self.button_ins_ph,
+              self.GetTopLevelParent().getMenuItem("&File", "Apply changes")]:
       b.Enable()
 
   def setCard(self, card):
 
     if self.related_card is not card:
 
-      if self.maySetCard()==False:
+      if self.maySetCard() is False:
         return
 
       self.related_card = card
@@ -174,7 +196,7 @@ class CurrCardWindow(wx.Panel):
     if card.type == CARD_BLACK:
       self.radio_black.SetValue(True)
       self.radio_white.SetValue(False)
-      self.button_ins_ph.Enable()      
+      self.button_ins_ph.Enable()
     elif card.type == CARD_WHITE:
       self.radio_black.SetValue(False)
       self.radio_white.SetValue(True)
@@ -188,19 +210,24 @@ class CurrCardWindow(wx.Panel):
   # and if not, the user will be asked to dump his changes
   def maySetCard(self):
 
-    if self.related_card == None:
+    if self.related_card is None:
       return True
 
     if self.saved:
       return True
 
     frame = self.GetTopLevelParent()
-    if frame.Message(caption="Unsaved changes", text="You didn't save the currently editing card yet. Do you want to discard your changes?", style=MSG_YES_NO) == wx.ID_YES:
+    if frame.Message(caption="Unsaved changes",
+                     text="You didn't save the currently editing card yet. Do you want to discard your changes?",
+                     style=MSG_YES_NO) == wx.ID_YES:
       # that's a newly created card
       # we can't leave them alive, since they would be blank
-      if self.related_card.getCardText()=='':
+      if self.related_card.getCardText() == '':
         cursor = frame.database.cursor()
-        cursor.execute('DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (self.related_card.id, self.related_card.getInternalText(), self.related_card.type, ))
+        cursor.execute(
+          'DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (
+            self.related_card.id, self.related_card.getInternalText(),
+            self.related_card.type,))
         frame.left_window.card_grid.deleteCard(self.related_card)
       return True
 
@@ -209,11 +236,11 @@ class CurrCardWindow(wx.Panel):
   @property
   def saved(self):
 
-    if self.related_card == None:
+    if self.related_card is None:
       return True
 
     # all cards without text can't be saved yet
-    if self.current_card_text.GetValue().strip(' ')=='':
+    if self.current_card_text.GetValue().strip(' ') == '':
       return False
 
     if self.radio_black.GetValue():
@@ -221,7 +248,8 @@ class CurrCardWindow(wx.Panel):
     elif self.radio_white.GetValue():
       card_type = CARD_WHITE
 
-    if self.related_card.formatInternalText(self.current_card_text.GetValue()) != self.related_card.getInternalText() or card_type != self.related_card.type:
+    if self.related_card.formatInternalText(
+            self.current_card_text.GetValue()) != self.related_card.getInternalText() or card_type != self.related_card.type:
       return False
 
     return True

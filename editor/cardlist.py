@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from cardlist_toolbar import CardListToolbar
 from card_panel import CardPanel
+from cardlist_toolbar import CardListToolbar
 from const import *
-from shared.card import CARD_BLACK
+
+# from shared.card import CARD_BLACK
 
 # elements have the border on all sides and are centered only horizontally
 FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
+
 
 class CardListWindow(wx.Panel):
   def __init__(self, parent):
@@ -15,7 +17,6 @@ class CardListWindow(wx.Panel):
                       name="card list panel (this is a name")
 
     self.toolbar = CardListToolbar(self)
-
     self.card_grid = ScrolledGrid(self)
 
     self.vbox = wx.BoxSizer(wx.VERTICAL)
@@ -23,7 +24,7 @@ class CardListWindow(wx.Panel):
     self.vbox.Add(self.card_grid, proportion=1, flag=wx.EXPAND)
 
     self.SetSizer(self.vbox)
-
+    self.SetMinSize((755, -1))
     self.SetLabel("card list panel(this is a label)")
     self.SetBackgroundColour("black")
 
@@ -110,7 +111,7 @@ class ScrolledGrid(wx.ScrolledWindow):
   def createGrid(self, available_height=-1):
     # this method creates the actual grid with the items
 
-    # if available_hight isn't given we automatically use the top-level frame's
+    # if available_height isn't given we automatically use the top-level frame's
     # client size
     if available_height == -1:
       available_height = self.GetTopLevelParent().ClientSize.height
@@ -135,8 +136,10 @@ class ScrolledGrid(wx.ScrolledWindow):
     card = CardPanel(self, card_id=id, text=text, card_type=card_type)
     # box = wx.BoxSizer()
     # box.Add(card)
-    self.grid.Add(card, 1, wx.EXPAND | wx.ALL,
-                       BORDER)  # if no wx.EXPAND, you only see the texts in the first column
+    self.grid.Add(card, 1,  # wx.EXPAND |
+                  wx.ALL,
+                  BORDER)  # if no wx.EXPAND, you only see the texts in the first column
+    # however, it's fixed now
 
     self.card_count += 1
 
@@ -154,7 +157,8 @@ class ScrolledGrid(wx.ScrolledWindow):
   def getCard(self, card):
 
     for child in self.grid.GetChildren():
-      if isinstance(child.Window, CardPanel) and child.Window.card.id == card.id:
+      if isinstance(child.Window,
+                    CardPanel) and child.Window.card.id == card.id:
         return child.Window
 
     return None
@@ -168,4 +172,4 @@ class ScrolledGrid(wx.ScrolledWindow):
       self.grid.Remove(panel)
       panel.Destroy()
       del panel
-      self.grid.Layout()
+      self.Layout()

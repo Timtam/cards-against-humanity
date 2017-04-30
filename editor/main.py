@@ -16,9 +16,11 @@ MENU_SAVE_ALL = 3
 MENU_UNDO_ALL = 4
 MENU_EXIT = 5
 
+
 class MainFrame(wx.Frame):
   def __init__(self):
-    wx.Frame.__init__(self, None, title="Card Editor", size=(WIDTH, HEIGHT))
+    wx.Frame.__init__(self, parent=None, title="Card Editor",
+                      size=(WIDTH, HEIGHT))
 
     self.database = None
     self.unsaved_changes = False
@@ -35,13 +37,13 @@ class MainFrame(wx.Frame):
     self.right_window = CurrCardWindow(splitter)
     # self.left_window.card_grid.buildList()
 
-    # split the frame
-    splitter.SplitVertically(self.left_window, self.right_window,
-                             (0.7 * WIDTH))
-    splitter.SetMinimumPaneSize((WIDTH / 8))  # just to prevent moving sash to
+    splitter.SetMinimumPaneSize((WIDTH / 5))  # just to prevent moving sash to
     #   the very right or left and so
     #   you can't move it back
-    splitter.SetSashGravity(0.0)
+    splitter.SetSashGravity(0.5)
+    # split the frame
+    splitter.SplitVertically(self.left_window, self.right_window,
+                             (0.3 * WIDTH))
 
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
@@ -57,7 +59,8 @@ class MainFrame(wx.Frame):
     menu_item = wx.MenuItem(file_menu, MENU_NEW_CARD, "&New card\tCtrl+N")
     file_menu.AppendItem(menu_item)
 
-    menu_item = wx.MenuItem(file_menu, MENU_APPLY_CHANGES, "&Apply changes\tCtrl+C")
+    menu_item = wx.MenuItem(file_menu, MENU_APPLY_CHANGES,
+                            "Apply &changes\tCtrl+C")
     file_menu.AppendItem(menu_item)
 
     menu_item = wx.MenuItem(file_menu, MENU_SAVE_ALL, "&Save all\tCtrl+S")
@@ -135,7 +138,7 @@ class MainFrame(wx.Frame):
       filter_prm.append(CARD_WHITE)
 
     if len(filter_cmd) > 0:
-      sql += ' WHERE (' + ' OR '.join(filter_cmd)+")"
+      sql += ' WHERE (' + ' OR '.join(filter_cmd) + ")"
 
     if self.left_window.toolbar.search_ctrl.GetValue() != '':
       if len(filter_cmd) == 0:
@@ -143,21 +146,22 @@ class MainFrame(wx.Frame):
       else:
         sql += ' AND '
       sql += 'text LIKE ?'
-      filter_prm.append('%'+self.left_window.toolbar.search_ctrl.GetValue()+'%')
-    
+      filter_prm.append(
+        '%' + self.left_window.toolbar.search_ctrl.GetValue() + '%')
+
     panel = None
     cursor = self.database.cursor()
     cursor.execute(sql, tuple(filter_prm))
     self.left_window.card_grid.clearCards()
     for card in cursor.fetchall():
       new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
-      if panel == None:
+      if panel is None:
         panel = new_card
-    if self.left_window.card_grid.initialized == False:
+    if self.left_window.card_grid.initialized is False:
       self.left_window.card_grid.createGrid()
     self.left_window.Layout()
 
-    if panel != None and focus:
+    if panel is not None and focus:
       panel.SetFocus()
 
   def Message(self, caption, text, style):
@@ -188,18 +192,23 @@ class MainFrame(wx.Frame):
       return
 
     if not self.right_window.saved:
-      result = self.Message(caption="Unapplied changes", text="Your edit window contains unapplied changes. Do you want to apply them now?", style=MSG_YES_NO)
+      result = self.Message(caption="Unapplied changes",
+                            text="Your edit window contains unapplied changes. Do you want to apply them now?",
+                            style=MSG_YES_NO)
 
-      if result == wx.ID_YES and self.right_window.SaveCard(None)==False:
+      if result == wx.ID_YES and self.right_window.SaveCard(None) == False:
         e.Veto(True)
         return
       elif result == wx.ID_NO:
         if self.right_window.related_card.getCardText() == '':
-          self.database.cursor().execute('DELETE FROM cards WHERE id = ?', (self.right_window.related_card.id, ))
+          self.database.cursor().execute('DELETE FROM cards WHERE id = ?',
+                                         (self.right_window.related_card.id,))
         self.right_window.Disable()
 
     if self.unsaved_changes:
-      result = self.Message(caption="unsaved changes", text="You changed some cards without saving. Do you want us to save for you?", style=MSG_YES_NO)
+      result = self.Message(caption="unsaved changes",
+                            text="You changed some cards without saving. Do you want us to save for you?",
+                            style=MSG_YES_NO)
 
       if result == wx.ID_YES:
         self.left_window.toolbar.onSaveAll(None)
@@ -229,6 +238,7 @@ class MainFrame(wx.Frame):
   def onUndoAll(self, e):
 
     self.left_window.toolbar.onUndoAll(None)
+
 
 def main():
   app = wx.App(False)

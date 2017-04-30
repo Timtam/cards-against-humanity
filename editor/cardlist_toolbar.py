@@ -1,7 +1,6 @@
-from .const import *
 from shared.card import CARD_BLACK, CARD_WHITE
+from .const import *
 
-import wx
 
 class SearchCtrl(wx.SearchCtrl):
   def __init__(self, *args, **kwargs):
@@ -14,7 +13,6 @@ class SearchCtrl(wx.SearchCtrl):
     self.Bind(wx.EVT_TEXT, self.GetParent().onSearch)
 
   def onCancel(self, e):
-
     parent = self.GetParent()
     frame = self.GetTopLevelParent()
 
@@ -35,44 +33,53 @@ class SearchCtrl(wx.SearchCtrl):
     frame.getMenuItem("&File", "New card").Enable(True)
     parent.button_new_card.Enable()
 
+
 class CardListToolbar(wx.ToolBar):
   def __init__(self, parent, id=wx.ID_ANY):
     wx.ToolBar.__init__(self, parent=parent, id=id)
     self.SetToolBitmapSize((30, 30))
+
+    # checkboxes for black and white
     self.checkbox_black = wx.CheckBox(self, label="show black cards")
     self.checkbox_black.SetValue(True)
     self.checkbox_white = wx.CheckBox(self, label="show white cards")
     self.checkbox_white.SetValue(True)
     self.Bind(wx.EVT_CHECKBOX, self.onSearch)
 
+    # buttons
     self.button_new_card = wx.Button(self, label="new card")
     self.button_new_card.Bind(wx.EVT_BUTTON, self.onNewCard)
-
     self.button_save_all = wx.Button(self, label="save changes")
     self.button_save_all.Bind(wx.EVT_BUTTON, self.onSaveAll)
     self.button_undo_all = wx.Button(self, label="undo all")
     self.button_undo_all.Bind(wx.EVT_BUTTON, self.onUndoAll)
 
-    self.AddControl(self.checkbox_black)
+    # search control
+    self.search_ctrl = SearchCtrl(parent=self)
 
+    # toolbar:
+    # checkboxes
+    self.AddControl(self.checkbox_black)
     self.AddControl(self.checkbox_white)
 
     self.AddSeparator()
 
+    # buttons
     self.AddControl(self.button_new_card)
     self.AddControl(self.button_save_all)
     self.AddControl(self.button_undo_all)
 
     self.AddSeparator()
-
     self.AddStretchableSpace()
-    self.search_ctrl = SearchCtrl(parent=self)
+
+    # search control
     self.AddControl(self.search_ctrl)
+
     self.Realize()
 
   def onNewCard(self, event):
     frame = self.GetTopLevelParent()
-    if frame.right_window.maySetCard()==False:
+    if frame.right_window.maySetCard() is False:
       return
     frame.right_window.related_card = None
 
@@ -86,9 +93,10 @@ class CardListToolbar(wx.ToolBar):
                    INSERT INTO cards (
                      text, type) VALUES (
                      ?,?)
-                   """, ('', card_type, ))
-    panel = frame.left_window.card_grid.addCard(id=cursor.lastrowid, text='', card_type=card_type)
-    #frame.left_window.card_grid.createGrid()
+                   """, ('', card_type,))
+    panel = frame.left_window.card_grid.addCard(id=cursor.lastrowid, text='',
+                                                card_type=card_type)
+    # frame.left_window.card_grid.createGrid()
     frame.left_window.Layout()
     frame.right_window.setCard(panel.card)
 
@@ -96,19 +104,22 @@ class CardListToolbar(wx.ToolBar):
 
     frame = self.GetTopLevelParent()
 
-    if frame.right_window.saved==False:
-      frame.Message(caption="unapplied changes", text="Apply your latest changes first before saving", style=MSG_INFO)
+    if frame.right_window.saved is False:
+      frame.Message(caption="unapplied changes",
+                    text="Apply your latest changes first before saving",
+                    style=MSG_INFO)
       return
 
     cursor = frame.database.cursor()
 
     cursor.execute('VACUUM')
 
-    cursor.execute('SELECT value FROM config WHERE key = ?', ('version', ))
+    cursor.execute('SELECT value FROM config WHERE key = ?', ('version',))
 
     version = int(cursor.fetchone()[0]) + 1
 
-    cursor.execute('UPDATE config SET value = ? WHERE key = ?', (version, 'version', ))
+    cursor.execute('UPDATE config SET value = ? WHERE key = ?',
+                   (version, 'version',))
 
     frame.database.commit()
 
@@ -119,7 +130,9 @@ class CardListToolbar(wx.ToolBar):
     frame = self.GetTopLevelParent()
 
     if not frame.right_window.saved:
-      frame.Message(caption="unapplied changes", text="Your edit window contains unapplied changes. You need to apply your changes or revert them in order to undo all your applied changes.", style=MSG_WARN)
+      frame.Message(caption="unapplied changes",
+                    text="Your edit window contains unapplied changes. You need to apply your changes or revert them in order to undo all your applied changes.",
+                    style=MSG_WARN)
       return
 
     frame.database.rollback()
@@ -163,7 +176,9 @@ class CardListToolbar(wx.ToolBar):
     frame = self.GetTopLevelParent()
 
     if not frame.right_window.saved:
-      frame.Message(caption="unapplied changes", text="Apply your changes before changing search parameters.", style=MSG_WARN)
+      frame.Message(caption="unapplied changes",
+                    text="Apply your changes before changing search parameters.",
+                    style=MSG_WARN)
       return False
 
     return True
