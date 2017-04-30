@@ -135,7 +135,7 @@ class MainFrame(wx.Frame):
       filter_prm.append(CARD_WHITE)
 
     if len(filter_cmd) > 0:
-      sql += ' WHERE ' + ' OR '.join(filter_cmd)
+      sql += ' WHERE (' + ' OR '.join(filter_cmd)+")"
 
     if self.left_window.toolbar.search_ctrl.GetValue() != '':
       if len(filter_cmd) == 0:
