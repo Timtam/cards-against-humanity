@@ -126,7 +126,16 @@ class CardListToolbar(wx.ToolBar):
       frame.Message(caption="unapplied changes", text="Apply your latest changes first before saving", style=MSG_INFO)
       return
 
-    frame.database.cursor().execute('VACUUM')
+    cursor = frame.database.cursor()
+
+    cursor.execute('VACUUM')
+
+    cursor.execute('SELECT value FROM config WHERE key = ?', ('version', ))
+
+    version = int(cursor.fetchone()[0]) + 1
+
+    cursor.execute('UPDATE config SET value = ? WHERE key = ?', (version, 'version', ))
+
     frame.database.commit()
 
     frame.unsaved_changes = False
