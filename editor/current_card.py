@@ -120,7 +120,12 @@ class CurrCardWindow(wx.Panel):
       self.related_card.type = old_type
       return False
 
-    frame.left_window.card_grid.getCard(self.related_card).text.SetLabel(self.related_card.getCardText())
+    grid_card_panel = frame.left_window.card_grid.getCard(self.related_card)
+    grid_card_panel.text.SetLabel(self.related_card.getCardText())
+    grid_card_panel.card_type = self.related_card.type
+    grid_card_panel.setColors()
+    frame.left_window.Layout()
+    frame.left_window.Refresh()
 
     cursor = frame.database.cursor()
     cursor.execute('UPDATE cards SET text = ?, type = ? WHERE id = ?', (self.related_card.getInternalText(), self.related_card.type, self.related_card.id, ))
@@ -219,3 +224,13 @@ class CurrCardWindow(wx.Panel):
       return False
 
     return True
+
+  def setColors(self, card_panel):
+    if card_panel.card.type is CARD_BLACK:
+      card_panel.SetBackgroundColour("black")
+      card_panel.text.SetBackgroundColour("black")
+      card_panel.text.SetForegroundColour("white")
+    else:
+      card_panel.SetBackgroundColour("white")
+      card_panel.text.SetBackgroundColour("white")
+      card_panel.text.SetForegroundColour("black")
