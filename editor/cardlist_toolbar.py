@@ -132,7 +132,7 @@ class CardListToolbar(wx.ToolBar):
   def onSearch(self, event):
 
     if self.searchCheck():
-      self.GetTopLevelParent().loadCards()
+      self.GetTopLevelParent().loadCards(False)
       if self.search_ctrl.GetValue() != '' or not self.checkbox_black.GetValue() or not self.checkbox_white.GetValue():
         self.GetTopLevelParent().getMenuItem("&File", "New card").Enable(False)
         self.button_new_card.Disable()

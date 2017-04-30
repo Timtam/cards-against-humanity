@@ -117,7 +117,8 @@ class MainFrame(wx.Frame):
     self.loadCards()
 
   # parses the database and fills the grid with cards
-  def loadCards(self):
+  # focus parameter defines if the focus should be set onto the first loaded card at the end of the load automatically
+  def loadCards(self, focus=True):
 
     # we need to construct the sql command here
     sql = 'SELECT id, text, type FROM cards'
@@ -155,7 +156,8 @@ class MainFrame(wx.Frame):
     if self.left_window.card_grid.initialized == False:
       self.left_window.card_grid.createGrid()
     self.left_window.Layout()
-    if panel != None:
+
+    if panel != None and focus:
       panel.SetFocus()
 
   def Message(self, caption, text, style):
