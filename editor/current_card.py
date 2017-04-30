@@ -175,9 +175,11 @@ class CurrCardWindow(wx.Panel):
     if card.type == CARD_BLACK:
       self.radio_black.SetValue(True)
       self.radio_white.SetValue(False)
+      self.button_ins_ph.Enable()      
     elif card.type == CARD_WHITE:
       self.radio_black.SetValue(False)
       self.radio_white.SetValue(True)
+      self.button_ins_ph.Disable()
 
     self.SetColors(None)
     self.Enable()
