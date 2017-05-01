@@ -116,6 +116,7 @@ class CardListToolbar(wx.ToolBar):
     # frame.left_window.card_grid.createGrid()
     frame.left_window.Layout()
     frame.right_window.setCard(panel.card)
+    panel.onClick(event)
   
   
   def onSaveAll(self, e):
