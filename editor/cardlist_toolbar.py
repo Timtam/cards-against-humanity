@@ -43,8 +43,8 @@ class SearchCtrl(wx.SearchCtrl):
 
 
 class CardListToolbar(wx.ToolBar):
-  def __init__(self, parent, id=wx.ID_ANY):
-    wx.ToolBar.__init__(self, parent=parent, id=id, style=wx.TB_FLAT, name="car list toolbar")
+  def __init__(self, parent):
+    wx.ToolBar.__init__(self, parent=parent, style=wx.TB_FLAT, name="car list toolbar")
     self.SetToolBitmapSize((23, 23))
     
     # checkboxes for black and white
@@ -111,7 +111,7 @@ class CardListToolbar(wx.ToolBar):
                      text, type) VALUES (
                      ?,?)
                    """, ('', card_type,))
-    panel = frame.left_window.card_grid.addCard(id=cursor.lastrowid, text='',
+    panel = frame.left_window.card_grid.addCard(card_id=cursor.lastrowid, text='',
                                                 card_type=card_type)
     # frame.left_window.card_grid.createGrid()
     frame.left_window.Layout()

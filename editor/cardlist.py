@@ -65,7 +65,6 @@ class ScrolledGrid(wx.ScrolledWindow):
     # at first calculate columns from the available width and let the grid calc
     #   the rows
     columns = self.ClientSize.width / FULL_ELEMENT
-    rows = 0
     self.grid.SetCols(columns)
     (rows, columns) = self.grid.CalcRowsCols()
     
@@ -108,8 +107,8 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.SetSizer(box, True)
   
   
-  def addCard(self, id, text, card_type):
-    card = CardPanel(self, card_id=id, text=text, card_type=card_type)
+  def addCard(self, card_id, text, card_type):
+    card = CardPanel(self, card_id=card_id, text=text, card_type=card_type)
     # box = wx.BoxSizer()
     # box.Add(card)
     self.grid.Add(card, 1,  # wx.EXPAND |
