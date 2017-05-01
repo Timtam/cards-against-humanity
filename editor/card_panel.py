@@ -14,6 +14,7 @@ class CardPanel(wx.Panel):
     # subpanel for more free space between panel-border and text
     self.subpanel = wx.Panel(self)
     self.text = CardText(parent=self.subpanel, text=self.card.getCardText())
+    self.subpanel.SetLabel('card %d'%self.card.id)
     
     box = wx.BoxSizer(wx.VERTICAL)
     box.Add(self.text, 1, wx.ALL | wx.EXPAND, 10)
@@ -51,7 +52,7 @@ class CardPanel(wx.Panel):
     self.entered_panel = self.entered_subpanel = self.entered_text = \
       self.clicked = False
     
-    self.Bind(wx.EVT_KEY_UP, self.onKeyPress)
+    self.subpanel.Bind(wx.EVT_KEY_UP, self.onKeyPress)
   
   
   def onClick(self, event):
@@ -134,11 +135,12 @@ class CardPanel(wx.Panel):
   def onKeyPress(self, e):
     
     key_code = e.GetKeyCode()
-    
+
     frame = self.GetTopLevelParent()
     
     if key_code == wx.WXK_RETURN:
       frame.right_window.setCard(self.card)
+      return
     
     e.Skip()
   

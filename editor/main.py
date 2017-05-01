@@ -242,6 +242,16 @@ class MainFrame(wx.Frame):
     
   
   def onNewCard(self, e):
+
+    # strange thing
+    # when pressing return on a card panel, instead of calling the
+    # key up event of that panel, the new card menu event is called
+    # luckily the GetEventObject() returns the panel in this case
+    # that means we can prevent this from happening
+    if not isinstance(e.GetEventObject(), wx.Menu):
+      e.Skip()
+      return
+
     self.left_window.toolbar.onNewCard(None)
   
   
