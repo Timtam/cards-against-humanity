@@ -28,7 +28,7 @@ class CurrCardWindow(wx.Panel):
     self.current_card_panel.SetBackgroundColour("black")
     self.current_card_text = wx.TextCtrl(parent=self.current_card_panel, id=-1,
                                          size=(150, 150),
-                                         style=wx.TE_MULTILINE,
+                                         style=wx.TE_MULTILINE | wx.NO_BORDER,
                                          name="text control for current card")
     self.current_card_text.SetBackgroundColour(
       self.current_card_panel.GetBackgroundColour())
@@ -149,8 +149,8 @@ class CurrCardWindow(wx.Panel):
     grid_card_panel = frame.left_window.card_grid.getCard(self.related_card)
     grid_card_panel.text.SetLabel(self.related_card.getCardText())
     grid_card_panel.setColors()
+    grid_card_panel.Refresh()
     frame.left_window.Layout()
-    frame.left_window.Refresh()
     
     cursor = frame.database.cursor()
     cursor.execute('UPDATE cards SET text = ?, type = ? WHERE id = ?', (
@@ -168,7 +168,7 @@ class CurrCardWindow(wx.Panel):
     current_text = current_text[
                    :current_position] + "_" * CARD_PLACEHOLDER_LENGTH + \
                    current_text[
-                                                                        current_position:]
+                   current_position:]
     self.current_card_text.SetValue(current_text)
     self.current_card_text.SetInsertionPoint(
       current_position + CARD_PLACEHOLDER_LENGTH)

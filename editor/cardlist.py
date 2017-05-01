@@ -50,43 +50,8 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.Height = 500
     self.card_count = 0
     
+    self.active_card = None
     self.SetAutoLayout(True)
-    
-    # def buildList(self):
-    # create list with dummy objects
-    # for _ in itertools.repeat(None, 55):
-    #  panel = wx.Panel(self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
-    #                                   name="Dummy")
-    #  panel.SetBackgroundColour("black")
-    #  self.item_list.append((panel, 0, FLAG, BORDER))
-  
-  
-  # def BuildItemList(self, card_list):
-  #   item_list = []
-  #
-  #   for i in range(len(card_list)):
-  #     card = card_list[i]
-  #     #panel = wx.Panel(parent=self, size=(ELEMENT_SIZE, ELEMENT_SIZE),
-  #     #                            name=("card " + `i+1`),
-  #     #                            style=wx.SIMPLE_BORDER)
-  #     text = wx.TextCtrl(parent=self, id=i, size=(ELEMENT_SIZE, ELEMENT_SIZE),
-  #                                   style=wx.EXPAND | wx.TE_READONLY,
-  #                                   name=("text of card " + `i+1`),
-  #                                   value=card.getCardText())
-  #     #card_texts[i].CenterOnParent()
-  #     if card.type == CARD_BLACK:
-  #       #panel.SetBackgroundColour("black")
-  #       text.SetBackgroundColour("black")
-  #       text.SetForegroundColour("white")
-  #     else:
-  #       #panel.SetBackgroundColour("white")
-  #       text.SetBackgroundColour("white")
-  #       text.SetForegroundColour("black")
-  #
-  #     item_list.append((text, 0, FLAG, BORDER))
-  #
-  #
-  #   return item_list
   
   
   def calcBestColumns(self, available_height=-1):
@@ -137,8 +102,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     self.SetVirtualSize((0, self.Height))
     self.SetScrollRate(10, 20)
     
-    # need a horizontal box sizer to make the grid horizontal flexible; i don't
-    #   know exactly why, but it works^^
+    # need a horizontal box sizer to make the grid horizontal flexible
     # otherwise the elements are also centered vertically
     box = wx.BoxSizer(wx.HORIZONTAL)
     box.Add(self.grid, proportion=1)
