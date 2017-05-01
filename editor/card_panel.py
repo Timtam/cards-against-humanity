@@ -46,8 +46,8 @@ class CardPanel(wx.Panel):
     self.text.Bind(wx.EVT_ENTER_WINDOW, self.onEnteringText)
     self.text.Bind(wx.EVT_LEAVE_WINDOW, self.onLeavingText)
     # for navigation per keys
-    self.Bind(wx.EVT_CHILD_FOCUS, self.onEnteringPanel)
-    self.Bind(wx.EVT_KILL_FOCUS, self.onLeavingPanel)
+    self.subpanel.Bind(wx.EVT_CHILD_FOCUS, self.onEnteringPanel)
+    self.subpanel.Bind(wx.EVT_KILL_FOCUS, self.onLeavingPanel)
     # some necessary flags
     self.entered_panel = self.entered_subpanel = self.entered_text = \
       self.clicked = False
@@ -139,6 +139,7 @@ class CardPanel(wx.Panel):
     frame = self.GetTopLevelParent()
     
     if key_code == wx.WXK_RETURN:
+      self.onClick(e)
       frame.right_window.setCard(self.card)
       return
     
