@@ -7,6 +7,7 @@ class SearchCtrl(wx.SearchCtrl):
   def __init__(self, *args, **kwargs):
     wx.SearchCtrl.__init__(self, *args, **kwargs)
     
+    self.SetName("card search")
     self.ShowSearchButton(False)
     self.ShowCancelButton(True)
     
@@ -43,7 +44,7 @@ class SearchCtrl(wx.SearchCtrl):
 
 class CardListToolbar(wx.ToolBar):
   def __init__(self, parent, id=wx.ID_ANY):
-    wx.ToolBar.__init__(self, parent=parent, id=id, style=wx.TB_FLAT)
+    wx.ToolBar.__init__(self, parent=parent, id=id, style=wx.TB_FLAT, name="car list toolbar")
     self.SetToolBitmapSize((23, 23))
     
     # checkboxes for black and white

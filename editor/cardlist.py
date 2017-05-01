@@ -15,7 +15,7 @@ FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
 class CardListWindow(wx.Panel):
   def __init__(self, parent):
     wx.Panel.__init__(self, parent=parent,
-                      name="card list panel (this is a name")
+                      name="card list panel (toolbar + grid)")
     
     self.toolbar = CardListToolbar(self)
     self.card_grid = ScrolledGrid(self)
@@ -29,7 +29,6 @@ class CardListWindow(wx.Panel):
     
     self.SetSizer(self.vbox)
     self.SetMinSize((764, -1))
-    self.SetLabel("card list panel(this is a label)")
     self.SetBackgroundColour("black")
 
 
@@ -37,7 +36,7 @@ class CardListWindow(wx.Panel):
 class ScrolledGrid(wx.ScrolledWindow):
   def __init__(self, parent):
     wx.ScrolledWindow.__init__(self, parent=parent,
-                               name="card list grid(this is a name",
+                               name="card list grid",
                                style=wx.FULL_REPAINT_ON_RESIZE)
     
     self.initialized = False

@@ -8,20 +8,19 @@ class CardPanel(wx.Panel):
                text="",
                card_type=CARD_WHITE):
     wx.Panel.__init__(self, parent=parent, id=card_id, size=size,
-                      name=("card " + `card_id`), style=wx.SIMPLE_BORDER)
+                      name=("card %d" %card_id), style=wx.SIMPLE_BORDER)
     self.card = Card(id=card_id, text=text, type=card_type)
     
     # subpanel for more free space between panel-border and text
-    self.subpanel = wx.Panel(self)
+    self.subpanel = wx.Panel(self, name=self.GetName(), style=wx.NO_BORDER)
     self.text = CardText(parent=self.subpanel, text=self.card.getCardText())
-    self.subpanel.SetLabel('card %d'%self.card.id)
     
     box = wx.BoxSizer(wx.VERTICAL)
     box.Add(self.text, 1, wx.ALL | wx.EXPAND, 10)
     self.subpanel.SetSizer(box)
     
     box2 = wx.BoxSizer(wx.VERTICAL)
-    box2.Add(self.subpanel, 1, wx.ALL | wx.EXPAND, 10)
+    box2.Add(self.subpanel, 1, wx.ALL | wx.EXPAND, BORDER_CARD)
     self.SetSizer(box2)
     
     self.setColors()
@@ -67,7 +66,7 @@ class CardPanel(wx.Panel):
       active_card.setColors()
       active_card.Refresh()
     # set a color for clicked card ("active")
-    self.SetBackgroundColour("green")
+    self.SetBackgroundColour(COLOR_ACTIVE_CARD)
     self.Refresh()
     parent.active_card = self.card
     
@@ -79,7 +78,7 @@ class CardPanel(wx.Panel):
   def onEnteringPanel(self, event):
     # print("entered panel " + self.GetName())
     if not self.clicked:
-      self.SetBackgroundColour("red")
+      self.SetBackgroundColour(COLOR_HOVER_CARD)
       self.Refresh()
       self.entered_panel = True
   
@@ -98,7 +97,7 @@ class CardPanel(wx.Panel):
   def onEnteringSubPanel(self, event):
     # print("entered subpanel " + self.GetName())
     if not self.clicked:
-      self.SetBackgroundColour("red")
+      self.SetBackgroundColour(COLOR_HOVER_CARD)
       self.Refresh()
       self.entered_subpanel = True
   
@@ -117,7 +116,7 @@ class CardPanel(wx.Panel):
   def onEnteringText(self, event):
     # print("entered text " + self.GetName())
     if not self.clicked:
-      self.SetBackgroundColour("red")
+      self.SetBackgroundColour(COLOR_HOVER_CARD)
       self.Refresh()
       self.entered_text = True
   

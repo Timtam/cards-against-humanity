@@ -7,7 +7,7 @@ from .const import *
 class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
     wx.Panel.__init__(self, parent=parent,
-                      name="current card panel(this is a name)")
+                      name="current card panel")
     self.related_card = None
     
     self.SetLabel("no card to be edited")
@@ -22,9 +22,8 @@ class CurrCardWindow(wx.Panel):
     
     # pane and text control for card
     self.current_card_panel = wx.Panel(parent=self, size=(200, 200),
-                                       name="current card (name)",
+                                       name="current card",
                                        style=wx.SIMPLE_BORDER)
-    self.current_card_panel.SetLabel("current card (label)")
     self.current_card_panel.SetBackgroundColour("black")
     self.current_card_text = wx.TextCtrl(parent=self.current_card_panel, id=-1,
                                          size=(150, 150),
@@ -264,6 +263,8 @@ class CurrCardWindow(wx.Panel):
       card_type = CARD_BLACK
     elif self.radio_white.GetValue():
       card_type = CARD_WHITE
+    else:
+      card_type = -1
     
     if self.related_card.formatInternalText(
             self.current_card_text.GetValue()) != \

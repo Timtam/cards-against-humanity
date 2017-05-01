@@ -7,7 +7,7 @@ HEIGHT = 720
 
 # size (width + height) of the (dummy?) elements
 ELEMENT_SIZE = 100
-# their border
+# their border (free space around card aka "padding")
 BORDER = 10
 # just for shorter and summarized code
 FULL_ELEMENT = ELEMENT_SIZE + 2 * BORDER
@@ -31,3 +31,10 @@ MSG_ERROR = wx.ICON_ERROR | wx.STAY_ON_TOP | wx.CANCEL
 MSG_WARN = wx.ICON_EXCLAMATION | wx.OK | wx.CANCEL
 MSG_INFO = wx.ICON_INFORMATION | wx.OK
 MSG_YES_NO = wx.ICON_QUESTION | wx.YES_NO
+
+# colors for hovering and clicked card
+COLOR_HOVER_CARD = "red"
+COLOR_ACTIVE_CARD = "green"
+
+# border size for above colors
+BORDER_CARD = 3
