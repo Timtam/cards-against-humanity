@@ -103,7 +103,7 @@ class CurrCardWindow(wx.Panel):
       self.current_card_text.SetBackgroundColour("white")
       self.current_card_text.SetForegroundColour("black")
       self.button_ins_ph.Disable()
-      
+    
     self.current_card_text.SetFocus()
     self.Refresh()
   
@@ -234,9 +234,10 @@ class CurrCardWindow(wx.Panel):
     
     frame = self.GetTopLevelParent()
     discard_changes = frame.Message(caption="Unsaved changes",
-                  text="You didn't save the currently editing card yet. Do "
-                       "you want to discard your changes?",
-                  style=MSG_YES_NO)
+                                    text="You didn't save the currently "
+                                         "editing card yet. Do you want to "
+                                         "discard your changes?",
+                                    style=MSG_YES_NO)
     if discard_changes == wx.ID_YES:
       # that's a newly created card
       # we can't leave them alive, since they would be blank
@@ -250,8 +251,8 @@ class CurrCardWindow(wx.Panel):
       return True
     
     else:
-      frame.left_window.card_grid.getCard(self.related_card).onClick(None)
-      
+      frame.left_window.card_grid.getCard(self.related_card).setActive()
+    
     return False
   
   

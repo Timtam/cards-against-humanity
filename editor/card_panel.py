@@ -55,6 +55,14 @@ class CardPanel(wx.Panel):
   
   
   def onClick(self, event):
+    self.setActive()
+    
+    frame = self.GetTopLevelParent()
+    frame.right_window.setCard(self.card)
+    frame.right_window.current_card_text.SetFocus()
+  
+  
+  def setActive(self):
     # print ("clicked on " + self.GetName())
     self.clicked = True
     # if there already is an other "active" card, we need to "deactivate" (
@@ -69,12 +77,8 @@ class CardPanel(wx.Panel):
     self.SetBackgroundColour(COLOR_ACTIVE_CARD)
     self.Refresh()
     parent.active_card = self.card
-    
-    frame = self.GetTopLevelParent()
-    frame.right_window.setCard(self.card)
-    frame.right_window.current_card_text.SetFocus()
-  
-  
+
+
   def onEnteringPanel(self, event):
     # print("entered panel " + self.GetName())
     if not self.clicked:
