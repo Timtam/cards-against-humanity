@@ -31,6 +31,6 @@ class Display(object):
     self.update()
     self.render()
 
-  def stop():
+  def stop(self):
     pygame.quit()
     sys.exit()
