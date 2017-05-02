@@ -7,8 +7,10 @@ class InitialView(View):
   
   
   def handleEvent(self, event):
-    self.textinput.update([event])
+    self.textinput.update(event)
     
+  def update(self):
+    print self.textinput.get_text()
     
   def render(self):
     return self.textinput.surface
