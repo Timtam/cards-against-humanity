@@ -1,0 +1,3 @@
+[submodule "textinput"]
+	path = textinput
+	url = https://github.com/Nearoo/pygame-text-input.git
