@@ -104,7 +104,6 @@ class CurrCardWindow(wx.Panel):
       self.current_card_text.SetForegroundColour("black")
       self.button_ins_ph.Disable()
     
-    self.current_card_text.SetFocus()
     self.Refresh()
   
   
