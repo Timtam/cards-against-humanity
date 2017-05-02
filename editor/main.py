@@ -48,13 +48,22 @@ class MainFrame(wx.Frame):
     splitter.SplitVertically(self.left_window, self.right_window,
                              (0.3 * WIDTH))
     
+    
+    
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
     # splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.onSashChanged)
     
+    self.Bind(wx.EVT_SIZE, self.onResizing)
+    
     # calling the database loading algorithm directly after the window appears
     wx.CallAfter(self.initDatabase)
   
+  
+  def onResizing(self, e):
+    e.Skip()
+    wx.CallAfter(self.left_window.card_grid.calcBestColumns)
+    
   
   def initUI(self):
     menubar = wx.MenuBar()
