@@ -80,8 +80,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     # finally also set the number of columns and return them just to be on the
     #   safe side
     self.grid.SetCols(columns)
-    
-    self.Layout()
+    self.GetParent().Layout()
     return columns
   
   
