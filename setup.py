@@ -40,6 +40,8 @@ def initialize_zope_package():
 
 include_files = []
 
+include_files += [(os.path.join(getScriptDirectory(), 'assets', x), os.path.relpath(x, getScriptDirectory())) for x in list_all_files(os.path.join(getScriptDirectory(), 'assets'))]
+
 # will later be needed for the client
 #include_files+=[(os.path.join(script.Path, "accessible_output", "lib", x), os.path.join("lib", x)) for x in os.listdir(os.path.join(script.Path, #"accessible_output", "lib"))]
 
