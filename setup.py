@@ -67,6 +67,10 @@ setup(
   },
   executables = [
     Executable(
+      'client.py',
+      base=(None if platform.system() != 'Windows' else 'Win32GUI')
+    ),
+    Executable(
       'editor.py',
       base=(None if platform.system() != 'Windows' else 'Win32GUI')
     ),
