@@ -21,9 +21,9 @@ class Display(object):
     self.view.update()
 
   def render(self):
-    self.screen.fill((0,0,0))
-    self.view.render()
-    pygame.display.flip()
+    self.screen.fill((255,255,255))
+    self.screen.blit(self.view.render(), (0, 0))
+    pygame.display.update()
 
   def process(self):
     for event in pygame.event.get():
