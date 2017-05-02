@@ -6,7 +6,7 @@ WIDTH = 1280
 HEIGHT = 720
 
 # size (width + height) of the (dummy?) elements
-ELEMENT_SIZE = 100
+ELEMENT_SIZE = 107
 # their border (free space around card aka "padding")
 BORDER = 10
 # just for shorter and summarized code
