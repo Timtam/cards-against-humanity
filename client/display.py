@@ -9,8 +9,20 @@ class Display(object):
     self.screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Cards Against Humanity Online')
 
+    # global font (may be the original from Cards Against Humanity)
+    self.font = pygame.font.Font("assets/helvetica-bold.ttf", 20)
+
     # setting the current view
     self.view = InitialView(self)
+
+
+  def getFont(self):
+    return self.font
+
+
+  def getSize(self):
+    return self.screen.get_width(), self.screen.get_height()
+
 
   def handleEvent(self, event):
     if event.type == pygame.QUIT:

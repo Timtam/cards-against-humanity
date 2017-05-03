@@ -11,8 +11,9 @@ class TextInput:
     This class let's the user input a short, one-lines piece of text at a blinking cursor
     that can be moved using the arrow-keys. Delete, home and end work as well.
     """
-    def __init__(self, font_family = "",
-                        font_size = 35,
+    def __init__(self, #font_family = "",
+                        #font_size = 35,
+                        font,
                         antialias=True,
                         text_color=(0, 0, 0),
                         cursor_color=(0, 0, 1),
@@ -29,10 +30,12 @@ class TextInput:
         # Text related vars:
         self.antialias = antialias
         self.text_color = text_color
-        self.font_size = font_size
+        #self.font_size = font_size
+        self.font_size = font.get_linesize()
         self.input_string = "" # Inputted text
-        if not os.path.isfile(font_family): font_family = pygame.font.match_font(font_family)
-        self.font_object = pygame.font.Font(font_family, font_size)
+        #if not os.path.isfile(font_family): font_family = pygame.font.match_font(font_family)
+        #self.font_object = pygame.font.Font(font_family, font_size)
+        self.font_object = font
 
         # Text-surface will be created during the first update call:
         self.surface = pygame.Surface((1, 1))
