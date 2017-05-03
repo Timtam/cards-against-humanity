@@ -1,8 +1,8 @@
 import pygame
 
 class View(object):
-  def __init__(self):
-    pass
+  def __init__(self, display):
+    self.display = display
 
   def update(self):
     pass

@@ -10,7 +10,7 @@ class Display(object):
     pygame.display.set_caption('Cards Against Humanity Online')
 
     # setting the current view
-    self.view = InitialView()
+    self.view = InitialView(self)
 
   def handleEvent(self, event):
     if event.type == pygame.QUIT:
@@ -22,8 +22,8 @@ class Display(object):
 
   def render(self):
     self.screen.fill((255,255,255))
-    self.screen.blit(self.view.render(), (0, 0))
-    pygame.display.update()
+    self.view.render()
+    pygame.display.flip()
 
   def process(self):
     for event in pygame.event.get():
