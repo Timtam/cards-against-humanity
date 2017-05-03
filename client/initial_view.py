@@ -45,14 +45,14 @@ class InitialView(View):
 
 
   def handleEvent(self, event):
-    self.uname_input.update(event)
-    self.pword_input.update(event)
+    self.uname_input.handleEvent(event)
+    self.pword_input.handleEvent(event)
     
     
   def render(self):
     # get surfaces of input texts
-    username_input = self.uname_input.get_surface()
-    password_input = self.pword_input.get_surface()
+    username_input = self.uname_input.render()
+    password_input = self.pword_input.render()
     
     self.display.screen.blit(self.welcome_text, self.welcome_text_pos)
     
@@ -65,3 +65,7 @@ class InitialView(View):
     # draw the input rectangles
     pygame.draw.rect(self.display.screen, (0, 0, 0), self.uname_input_rect, 1)
     pygame.draw.rect(self.display.screen, (0, 0, 0), self.pword_input_rect, 1)
+
+  def update(self):
+    self.uname_input.update()
+    self.pword_input.update()

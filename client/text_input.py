@@ -11,14 +11,10 @@ class TextInput:
     This class let's the user input a short, one-lines piece of text at a blinking cursor
     that can be moved using the arrow-keys. Delete, home and end work as well.
     """
-    def __init__(self, #font_family = "",
-                        #font_size = 35,
-                        font,
+    def __init__(self,  font,
                         antialias=True,
                         text_color=(0, 0, 0),
-                        cursor_color=(0, 0, 1),
-                        repeat_keys_initial_ms=400,
-                        repeat_keys_interval_ms=35):
+                        cursor_color=(0, 0, 1)):
         """
         Args:
             font_family: Name or path of the font that should be used. Default is pygame-font
@@ -30,11 +26,8 @@ class TextInput:
         # Text related vars:
         self.antialias = antialias
         self.text_color = text_color
-        #self.font_size = font_size
         self.font_size = font.get_linesize()
         self.input_string = "" # Inputted text
-        #if not os.path.isfile(font_family): font_family = pygame.font.match_font(font_family)
-        #self.font_object = pygame.font.Font(font_family, font_size)
         self.font_object = font
 
         # Text-surface will be created during the first update call:
@@ -51,7 +44,7 @@ class TextInput:
 
         self.clock = pygame.time.Clock()
 
-    def update(self, event):
+    def handleEvent(self, event):
         if event.type == pygame.KEYDOWN:
             self.cursor_visible = True # So the user sees where he writes
 
@@ -89,14 +82,12 @@ class TextInput:
                                     self.input_string[self.cursor_position:]
                 self.cursor_position += len(event.unicode) # Some are empty, e.g. K_UP
 
+        return False
+
+    def render(self):
+
         # Rerender text surface:
         self.surface = self.font_object.render(self.input_string, self.antialias, self.text_color)
-
-        # Update self.cursor_visible
-        self.cursor_ms_counter += self.clock.get_time()
-        if self.cursor_ms_counter >= self.cursor_switch_ms:
-            self.cursor_ms_counter %= self.cursor_switch_ms
-            self.cursor_visible = not self.cursor_visible
 
         if self.cursor_visible:
             cursor_y_pos = self.font_object.size(self.input_string[:self.cursor_position])[0]
@@ -105,10 +96,6 @@ class TextInput:
                 cursor_y_pos -= self.cursor_surface.get_width()
             self.surface.blit(self.cursor_surface, (cursor_y_pos, 0))
 
-        self.clock.tick()
-        return False
-
-    def get_surface(self):
         return self.surface
 
     def get_text(self):
@@ -122,3 +109,12 @@ class TextInput:
 
     def set_cursor_color(self, color):
         self.cursor_surface.fill(color)
+
+    def update(self):
+        # Update self.cursor_visible
+        self.cursor_ms_counter += self.clock.get_time()
+        if self.cursor_ms_counter >= self.cursor_switch_ms:
+            self.cursor_ms_counter %= self.cursor_switch_ms
+            self.cursor_visible = not self.cursor_visible
+
+        self.clock.tick()
