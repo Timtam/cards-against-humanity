@@ -1,14 +1,10 @@
-import pygame
-
 import text_input
+from tools import *
 from .view import View
 
 SPACE_BETWEEN_LABEL_AND_INPUT = 20
 PADDING_RECT_TEXT = 5
 TEXT_INPUT_LEN = 300
-
-COLOR_BUTTON = (128, 128, 128)
-COLOR_BUTTON_HOVER = (100, 100, 100)
 
 
 
@@ -27,9 +23,7 @@ class InitialView(View):
     space = SPACE_BETWEEN_LABEL_AND_INPUT / 2
     self.padding = PADDING_RECT_TEXT
     
-    self.color_but_connect = self.color_but_close = COLOR_BUTTON
-    
-    # short(! or we have to wrap it and that's not easy...) welcome text
+    # short (! or we have to wrap it and that's not easy...) welcome text
     self.welcome_text = font.render("Welcome to Cards Against Humanity Online!",
                                     1, (0, 0, 0))
     self.welcome_text_pos = (hmiddle - self.welcome_text.get_width() / 2, 100)
@@ -44,43 +38,13 @@ class InitialView(View):
     
     # calc their positions (same y for label and input as they should be side
     #  by side, same x for all inputs as the should be exactly among each other)
-    self.server_label_x = hmiddle - self.server_label.get_width() - space
-    self.server_y = vmiddle - size[1] * 0.1
-    self.uname_label_x = hmiddle - self.uname_label.get_width() - space
-    self.uname_y = vmiddle + size[1] * 0.0
-    self.pword_label_x = hmiddle - self.pword_label.get_width() - space
-    self.pword_y = vmiddle + size[1] * 0.06
-    self.input_x = hmiddle + space + self.padding
-    
-    # button texts
-    self.button_connect_text = font.render("Connect", 1, (0, 0, 0))
-    self.button_close_text = font.render("Close", 1, (0, 0, 0))
-    
-    # button positions
-    self.button_connect_x = hmiddle - self.button_connect_text.get_width() - \
-                            space
-    self.button_close_x = hmiddle + space
-    self.button_y = size[1] * 0.8
-    
-    # button rectangle positions
-    self.but_connect_rect_x = self.button_connect_x - self.padding
-    self.but_connect_rect_w = self.button_connect_text.get_width() + 2 * \
-                                                                     self.padding
-    self.but_connect_rect_h = self.button_connect_text.get_height() + 1.5 * \
-                                                                      self.padding
-    
-    self.but_close_rect_x = self.button_close_x - self.padding
-    self.but_close_rect_w = self.button_close_text.get_width() + 2 * \
-                                                                 self.padding
-    self.but_close_rect_h = self.button_close_text.get_height() + 1.5 * \
-                                                                  self.padding
-    self.but_rect_y = self.button_y - self.padding
-    
-    self.but_connect_rect_x_end = self.but_connect_rect_x + \
-                                  self.but_connect_rect_w
-    self.but_connect_rect_y_end = self.but_rect_y + self.but_connect_rect_h
-    self.but_close_rect_x_end = self.but_close_rect_x + self.but_close_rect_w
-    self.but_close_rect_y_end = self.but_rect_y + self.but_close_rect_h
+    self.server_label_x = hmiddle - self.server_label.get_width() - space - 100
+    self.server_y = vmiddle - 70
+    self.uname_label_x = hmiddle - self.uname_label.get_width() - space - 100
+    self.uname_y = vmiddle + 0
+    self.pword_label_x = hmiddle - self.pword_label.get_width() - space - 100
+    self.pword_y = vmiddle + 35
+    self.input_x = hmiddle + space + self.padding - 100
     
     # rectangles around the input texts (x, y, width, height)
     self.server_input_rect = (
@@ -93,13 +57,16 @@ class InitialView(View):
       self.input_x - self.padding, self.pword_y - self.padding, TEXT_INPUT_LEN,
       self.pword_label.get_height() + 2 * self.padding)
     
-    # button rectangles
-    self.button_connect_rect = (
-      self.but_connect_rect_x, self.but_rect_y, self.but_connect_rect_w,
-      self.but_connect_rect_h)
-    self.button_close_rect = (
-      self.but_close_rect_x, self.but_rect_y, self.but_close_rect_w,
-      self.but_close_rect_h)
+    # buttons connect and close
+    self.button_connect = Button(self.display.screen, "Connect", font,
+                                 (0, 0, 0), hmiddle - 100,
+                                 vmiddle + 100)  # dummy positions,
+    # for auto-deetermine width and height
+    self.button_connect.setPosition(
+      hmiddle - self.button_connect.getWidth() - space,
+      vmiddle + 150)  # calc position with own width
+    self.button_close = Button(self.display.screen, "Close", font, (0, 0, 0),
+                               hmiddle, vmiddle + 150)
   
   
   def handleEvent(self, event):
@@ -107,21 +74,8 @@ class InitialView(View):
     self.uname_input.handleEvent(event)
     self.pword_input.handleEvent(event)
     
-    if event.type == pygame.MOUSEMOTION:
-      mouse = pygame.mouse.get_pos()
-      # hover over buttons
-      if self.but_connect_rect_x < mouse[
-        0] < self.but_connect_rect_x_end and self.but_rect_y < mouse[
-        1] < self.but_connect_rect_y_end:
-        self.color_but_connect = COLOR_BUTTON_HOVER
-      else:
-        self.color_but_connect = COLOR_BUTTON
-      if self.but_close_rect_x < mouse[
-        0] < self.but_close_rect_x_end and self.but_rect_y < mouse[
-        1] < self.but_close_rect_y_end:
-        self.color_but_close = COLOR_BUTTON_HOVER
-      else:
-        self.color_but_close = COLOR_BUTTON
+    self.button_connect.handleEvent(event)
+    self.button_close.handleEvent(event)
   
   
   def render(self):
@@ -148,17 +102,9 @@ class InitialView(View):
     pygame.draw.rect(self.display.screen, (0, 0, 0), self.uname_input_rect, 1)
     pygame.draw.rect(self.display.screen, (0, 0, 0), self.pword_input_rect, 1)
     
-    # draw button rectangles
-    pygame.draw.rect(self.display.screen, self.color_but_connect,
-                     self.button_connect_rect, 0)
-    pygame.draw.rect(self.display.screen, self.color_but_close,
-                     self.button_close_rect, 0)
-    
-    # button texts
-    self.display.screen.blit(self.button_connect_text,
-                             (self.button_connect_x, self.button_y))
-    self.display.screen.blit(self.button_close_text,
-                             (self.button_close_x, self.button_y))
+    # draw buttons
+    self.button_connect.render()
+    self.button_close.render()
   
   
   def update(self):
