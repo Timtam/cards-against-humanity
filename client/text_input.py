@@ -3,6 +3,8 @@ import pygame.locals as pl
 
 pygame.font.init()
 
+DEFAULT_LENGTH = 300
+
 
 
 class TextInput:
@@ -18,12 +20,13 @@ class TextInput:
   def __init__(self, font,
                antialias=True,
                text_color=(0, 0, 0),
-               cursor_color=(0, 0, 1)):
+               cursor_color=(0, 0, 1),
+               max_width=DEFAULT_LENGTH):
     """
     Args:
-        font_family: Name or path of the font that should be used. Default is
+        #font_family: Name or path of the font that should be used. Default is
         pygame-font
-        font_size: Size of the font in pixels
+        #font_size: Size of the font in pixels
         antialias: (bool) Determines if antialias is used on fonts or not
         text_color: Color of the text
     """
@@ -34,6 +37,9 @@ class TextInput:
     self.font_size = font.get_linesize()
     self.input_string = ""  # Inputted text
     self.font_object = font
+    
+    # max width of text input
+    self.max_width = max_width
     
     # Text-surface will be created during the first update call:
     self.surface = pygame.Surface((1, 1))
@@ -85,11 +91,17 @@ class TextInput:
         self.cursor_position = 0
       
       else:
-        # If no special key is pressed, add unicode of key to input_string
-        self.input_string = self.input_string[:self.cursor_position] + \
-                            event.unicode + \
-                            self.input_string[self.cursor_position:]
-        self.cursor_position += len(event.unicode)  # Some are empty, e.g. K_UP
+        # to avoid to input endless text, check the length of current text +
+        # next character
+        text = self.font_object.render(self.input_string + "W", 1, (
+        0, 0, 0))  # + "W" because its the possibly widest letter ;)
+        if text.get_width() <= self.max_width:
+          # If no special key is pressed, add unicode of key to input_string
+          self.input_string = self.input_string[:self.cursor_position] + \
+                              event.unicode + \
+                              self.input_string[self.cursor_position:]
+          self.cursor_position += len(
+            event.unicode)  # Some are empty, e.g. K_UP
     
     return False
   
@@ -102,7 +114,7 @@ class TextInput:
     
     if self.cursor_visible:
       cursor_y_pos = \
-      self.font_object.size(self.input_string[:self.cursor_position])[0]
+        self.font_object.size(self.input_string[:self.cursor_position])[0]
       # Without this, the cursor is invisible when self.cursor_position > 0:
       if self.cursor_position > 0:
         cursor_y_pos -= self.cursor_surface.get_width()
