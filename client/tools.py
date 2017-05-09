@@ -7,6 +7,33 @@ BUTTON_COLOR = (128, 128, 128)
 BUTTON_COLOR_HOVER = (100, 100, 100)
 INPUT_PADDING = 5
 
+textmarker = (  # sized 16x24
+  "ooooo ooooo     ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "     o          ",
+  "ooooo ooooo     ",
+  )
+
 
 
 class Button:
@@ -79,7 +106,6 @@ class TextInput:
     self.x = x + INPUT_PADDING
     self.y = y
     self.rect_color = (0, 0, 0)
-    
     self.focus = False
     
     # to get the height of text with this font
@@ -103,10 +129,20 @@ class TextInput:
   def handleEvent(self, event):
     self.input.handleEvent(event)
     
+    # TODO: text box hover with changing cursor not working...
+    # if event.type == pygame.MOUSEMOTION:
+    #   size = (16, 24)
+    #   hotspot = (6, 12)
+    #   if self.input_rect.collidepoint(event.pos):
+    #     pygame.mouse.set_cursor(size, hotspot, *pygame.cursors.compile(
+    #     textmarker))
+    #   else:
+    #     pygame.mouse.set_cursor(*pygame.cursors.arrow)
+    
     # set focus if clicked
     if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
             self.input_rect.collidepoint(
-            event.pos):  # TODO: constant for button == 1
+              event.pos):  # TODO: constant for button == 1
       self.focus = True
       self.input.setFocus(True)
       # self.rect_color = (255, 0, 0) # debug
