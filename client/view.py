@@ -1,4 +1,3 @@
-import accessible_output2.outputs.auto as speech
 import pygame
 import pygame.locals as pl
 
@@ -8,10 +7,12 @@ class View(object):
   def __init__(self, display):
     self.display = display
     self.first_call = False
-    self.speaker = speech.Auto()
     self.tab_order = []
     self.tab_position = 0
-  
+
+    if self.display.accessibility:
+      import accessible_output2.outputs.auto as speech
+      self.speaker = speech.Auto()  
   
   def update(self):
     if not self.first_call:
