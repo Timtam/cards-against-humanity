@@ -118,14 +118,12 @@ class TextInput:
     if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
             self.input_rect.collidepoint(
             event.pos):  # TODO: constant for button == 1
-      self.focus = True
-      self.input.setFocus(True)
+      self.setFocus(True)
       # self.rect_color = (255, 0, 0) # debug
     # if left mouse button clicked anywhere else, focus is gone ("dirty"
     # solution)
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-      self.focus = False
-      self.input.setFocus(False)
+      self.setFocus(False)
       # self.rect_color = (0, 0, 0)  # debug
   
   

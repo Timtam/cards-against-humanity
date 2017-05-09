@@ -33,6 +33,10 @@ class View(object):
 
     if event.type == pygame.KEYDOWN:
       if event.key == pl.K_TAB:
+        try:
+          self.tab_order[self.tab_position].setFocus(False)
+        except AttributeError:
+          pass
         if event.mod in [pl.KMOD_LSHIFT, pl.KMOD_RSHIFT]:
           self.tab_position -= 1
           if self.tab_position < 0:
@@ -43,6 +47,11 @@ class View(object):
             self.tab_position = 0
 
         self.speak(self.tab_order[self.tab_position].getLabel(), True)
+
+        try:
+          self.tab_order[self.tab_position].setFocus(True)
+        except AttributeError:
+          pass
   
       elif event.key == pl.K_LCTRL or pygame.key == pl.K_RCTRL:
         self.speak(self.tab_order[self.tab_position].getLabel(), True)
@@ -77,3 +86,7 @@ class View(object):
       return
 
     self.speak(self.tab_order[0].getLabel(), False)
+    try:
+      self.tab_order[0].setFocus(True)
+    except AttributeError:
+      pass
