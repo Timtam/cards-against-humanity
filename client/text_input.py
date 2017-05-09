@@ -57,7 +57,7 @@ class TextInput:
     self.cursor_ms_counter = 0
     
     self.clock = pygame.time.Clock()
-  
+
   
   def setFocus(self, flag):
     self.focus = flag
@@ -77,6 +77,8 @@ class TextInput:
                             self.input_string[self.cursor_position:]
         # Subtract one from cursor_pos, but do not go below zero:
         self.cursor_position = max(self.cursor_position - 1, 0)
+        self.display.tap_delete_sound.stop()
+        self.display.tap_delete_sound.play()
       
       elif event.key == pl.K_DELETE:
         try:
@@ -85,6 +87,8 @@ class TextInput:
           self.display.view.speak('', True)
         self.input_string = self.input_string[:self.cursor_position] + \
                             self.input_string[self.cursor_position + 1:]
+        self.display.tap_delete_sound.stop()
+        self.display.tap_delete_sound.play()
       
       elif event.key == pl.K_RETURN:
         return True
@@ -138,6 +142,10 @@ class TextInput:
           self.cursor_position += len(
             event.unicode)  # Some are empty, e.g. K_UP
         self.display.view.speak(event.unicode, True)
+        if len(event.unicode):
+          self.display.tap_sound.stop()
+          self.display.tap_sound.play()
+
     
     return False
   
