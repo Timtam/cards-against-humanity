@@ -4,10 +4,11 @@ from twisted.logger import Logger
 import sqlite3
 
 from .protocol import ServerProtocol
+from shared.card_database_manager import CardDatabaseManager
 from shared.path import getScriptDirectory
 
 class ServerFactory(Factory):
-  cardsDatabaseVersion = 0
+  card_database = None
   log = Logger()
   serverDatabase = None
   users=[]
@@ -22,12 +23,8 @@ class ServerFactory(Factory):
     self.log.info("Opened server database")
 
   def startFactory(self):
-    database = sqlite3.connect(os.path.join(getScriptDirectory(), "cards.db"))
-    cursor = database.cursor()
-    cursor.execute("SELECT value FROM config WHERE key = ?", ("version",))
-    self.cardsDatabaseVersion=int(cursor.fetchone()[0])
-    database.close()
-    self.log.info("Loaded card database version {log_source.cardsDatabaseVersion!r}")
+    self.card_database = CardDatabaseManager('cards.db')
+    self.log.info("Loaded card database version {log_source.card_database.version!r}")
 
     self.openServerDatabase()
 
