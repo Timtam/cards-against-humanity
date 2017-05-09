@@ -7,9 +7,9 @@ from .display import Display
 
 
 
-def main():
+def main(accessibility=False):
   pygame.init()
   globalLogBeginner.beginLoggingTo([textFileLogObserver(sys.stdout)])
   
   display = Display()
-  display.init()
+  display.init(accessibility)
