@@ -11,6 +11,7 @@ import sys
 import os
 import os.path
 import platform
+import accessible_output2
 from cx_Freeze import setup,Executable
 from distutils.sysconfig import get_python_lib
 
@@ -42,8 +43,10 @@ include_files = []
 
 include_files += [(os.path.join(getScriptDirectory(), 'assets', x), os.path.relpath(x, getScriptDirectory())) for x in list_all_files(os.path.join(getScriptDirectory(), 'assets'))]
 
-# will later be needed for the client
-#include_files+=[(os.path.join(script.Path, "accessible_output", "lib", x), os.path.join("lib", x)) for x in os.listdir(os.path.join(script.Path, #"accessible_output", "lib"))]
+
+base, files = accessible_output2.find_datafiles()[0]
+
+include_files += [(f, os.path.join(base, os.path.split(f)[-1])) for f in files]
 
 build_exe_options = {
                      "includes": [
