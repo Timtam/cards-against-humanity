@@ -296,4 +296,4 @@ class CurrCardWindow(wx.Panel):
 def onEraseBackGround(e):
   # do nothing
   # for flicker-fix
-  None
+  pass

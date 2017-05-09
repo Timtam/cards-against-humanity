@@ -159,4 +159,4 @@ class ScrolledGrid(wx.ScrolledWindow):
 def onEraseBackGround(e):
   # do nothing
   # for flicker-fix
-  None
+  pass

@@ -280,7 +280,7 @@ class MainFrame(wx.Frame):
 def onEraseBackGround(e):
   # do nothing
   # for flicker-fix
-  None
+  pass
 
 
 

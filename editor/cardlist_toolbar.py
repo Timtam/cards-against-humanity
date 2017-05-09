@@ -215,4 +215,4 @@ class CardListToolbar(wx.ToolBar):
 def onEraseBackGround(e):
   # do nothing
   # for flicker-fix
-  None
+  pass
