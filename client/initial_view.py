@@ -42,12 +42,12 @@ class InitialView(View):
     self.input_x = hmiddle + space - 100
     
     # create text inputs with positions
-    self.server_input = TextInput(display.screen, font,
+    self.server_input = TextInput(display, font,
                                   (self.input_x, self.server_y),
                                   TEXT_INPUT_WIDTH, 'Server address')
-    self.uname_input = TextInput(display.screen, font,
+    self.uname_input = TextInput(display, font,
                                  (self.input_x, self.uname_y), TEXT_INPUT_WIDTH, 'Username')
-    self.pword_input = TextInput(display.screen, font,
+    self.pword_input = TextInput(display, font,
                                  (self.input_x, self.pword_y), TEXT_INPUT_WIDTH, 'Password')
     
     # buttons connect and close

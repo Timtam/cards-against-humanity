@@ -84,9 +84,9 @@ class Button:
 
 # own TextInput class, which we added a rectangle
 class TextInput:
-  def __init__(self, screen, font, (x, y), width, label=''):
+  def __init__(self, display, font, (x, y), width, label=''):
     self.label = label
-    self.screen = screen
+    self.display = display
     self.x = x + INPUT_PADDING
     self.y = y
     self.rect_color = (0, 0, 0)
@@ -132,8 +132,8 @@ class TextInput:
   
   
   def render(self):
-    self.screen.blit(self.input.render(), (self.x, self.y))
-    pygame.draw.rect(self.screen, self.rect_color, self.input_rect, 1)
+    self.display.screen.blit(self.input.render(), (self.x, self.y))
+    pygame.draw.rect(self.display.screen, self.rect_color, self.input_rect, 1)
 
 
   def setLabel(self, text):
