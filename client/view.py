@@ -1,3 +1,4 @@
+import accessible_output2.outputs.auto as speech
 import pygame
 import pygame.locals as pl
 
@@ -6,12 +7,16 @@ import pygame.locals as pl
 class View(object):
   def __init__(self, display):
     self.display = display
+    self.first_call = False
+    self.speaker = speech.Auto()
     self.tab_order = []
     self.tab_position = 0
   
   
   def update(self):
-    pass
+    if not self.first_call:
+      self.first_update()
+      self.first_call = True
   
   
   def render(self):
@@ -19,6 +24,9 @@ class View(object):
   
   
   def handleEvent(self, event):
+
+    if not self.display.accessibility:
+      return
 
     if len(self.tab_order) == 0:
       return
@@ -34,7 +42,7 @@ class View(object):
           if self.tab_position >= len(self.tab_order):
             self.tab_position = 0
 
-        # TODO: speaking the currently selected item
+        self.speak(self.tab_order[self.tab_position].getLabel(), True)
   
   
   def loadImage(self, filename, colorkey=None):
@@ -54,3 +62,16 @@ class View(object):
     image.set_colorkey(colorkey, pygame.RLEACCEL)
     
     return image
+
+  def speak(self, text, interrupt=False):
+    self.speaker.speak(text, interrupt)
+
+  # will only be called once the view receives it's first update
+  def first_update(self):
+    if not self.display.accessibility:
+      return
+
+    if len(self.tab_order) == 0:
+      return
+
+    self.speak(self.tab_order[0].getLabel(), False)

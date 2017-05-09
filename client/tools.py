@@ -13,6 +13,8 @@ class Button:
   def __init__(self, screen, text, font, tcolor, (x, y), width=-1, height=-1):
     # init values
     self.screen = screen
+    # used for accessibility purposes
+    self.label = text
     self.text = font.render(text, 1, tcolor)
     self.x = x
     self.y = y
@@ -71,10 +73,19 @@ class Button:
     self.screen.blit(self.text, (self.text_x, self.text_y))
 
 
+  def setLabel(self, text):
+    self.label = text
+
+
+  def getLabel(self):
+    return self.label+" button"
+
+
 
 # own TextInput class, which we added a rectangle
 class TextInput:
-  def __init__(self, screen, font, (x, y), width):
+  def __init__(self, screen, font, (x, y), width, label=''):
+    self.label = label
     self.screen = screen
     self.x = x + INPUT_PADDING
     self.y = y
@@ -125,3 +136,16 @@ class TextInput:
   def render(self):
     self.screen.blit(self.input.render(), (self.x, self.y))
     pygame.draw.rect(self.screen, self.rect_color, self.input_rect, 1)
+
+
+  def setLabel(self, text):
+    self.label = text
+
+
+  def getLabel(self):
+    label = self.label+" input: "
+    if self.input.get_text() == '':
+      label += "empty"
+    else:
+      label += self.input.get_text()
+    return label

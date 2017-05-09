@@ -44,11 +44,11 @@ class InitialView(View):
     # create text inputs with positions
     self.server_input = TextInput(display.screen, font,
                                   (self.input_x, self.server_y),
-                                  TEXT_INPUT_WIDTH)
+                                  TEXT_INPUT_WIDTH, 'Server address')
     self.uname_input = TextInput(display.screen, font,
-                                 (self.input_x, self.uname_y), TEXT_INPUT_WIDTH)
+                                 (self.input_x, self.uname_y), TEXT_INPUT_WIDTH, 'Username')
     self.pword_input = TextInput(display.screen, font,
-                                 (self.input_x, self.pword_y), TEXT_INPUT_WIDTH)
+                                 (self.input_x, self.pword_y), TEXT_INPUT_WIDTH, 'Password')
     
     # buttons connect and close
     self.button_connect = Button(self.display.screen, "Connect", font,
@@ -60,7 +60,9 @@ class InitialView(View):
       vmiddle + 150))  # calc position with own width
     self.button_close = Button(self.display.screen, "Close", font, (0, 0, 0),
                                (hmiddle, vmiddle + 150))
-  
+
+    self.tab_order = [self.server_input, self.uname_input, self.pword_input, self.button_connect, self.button_close]
+
   
   def handleEvent(self, event):
     View.handleEvent(self, event)
@@ -93,6 +95,12 @@ class InitialView(View):
   
   
   def update(self):
+    View.update(self)
     self.server_input.update()
     self.uname_input.update()
     self.pword_input.update()
+
+
+  def first_update(self):
+    self.speak("Welcome to Cards Against Humanity Online")
+    View.first_update(self)
