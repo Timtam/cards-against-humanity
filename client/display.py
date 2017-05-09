@@ -9,6 +9,7 @@ from .initial_view import InitialView
 class Display(object):
   def __init__(self, width=1280, height=720):
     
+    self.accessibility = False
     # initializing the loop caller
     self.loop = LoopingCall(self.process)
     self.running = True
@@ -63,6 +64,7 @@ class Display(object):
     self.running = False
   
   
-  def init(self):
+  def init(self, accessibility = False):
+    self.accessibility = accessibility
     self.loop.start(1.0 / 30.0)
     reactor.run()

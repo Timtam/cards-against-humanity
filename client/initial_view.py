@@ -63,6 +63,7 @@ class InitialView(View):
   
   
   def handleEvent(self, event):
+    View.handleEvent(self, event)
     self.server_input.handleEvent(event)
     self.uname_input.handleEvent(event)
     self.pword_input.handleEvent(event)

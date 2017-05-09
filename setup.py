@@ -73,6 +73,10 @@ setup(
       base=(None if platform.system() != 'Windows' else 'Win32GUI')
     ),
     Executable(
+      'client-accessible.py',
+      base=(None if platform.system() != 'Windows' else 'Win32GUI')
+    ),
+    Executable(
       'editor.py',
       base=(None if platform.system() != 'Windows' else 'Win32GUI')
     ),
