@@ -95,6 +95,11 @@ class TextInput:
       elif event.key == pl.K_HOME:
         self.cursor_position = 0
       
+      elif event.key == pl.K_TAB:
+        # prevent tab usage here
+        # this key is only a focus key for us
+        pass
+
       else:
         # to avoid to input endless text, check the length of current text +
         # next character
