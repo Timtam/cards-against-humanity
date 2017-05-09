@@ -15,7 +15,7 @@ class TextInput:
   """
   
   
-  def __init__(self, font,
+  def __init__(self, display, font,
                antialias=True,
                text_color=(0, 0, 0),
                cursor_color=(0, 0, 1),
@@ -30,6 +30,7 @@ class TextInput:
     """
     
     # Text related vars:
+    self.display = display
     self.antialias = antialias
     self.text_color = text_color
     self.font_size = font.get_linesize()

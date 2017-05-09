@@ -79,6 +79,8 @@ class View(object):
     return image
 
   def speak(self, text, interrupt=False):
+    if not self.display.accessibility:
+      return
     self.speaker.speak(text, interrupt)
 
   # will only be called once the view receives it's first update
