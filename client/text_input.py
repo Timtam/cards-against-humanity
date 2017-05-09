@@ -68,6 +68,10 @@ class TextInput:
       self.cursor_visible = True  # So the user sees where he writes
       
       if event.key == pl.K_BACKSPACE:  # FIXME: Delete at beginning of line?
+        try:
+          self.display.view.speak(self.input_string[-1], True)
+        except IndexError:
+          self.display.view.speak('', True)
         self.input_string = self.input_string[
                             :max(self.cursor_position - 1, 0)] + \
                             self.input_string[self.cursor_position:]
@@ -75,6 +79,10 @@ class TextInput:
         self.cursor_position = max(self.cursor_position - 1, 0)
       
       elif event.key == pl.K_DELETE:
+        try:
+          self.display.view.speak(self.input_string[self.cursor_position], True)
+        except IndexError:
+          self.display.view.speak('', True)
         self.input_string = self.input_string[:self.cursor_position] + \
                             self.input_string[self.cursor_position + 1:]
       
@@ -85,16 +93,32 @@ class TextInput:
         # Add one to cursor_pos, but do not exceed len(input_string)
         self.cursor_position = min(self.cursor_position + 1,
                                    len(self.input_string))
+        try:
+          self.display.view.speak(self.input_string[self.cursor_position], True)
+        except IndexError:
+          self.display.view.speak('', True)
       
       elif event.key == pl.K_LEFT:
         # Subtract one from cursor_pos, but do not go below zero:
         self.cursor_position = max(self.cursor_position - 1, 0)
+        try:
+          self.display.view.speak(self.input_string[self.cursor_position], True)
+        except IndexError:
+          self.display.view.speak('', True)
       
       elif event.key == pl.K_END:
         self.cursor_position = len(self.input_string)
+        try:
+          self.display.view.speak(self.input_string[self.cursor_position], True)
+        except IndexError:
+          self.display.view.speak('', True)
       
       elif event.key == pl.K_HOME:
         self.cursor_position = 0
+        try:
+          self.display.view.speak(self.input_string[self.cursor_position], True)
+        except IndexError:
+          self.display.view.speak('', True)
       
       elif event.key == pl.K_TAB:
         # prevent tab usage here
@@ -113,6 +137,7 @@ class TextInput:
                               self.input_string[self.cursor_position:]
           self.cursor_position += len(
             event.unicode)  # Some are empty, e.g. K_UP
+        self.display.view.speak(event.unicode, True)
     
     return False
   
