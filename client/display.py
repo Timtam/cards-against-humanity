@@ -78,5 +78,6 @@ class Display(object):
     def sound(name):
       return pygame.mixer.Sound(os.path.join(getScriptDirectory(), 'assets', 'sound', name+'.ogg'))
 
+    self.cursor_sound = sound('cursor')
     self.tap_sound = sound('tap')
     self.tap_delete_sound = sound('tap_delete')

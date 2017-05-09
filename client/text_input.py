@@ -101,6 +101,8 @@ class TextInput:
           self.display.view.speak(self.input_string[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
+        self.display.cursor_sound.stop()
+        self.display.cursor_sound.play()
       
       elif event.key == pl.K_LEFT:
         # Subtract one from cursor_pos, but do not go below zero:
@@ -109,6 +111,8 @@ class TextInput:
           self.display.view.speak(self.input_string[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
+        self.display.cursor_sound.stop()
+        self.display.cursor_sound.play()
       
       elif event.key == pl.K_END:
         self.cursor_position = len(self.input_string)
@@ -116,6 +120,8 @@ class TextInput:
           self.display.view.speak(self.input_string[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
+        self.display.cursor_sound.stop()
+        self.display.cursor_sound.play()
       
       elif event.key == pl.K_HOME:
         self.cursor_position = 0
@@ -123,6 +129,8 @@ class TextInput:
           self.display.view.speak(self.input_string[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
+        self.display.cursor_sound.stop()
+        self.display.cursor_sound.play()
       
       elif event.key == pl.K_TAB:
         # prevent tab usage here
