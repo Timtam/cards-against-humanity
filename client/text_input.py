@@ -41,6 +41,9 @@ class TextInput:
     # max width of text input
     self.max_width = max_width
     
+    # focus
+    self.focus = False
+    
     # Text-surface will be created during the first update call:
     self.surface = pygame.Surface((1, 1))
     self.surface.set_alpha(0)
@@ -50,24 +53,28 @@ class TextInput:
       (int(self.font_size / 20 + 1), self.font_size))
     self.cursor_surface.fill(cursor_color)
     self.cursor_position = 0  # Inside text
-    self.cursor_visible = True  # Switches every self.cursor_switch_ms ms
+    self.cursor_visible = False  # Switches every self.cursor_switch_ms ms
     self.cursor_switch_ms = 500  # /|\
     self.cursor_ms_counter = 0
     
     self.clock = pygame.time.Clock()
   
   
+  def setFocus(self, flag):
+    self.focus = flag
+  
+  
   def handleEvent(self, event):
-    if event.type == pygame.KEYDOWN:
+    if self.focus and event.type == pygame.KEYDOWN:
       self.cursor_visible = True  # So the user sees where he writes
       
       if event.key == pl.K_BACKSPACE:  # FIXME: Delete at beginning of line?
         self.input_string = self.input_string[
                             :max(self.cursor_position - 1, 0)] + \
                             self.input_string[self.cursor_position:]
-        
         # Subtract one from cursor_pos, but do not go below zero:
         self.cursor_position = max(self.cursor_position - 1, 0)
+      
       elif event.key == pl.K_DELETE:
         self.input_string = self.input_string[:self.cursor_position] + \
                             self.input_string[self.cursor_position + 1:]
@@ -93,9 +100,9 @@ class TextInput:
       else:
         # to avoid to input endless text, check the length of current text +
         # next character
-        text = self.font_object.render(self.input_string + "W", 1, (
-        0, 0, 0))  # + "W" because its the possibly widest letter ;)
-        if text.get_width() <= self.max_width:
+        text_width = self.font_object.size(self.input_string + "W")[0]  # + "W",
+          # because its the possibly widest letter ;)
+        if text_width <= self.max_width:
           # If no special key is pressed, add unicode of key to input_string
           self.input_string = self.input_string[:self.cursor_position] + \
                               event.unicode + \
@@ -140,10 +147,13 @@ class TextInput:
   
   
   def update(self):
-    # Update self.cursor_visible
-    self.cursor_ms_counter += self.clock.get_time()
-    if self.cursor_ms_counter >= self.cursor_switch_ms:
-      self.cursor_ms_counter %= self.cursor_switch_ms
-      self.cursor_visible = not self.cursor_visible
-    
-    self.clock.tick()
+    if self.focus:
+      # Update self.cursor_visible
+      self.cursor_ms_counter += self.clock.get_time()
+      if self.cursor_ms_counter >= self.cursor_switch_ms:
+        self.cursor_ms_counter %= self.cursor_switch_ms
+        self.cursor_visible = not self.cursor_visible
+      
+      self.clock.tick()
+    else:
+      self.cursor_visible = False
