@@ -1,8 +1,6 @@
 import pygame
 import pygame.locals as pl
 
-pygame.font.init()
-
 DEFAULT_LENGTH = 300
 
 

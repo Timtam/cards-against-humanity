@@ -9,6 +9,7 @@ from .display import Display
 
 def main(accessibility=False):
   pygame.init()
+  pygame.font.init()
   globalLogBeginner.beginLoggingTo([textFileLogObserver(sys.stdout)])
   
   display = Display()
