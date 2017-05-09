@@ -40,6 +40,8 @@ class Button:
   def __init__(self, screen, text, font, tcolor, (x, y), width=-1, height=-1):
     # init values
     self.screen = screen
+    # used for accessibility purposes
+    self.label = text
     self.text = font.render(text, 1, tcolor)
     self.x = x
     self.y = y
@@ -98,11 +100,20 @@ class Button:
     self.screen.blit(self.text, (self.text_x, self.text_y))
 
 
+  def setLabel(self, text):
+    self.label = text
+
+
+  def getLabel(self):
+    return self.label+" button"
+
+
 
 # own TextInput class, which we added a rectangle
 class TextInput:
-  def __init__(self, screen, font, (x, y), width):
-    self.screen = screen
+  def __init__(self, display, font, (x, y), width, label=''):
+    self.label = label
+    self.display = display
     self.x = x + INPUT_PADDING
     self.y = y
     self.rect_color = (0, 0, 0)
@@ -111,7 +122,7 @@ class TextInput:
     # to get the height of text with this font
     text_height = font.size("Dummy")[1]
     
-    self.input = text_input.TextInput(font, max_width=width - 2 * INPUT_PADDING)
+    self.input = text_input.TextInput(self.display, font, max_width=width - 2 * INPUT_PADDING)
     self.x_end = x + width
     self.y_end = y + text_height + 2 * INPUT_PADDING
     self.input_rect = pygame.Rect(
@@ -142,15 +153,13 @@ class TextInput:
     # set focus if clicked
     if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
             self.input_rect.collidepoint(
-              event.pos):  # TODO: constant for button == 1
-      self.focus = True
-      self.input.setFocus(True)
+            event.pos):  # TODO: constant for button == 1
+      self.setFocus(True)
       # self.rect_color = (255, 0, 0) # debug
     # if left mouse button clicked anywhere else, focus is gone ("dirty"
     # solution)
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-      self.focus = False
-      self.input.setFocus(False)
+      self.setFocus(False)
       # self.rect_color = (0, 0, 0)  # debug
   
   
@@ -159,5 +168,18 @@ class TextInput:
   
   
   def render(self):
-    self.screen.blit(self.input.render(), (self.x, self.y))
-    pygame.draw.rect(self.screen, self.rect_color, self.input_rect, 1)
+    self.display.screen.blit(self.input.render(), (self.x, self.y))
+    pygame.draw.rect(self.display.screen, self.rect_color, self.input_rect, 1)
+
+
+  def setLabel(self, text):
+    self.label = text
+
+
+  def getLabel(self):
+    label = self.label+" input: "
+    if self.input.get_text() == '':
+      label += "empty"
+    else:
+      label += self.input.get_text()
+    return label

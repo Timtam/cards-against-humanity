@@ -1,8 +1,10 @@
+import os.path
 import pygame
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 
 from .initial_view import InitialView
+from shared.path import getScriptDirectory
 
 
 
@@ -18,10 +20,12 @@ class Display(object):
     pygame.display.set_caption('Cards Against Humanity Online')
     
     # global font (may be the original from Cards Against Humanity)
-    self.font = pygame.font.Font("assets/helvetica-bold.ttf", 20)
+    self.font = pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 20)
     
     # setting the current view
     self.view = InitialView(self)
+    # loading all sounds
+    self.loadSounds()
   
   
   def getFont(self):
@@ -68,3 +72,12 @@ class Display(object):
     self.accessibility = accessibility
     self.loop.start(1.0 / 30.0)
     reactor.run()
+
+  def loadSounds(self):
+    # the function which builds some sounds path for us
+    def sound(name):
+      return pygame.mixer.Sound(os.path.join(getScriptDirectory(), 'assets', 'sound', name+'.ogg'))
+
+    self.cursor_sound = sound('cursor')
+    self.tap_sound = sound('tap')
+    self.tap_delete_sound = sound('tap_delete')

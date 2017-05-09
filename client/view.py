@@ -1,3 +1,4 @@
+import accessible_output2.outputs.auto as speech
 import pygame
 import pygame.locals as pl
 
@@ -6,12 +7,16 @@ import pygame.locals as pl
 class View(object):
   def __init__(self, display):
     self.display = display
+    self.first_call = False
+    self.speaker = speech.Auto()
     self.tab_order = []
     self.tab_position = 0
   
   
   def update(self):
-    pass
+    if not self.first_call:
+      self.first_update()
+      self.first_call = True
   
   
   def render(self):
@@ -20,12 +25,23 @@ class View(object):
   
   def handleEvent(self, event):
 
+    if not self.display.accessibility:
+      return
+
     if len(self.tab_order) == 0:
       return
 
-    if event.type == pygame.KEYUP:
+    if event.type == pygame.KEYDOWN:
       if event.key == pl.K_TAB:
-        if event.mod in [pl.KMOD_LSHIFT, pl.KMOD_RSHIFT]:
+        try:
+          self.tab_order[self.tab_position].setFocus(False)
+        except AttributeError:
+          pass
+        # some weird problem here
+        # after restoring the focus of the window by tabbing back into
+        # it, the mod attribute won't be set correctly
+        # that's why we will try to guess it here in a different way
+        if pygame.key.get_mods()&pl.KMOD_LSHIFT == pl.KMOD_LSHIFT or pygame.key.get_mods()&pl.KMOD_RSHIFT == pl.KMOD_RSHIFT:
           self.tab_position -= 1
           if self.tab_position < 0:
             self.tab_position = len(self.tab_order)-1
@@ -34,8 +50,15 @@ class View(object):
           if self.tab_position >= len(self.tab_order):
             self.tab_position = 0
 
-        # TODO: speaking the currently selected item
+        self.speak(self.tab_order[self.tab_position].getLabel(), True)
+
+        try:
+          self.tab_order[self.tab_position].setFocus(True)
+        except AttributeError:
+          pass
   
+      elif event.key == pl.K_LCTRL or pygame.key == pl.K_RCTRL:
+        self.speak(self.tab_order[self.tab_position].getLabel(), True)
   
   def loadImage(self, filename, colorkey=None):
     
@@ -54,3 +77,22 @@ class View(object):
     image.set_colorkey(colorkey, pygame.RLEACCEL)
     
     return image
+
+  def speak(self, text, interrupt=False):
+    if not self.display.accessibility:
+      return
+    self.speaker.speak(text, interrupt)
+
+  # will only be called once the view receives it's first update
+  def first_update(self):
+    if not self.display.accessibility:
+      return
+
+    if len(self.tab_order) == 0:
+      return
+
+    self.speak(self.tab_order[0].getLabel(), False)
+    try:
+      self.tab_order[0].setFocus(True)
+    except AttributeError:
+      pass
