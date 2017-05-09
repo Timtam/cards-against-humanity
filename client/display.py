@@ -9,9 +9,9 @@ from shared.path import getScriptDirectory
 
 
 class Display(object):
-  def __init__(self, width=1280, height=720):
+  def __init__(self, width=1280, height=720, accessibility = False):
     
-    self.accessibility = False
+    self.accessibility = accessibility
     # initializing the loop caller
     self.loop = LoopingCall(self.process)
     self.running = True
@@ -68,8 +68,7 @@ class Display(object):
     self.running = False
   
   
-  def init(self, accessibility = False):
-    self.accessibility = accessibility
+  def init(self):
     self.loop.start(1.0 / 30.0)
     reactor.run()
 

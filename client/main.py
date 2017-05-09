@@ -13,5 +13,5 @@ def main(accessibility=False):
   pygame.font.init()
   globalLogBeginner.beginLoggingTo([textFileLogObserver(sys.stdout)])
   
-  display = Display()
-  display.init(accessibility)
+  display = Display(accessibility = accessibility)
+  display.init()
