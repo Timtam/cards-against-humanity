@@ -37,7 +37,11 @@ class View(object):
           self.tab_order[self.tab_position].setFocus(False)
         except AttributeError:
           pass
-        if event.mod in [pl.KMOD_LSHIFT, pl.KMOD_RSHIFT]:
+        # some weird problem here
+        # after restoring the focus of the window by tabbing back into
+        # it, the mod attribute won't be set correctly
+        # that's why we will try to guess it here in a different way
+        if pygame.key.get_mods()&pl.KMOD_LSHIFT == pl.KMOD_LSHIFT or pygame.key.get_mods()&pl.KMOD_RSHIFT == pl.KMOD_RSHIFT:
           self.tab_position -= 1
           if self.tab_position < 0:
             self.tab_position = len(self.tab_order)-1
