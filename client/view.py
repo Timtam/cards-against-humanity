@@ -60,6 +60,13 @@ class View(object):
   
       elif event.key == pl.K_LCTRL or pygame.key == pl.K_RCTRL:
         self.speak(self.tab_order[self.tab_position].getLabel(), True)
+
+      elif event.key == pl.K_RETURN:
+
+        try:
+          self.tab_order[self.tab_position].getCallback()()
+        except (AttributeError, ValueError):
+          pass
   
   def loadImage(self, filename, colorkey=None):
     

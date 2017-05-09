@@ -61,6 +61,8 @@ class InitialView(View):
     self.button_close = Button(self.display.screen, "Close", font, (0, 0, 0),
                                (hmiddle, vmiddle + 150))
 
+    self.button_close.setCallback(self.onClose)
+
     self.tab_order = [self.server_input, self.uname_input, self.pword_input, self.button_connect, self.button_close]
 
   
@@ -104,3 +106,7 @@ class InitialView(View):
   def first_update(self):
     self.speak("Welcome to Cards Against Humanity Online")
     View.first_update(self)
+
+
+  def onClose(self):
+    pygame.event.post(pygame.event.Event(pygame.QUIT))

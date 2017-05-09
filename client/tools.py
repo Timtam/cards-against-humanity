@@ -43,6 +43,7 @@ class Button:
     # used for accessibility purposes
     self.label = text
     self.text = font.render(text, 1, tcolor)
+    self.callback = None
     self.x = x
     self.y = y
     self.width = self.w = width
@@ -91,6 +92,9 @@ class Button:
     if event.type == pygame.MOUSEMOTION and self.button_rect.collidepoint(
             event.pos):
       self.color = BUTTON_COLOR_HOVER
+    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.button_rect.coolidepoint(event.pos):
+      if self.callback:
+        self.callback()
     else:
       self.color = BUTTON_COLOR
   
@@ -106,6 +110,14 @@ class Button:
 
   def getLabel(self):
     return self.label+" button"
+
+
+  def setCallback(self, cb):
+    self.callback = cb
+
+
+  def getCallback(self):
+    return self.callback
 
 
 
