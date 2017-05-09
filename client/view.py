@@ -31,7 +31,7 @@ class View(object):
     if len(self.tab_order) == 0:
       return
 
-    if event.type == pygame.KEYUP:
+    if event.type == pygame.KEYDOWN:
       if event.key == pl.K_TAB:
         if event.mod in [pl.KMOD_LSHIFT, pl.KMOD_RSHIFT]:
           self.tab_position -= 1
@@ -44,6 +44,8 @@ class View(object):
 
         self.speak(self.tab_order[self.tab_position].getLabel(), True)
   
+      elif event.key == pl.K_LCTRL or pygame.key == pl.K_RCTRL:
+        self.speak(self.tab_order[self.tab_position].getLabel(), True)
   
   def loadImage(self, filename, colorkey=None):
     
