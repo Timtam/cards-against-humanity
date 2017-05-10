@@ -1,4 +1,5 @@
 from tools import *
+from .message_view import MessageView
 from .view import View
 
 SPACE_BETWEEN_LABEL_AND_INPUT = 20
@@ -56,6 +57,7 @@ class LoginView(View):
     # now calc position with own width
     self.button_connect.setPosition((hmiddle - self.button_connect.getWidth()
                                      - space, vmiddle + 150))
+    self.button_connect.setCallback(self.onConnect)
     self.button_close = Button(self.display, "Close", font, (0, 0, 0),
                                (hmiddle, vmiddle + 150))
     
@@ -110,3 +112,7 @@ class LoginView(View):
   
   def onClose(self):
     pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+
+  def onConnect(self):
+    self.display.setView(MessageView)
