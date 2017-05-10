@@ -63,9 +63,12 @@ class View(object):
 
       elif event.key == pl.K_RETURN:
 
+        self.display.button_up_sound.stop()
+        self.display.button_up_sound.play()
+
         try:
           self.tab_order[self.tab_position].getCallback()()
-        except (AttributeError, ValueError):
+        except (AttributeError, TypeError):
           pass
   
   def loadImage(self, filename, colorkey=None):

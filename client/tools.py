@@ -37,9 +37,9 @@ textmarker = (  # sized 16x24
 
 
 class Button:
-  def __init__(self, screen, text, font, tcolor, (x, y), width=-1, height=-1):
+  def __init__(self, display, text, font, tcolor, (x, y), width=-1, height=-1):
     # init values
-    self.screen = screen
+    self.display = display
     # used for accessibility purposes
     self.label = text
     self.text = font.render(text, 1, tcolor)
@@ -96,11 +96,15 @@ class Button:
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and \
             self.button_rect.collidepoint(
             event.pos):
+      self.display.button_up_sound.stop()
+      self.display.button_up_sound.play()
       self.color = BUTTON_COLOR_HOVER
       self.clicked = True
     elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
             self.button_rect.collidepoint(
             event.pos):
+      self.display.button_down_sound.stop()
+      self.display.button_down_sound.play()
       self.color = BUTTON_COLOR_HOVER
       if self.clicked:
         if self.callback:
@@ -112,8 +116,8 @@ class Button:
   
   
   def render(self):
-    pygame.draw.rect(self.screen, self.color, self.button_rect, 0)
-    self.screen.blit(self.text, (self.text_x, self.text_y))
+    pygame.draw.rect(self.display.screen, self.color, self.button_rect, 0)
+    self.display.screen.blit(self.text, (self.text_x, self.text_y))
   
   
   def setLabel(self, text):
