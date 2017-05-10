@@ -8,8 +8,8 @@ from shared.path import getScriptDirectory
 
 
 class ScrolledTextPanel:
-  def __init__(self, display, text, x, y, width, height):
-    self.display = display
+  def __init__(self, screen, text, x, y, width, height):
+    self.screen = screen
     self.text = text
     self.x = x
     self.y = y
@@ -76,5 +76,5 @@ class ScrolledTextPanel:
   def render(self):
     pos_y = self.y
     for text_line in self.text_surfaces:
-      self.display.screen.blit(text_line, (self.x, pos_y))
+      self.screen.blit(text_line, (self.x, pos_y))
       pos_y += text_line.get_height()

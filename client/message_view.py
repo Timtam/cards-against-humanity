@@ -12,9 +12,13 @@ class MessageView(View):
     View.__init__(self, display)
     
     self.display = display
-    self.display.screen = pygame.display.set_mode((width, height))
     self.width = width
     self.height = height
+    self.old_screen = display.screen.copy()
+    self.old_screen.set_alpha(86)
+    self.display_size = display.getSize()
+    self.hmiddle = self.display_size[0] / 2
+    self.vmiddle = self.display_size[1] / 2
     
     self.text = ""
     dummy_text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
@@ -23,6 +27,7 @@ class MessageView(View):
                  "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
                  "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
                  "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
+                 "" \
                  "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
                  "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
                  "et accusam et justo duo dolores et ea rebum. Stet clita " \
@@ -30,7 +35,13 @@ class MessageView(View):
                  "dolor sit amet."
     self.setText(dummy_text)
     
-    self.scrolled_text = ScrolledTextPanel(self.display, self.text,
+    self.message_box = pygame.Surface((width, height))
+    self.message_border = pygame.Rect(0, 0, width, height)
+    
+    self.box_x = self.hmiddle - width / 2
+    self.box_y = self.vmiddle - height / 2
+    
+    self.scrolled_text = ScrolledTextPanel(self.message_box, self.text,
                                            PADDING_LEFT_RIGHT,
                                            PADDING_TOP_BOTTOM,
                                            width - 2 * PADDING_LEFT_RIGHT,
@@ -51,7 +62,11 @@ class MessageView(View):
   
   
   def render(self):
+    self.display.screen.blit(self.old_screen, (0, 0))
+    self.message_box.fill((255, 255, 255))
+    pygame.draw.rect(self.message_box, (0, 0, 0), self.message_border, 3)
     self.scrolled_text.render()
+    self.display.screen.blit(self.message_box, (self.box_x, self.box_y))
   
   
   def handleEvent(self, event):
