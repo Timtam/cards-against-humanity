@@ -57,7 +57,7 @@ class TextInput:
     self.cursor_ms_counter = 0
     
     self.clock = pygame.time.Clock()
-
+  
   
   def setFocus(self, flag):
     self.focus = flag
@@ -136,12 +136,12 @@ class TextInput:
         # prevent usage here
         # those keys are used differently in our project
         pass
-
+      
       else:
         # to avoid to input endless text, check the length of current text +
         # next character
         text_width = self.font_object.size(self.input_string + "W")[0]  # + "W",
-          # because its the possibly widest letter ;)
+        # because its the possibly widest letter ;)
         if text_width <= self.max_width:
           # If no special key is pressed, add unicode of key to input_string
           self.input_string = self.input_string[:self.cursor_position] + \
@@ -153,7 +153,6 @@ class TextInput:
         if len(event.unicode):
           self.display.tap_sound.stop()
           self.display.tap_sound.play()
-
     
     return False
   

@@ -6,6 +6,7 @@ BUTTON_PADDING = 5
 BUTTON_COLOR = (128, 128, 128)
 BUTTON_COLOR_HOVER = (100, 100, 100)
 INPUT_PADDING = 5
+MOUSE_BUTTON_LEFT = 1
 
 textmarker = (  # sized 16x24
   "ooooo ooooo     ",
@@ -94,15 +95,15 @@ class Button:
             event.pos):
       self.color = BUTTON_COLOR_HOVER
     
-    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and \
-            self.button_rect.collidepoint(event.pos):
+    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == \
+            MOUSE_BUTTON_LEFT and self.button_rect.collidepoint(event.pos):
       self.display.button_up_sound.stop()
       self.display.button_up_sound.play()
       self.color = BUTTON_COLOR_HOVER
       self.clicked = True
     
-    elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
-            self.button_rect.collidepoint(event.pos):
+    elif event.type == pygame.MOUSEBUTTONUP and event.button == \
+            MOUSE_BUTTON_LEFT and self.button_rect.collidepoint(event.pos):
       self.display.button_down_sound.stop()
       self.display.button_down_sound.play()
       self.color = BUTTON_COLOR_HOVER
@@ -167,9 +168,6 @@ class TextInput:
   def setFocus(self, flag):
     self.focus = flag
     self.input.setFocus(flag)
-    if flag:
-      # TODO: "defocus" all others
-      pass
   
   
   def handleEvent(self, event):
@@ -189,9 +187,8 @@ class TextInput:
         self.cursor_is_textmarker = False
     
     # set focus if clicked
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and \
-            self.input_rect.collidepoint(event.pos):
-      # TODO: constant for button == 1
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == \
+            MOUSE_BUTTON_LEFT and self.input_rect.collidepoint(event.pos):
       self.clicked = True
     elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
             self.input_rect.collidepoint(event.pos):
@@ -202,8 +199,8 @@ class TextInput:
     
     # if left mouse button clicked anywhere else, focus is gone ("dirty"
     # solution)
-    elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and not \
-            self.input_rect.collidepoint(event.pos):
+    elif event.type == pygame.MOUSEBUTTONUP and event.button == \
+            MOUSE_BUTTON_LEFT and not self.input_rect.collidepoint(event.pos):
       self.setFocus(False)
       self.clicked = False
       # self.rect_color = (0, 0, 0)  # debug

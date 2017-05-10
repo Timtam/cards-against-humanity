@@ -15,6 +15,8 @@ class LoginView(View):
     View.__init__(self, display)
     
     font = display.getFont()
+    font_welcome = pygame.font.Font(
+      os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 30)
     font_note = pygame.font.Font(
       os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 14)
     size = display.getSize()
@@ -26,9 +28,10 @@ class LoginView(View):
     # short form of constant
     space = SPACE_BETWEEN_LABEL_AND_INPUT / 2
     
-    # short (! or we have to wrap it and that's not easy...) welcome text
-    self.welcome_text = font.render("Welcome to Cards Against Humanity Online!",
-                                    1, (0, 0, 0))
+    # short welcome text
+    self.welcome_text = font_welcome.render(
+      "Welcome to Cards Against Humanity Online!",
+      1, (0, 0, 0))
     self.welcome_text_pos = (hmiddle - self.welcome_text.get_width() / 2, 100)
     
     # create labels and inputs for server, username and password
