@@ -52,6 +52,7 @@ class Button:
     self.text_y = y + BUTTON_PADDING
     self.button_rect = pygame.Rect(self.x, self.y, self.w, self.h)
     self.color = BUTTON_COLOR
+    self.clicked = False
     
     # calc positions and width + height
     self.setPosition((x, y))
@@ -88,15 +89,22 @@ class Button:
   
   
   def handleEvent(self, event):
-    # hover over button
+    # hover over button and click events
     if event.type == pygame.MOUSEMOTION and self.button_rect.collidepoint(
             event.pos):
       self.color = BUTTON_COLOR_HOVER
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.button_rect.collidepoint(event.pos):
-      if self.callback:
-        self.callback()
+      self.color = BUTTON_COLOR_HOVER
+      self.clicked = True
+    elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and self.button_rect.collidepoint(event.pos):
+      self.color = BUTTON_COLOR_HOVER
+      if self.clicked:
+        if self.callback:
+          self.callback()
+        self.clicked = False
     else:
       self.color = BUTTON_COLOR
+      self.clicked = False
   
   
   def render(self):
@@ -130,7 +138,10 @@ class TextInput:
     self.y = y
     self.rect_color = (0, 0, 0)
     self.focus = False
-    self.flag_not_in_box = True
+    self.cursor_size = (16, 24)
+    self.cursor_hotspot = (6, 12)
+    self.cursor = pygame.cursors.compile(textmarker)
+    self.cursor_is_textmarker = False
     
     # to get the height of text with this font
     text_height = font.size("Dummy")[1]
@@ -153,15 +164,14 @@ class TextInput:
   def handleEvent(self, event):
     self.input.handleEvent(event)
     
-    # TODO: text box hover with changing cursor not working correctly...
+    # change cursor type when hovering over text input
     if event.type == pygame.MOUSEMOTION:
-      size = (16, 24)
-      hotspot = (6, 12)
-      if self.input_rect.collidepoint(event.pos) and pygame.mouse.get_cursor() == pygame.cursors.arrow:
-        pygame.mouse.set_cursor(size, hotspot, *pygame.cursors.compile(
-        textmarker))
-      elif pygame.mouse.get_cursor() != pygame.cursors.arrow:
+      if not self.cursor_is_textmarker and self.input_rect.collidepoint(event.pos):
+        pygame.mouse.set_cursor(self.cursor_size, self.cursor_hotspot, *self.cursor)
+        self.cursor_is_textmarker = True
+      elif self.cursor_is_textmarker and not self.input_rect.collidepoint(event.pos):
         pygame.mouse.set_cursor(*pygame.cursors.arrow)
+        self.cursor_is_textmarker = False
     
     # set focus if clicked
     if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
