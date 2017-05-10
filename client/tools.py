@@ -93,6 +93,8 @@ class Button:
             event.pos):
       self.color = BUTTON_COLOR_HOVER
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.button_rect.collidepoint(event.pos):
+      self.display.button_up_sound.stop()
+      self.display.button_up_sound.play()
       if self.callback:
         self.callback()
     else:
