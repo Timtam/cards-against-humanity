@@ -105,6 +105,7 @@ class InitialView(View):
 
   def firstUpdate(self):
     self.speak("Welcome to Cards Against Humanity Online")
+    self.display.start_sound.play()
     View.firstUpdate(self)
 
 
