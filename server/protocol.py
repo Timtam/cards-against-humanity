@@ -15,7 +15,6 @@ class ServerProtocol(JSONReceiver):
 
   def connectionMade(self):
     self.log.info("connection established from {connection}", connection=self.transport.getPeer())
-    self.sendMessage(MSG_SERVER_AUTHENTIFICATION, version={"major": version.MAJOR, "minor": version.MINOR, "revision": version.REVISION}, databaseVersion=self.factory.cardsDatabaseVersion)
 
   def messageReceived(self, code, data):
     if not self.authenticated and code!=MSG_CLIENT_AUTHENTIFICATION:
