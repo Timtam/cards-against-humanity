@@ -103,9 +103,9 @@ class InitialView(View):
     self.pword_input.update()
 
 
-  def first_update(self):
+  def firstUpdate(self):
     self.speak("Welcome to Cards Against Humanity Online")
-    View.first_update(self)
+    View.firstUpdate(self)
 
 
   def onClose(self):

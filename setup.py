@@ -11,7 +11,6 @@ import sys
 import os
 import os.path
 import platform
-import accessible_output2
 from cx_Freeze import setup,Executable
 from distutils.sysconfig import get_python_lib
 
@@ -39,14 +38,9 @@ def initialize_zope_package():
     print "No __init__.py file found for zope package, creating it manually"
     open(os.path.join(lib_dir, 'zope', '__init__.py'), 'w').write('')
 
-include_files = []
+include_files = [(os.path.join(getScriptDirectory(), 'assets', x), os.path.relpath(x, getScriptDirectory())) for x in list_all_files(os.path.join(getScriptDirectory(), 'assets'))]
 
-include_files += [(os.path.join(getScriptDirectory(), 'assets', x), os.path.relpath(x, getScriptDirectory())) for x in list_all_files(os.path.join(getScriptDirectory(), 'assets'))]
-
-
-base, files = accessible_output2.find_datafiles()[0]
-
-include_files += [(f, os.path.join(base, os.path.split(f)[-1])) for f in files]
+include_files += [(os.path.join(getScriptDirectory(), "accessible_output", "lib", x), os.path.join("lib", x)) for x in os.listdir(os.path.join(getScriptDirectory(), "accessible_output", "lib"))]
 
 build_exe_options = {
                      "includes": [

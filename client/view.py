@@ -11,12 +11,12 @@ class View(object):
     self.tab_position = 0
 
     if self.display.accessibility:
-      import accessible_output2.outputs.auto as speech
-      self.speaker = speech.Auto()  
+      from .speech import Speaker
+      self.speaker = Speaker()
   
   def update(self):
     if not self.first_call:
-      self.first_update()
+      self.firstUpdate()
       self.first_call = True
   
   
@@ -89,10 +89,10 @@ class View(object):
   def speak(self, text, interrupt=False):
     if not self.display.accessibility:
       return
-    self.speaker.speak(text, interrupt)
+    self.speaker.output(text, interrupt)
 
   # will only be called once the view receives it's first update
-  def first_update(self):
+  def firstUpdate(self):
     if not self.display.accessibility:
       return
 
