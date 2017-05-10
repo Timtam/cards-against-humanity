@@ -51,14 +51,14 @@ class InitialView(View):
                                  (self.input_x, self.pword_y), TEXT_INPUT_WIDTH, 'Password')
     
     # buttons connect and close
-    self.button_connect = Button(self.display.screen, "Connect", font,
+    self.button_connect = Button(self.display, "Connect", font,
                                  (0, 0, 0), (hmiddle - 100,
                                              vmiddle + 100))  # dummy positions,
     # for auto-determine width and height
     self.button_connect.setPosition((
       hmiddle - self.button_connect.getWidth() - space,
       vmiddle + 150))  # calc position with own width
-    self.button_close = Button(self.display.screen, "Close", font, (0, 0, 0),
+    self.button_close = Button(self.display, "Close", font, (0, 0, 0),
                                (hmiddle, vmiddle + 150))
 
     self.button_close.setCallback(self.onClose)
