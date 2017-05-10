@@ -23,7 +23,7 @@ class Display(object):
     self.font = pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 20)
     
     # setting the current view
-    self.view = InitialView(self)
+    self.setView(InitialView)
     # loading all sounds
     self.loadSounds()
   
@@ -83,3 +83,7 @@ class Display(object):
     self.start_sound = sound('start')
     self.tap_sound = sound('tap')
     self.tap_delete_sound = sound('tap_delete')
+
+
+  def setView(self, view):
+    self.view = view(self)
