@@ -2,8 +2,10 @@ import os.path
 
 import pygame
 from twisted.internet import reactor
+from twisted.internet.endpoints import TCP4ClientEndpoint
 from twisted.internet.task import LoopingCall
 
+from .factory import ClientFactory
 from shared.path import getScriptDirectory
 
 
@@ -12,8 +14,11 @@ class Display(object):
   def __init__(self, width=1280, height=720, accessibility=False):
     
     self.accessibility = accessibility
+    self.endpoint = None
+    self.factory = ClientFactory(self)
     # initializing the loop caller
     self.loop = LoopingCall(self.process)
+    self.reactor = None
     self.running = True
     
     self.screen = pygame.display.set_mode((width, height))
@@ -65,14 +70,14 @@ class Display(object):
   
   def stop(self):
     pygame.quit()
-    reactor.stop()
+    self.reactor.stop()
     self.running = False
   
   
   def init(self):
     self.loop.start(1.0 / 30.0)
-    reactor.run()
-  
+    self.reactor = reactor
+    self.reactor.run()
 
   def loadSounds(self):
     # the function which builds some sounds path for us
@@ -90,3 +95,10 @@ class Display(object):
   
   def setView(self, view):
     self.view = view(self)
+
+
+  # unhashed password is required here
+  def connect(self, host, username, password):
+    self.endpoint = TCP4ClientEndpoint(self.reactor, host, 11337)
+    deferred = self.endpoint.connect(self.factory)
+    deferred.addErrback(lambda err: err.printTraceback())
