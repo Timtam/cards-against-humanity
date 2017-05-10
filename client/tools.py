@@ -92,7 +92,7 @@ class Button:
     if event.type == pygame.MOUSEMOTION and self.button_rect.collidepoint(
             event.pos):
       self.color = BUTTON_COLOR_HOVER
-    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.button_rect.coolidepoint(event.pos):
+    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.button_rect.collidepoint(event.pos):
       if self.callback:
         self.callback()
     else:
