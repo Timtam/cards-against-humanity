@@ -65,7 +65,7 @@ class View(object):
 
         try:
           self.tab_order[self.tab_position].getCallback()()
-        except (AttributeError, ValueError):
+        except (AttributeError, TypeError):
           pass
   
   def loadImage(self, filename, colorkey=None):

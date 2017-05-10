@@ -132,9 +132,9 @@ class TextInput:
         self.display.cursor_sound.stop()
         self.display.cursor_sound.play()
       
-      elif event.key == pl.K_TAB:
-        # prevent tab usage here
-        # this key is only a focus key for us
+      elif event.key == pl.K_TAB or event.key == pl.K_LCTRL:
+        # prevent usage here
+        # those keys are used differently in our project
         pass
 
       else:
