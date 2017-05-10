@@ -3,7 +3,6 @@ import pygame
 from twisted.internet import reactor
 from twisted.internet.task import LoopingCall
 
-from .initial_view import InitialView
 from shared.path import getScriptDirectory
 
 
@@ -23,7 +22,7 @@ class Display(object):
     self.font = pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 20)
     
     # setting the current view
-    self.setView(InitialView)
+    self.view = None
     # loading all sounds
     self.loadSounds()
   

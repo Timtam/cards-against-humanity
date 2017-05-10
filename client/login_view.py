@@ -6,7 +6,7 @@ TEXT_INPUT_WIDTH = 300
 
 
 
-class InitialView(View):
+class LoginView(View):
   def __init__(self, display):
     View.__init__(self, display)
     

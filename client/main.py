@@ -4,6 +4,7 @@ import pygame
 from twisted.logger import globalLogBeginner, textFileLogObserver
 
 from .display import Display
+from .login_view import LoginView
 
 
 
@@ -14,4 +15,5 @@ def main(accessibility=False):
   globalLogBeginner.beginLoggingTo([textFileLogObserver(sys.stdout)])
   
   display = Display(accessibility = accessibility)
+  display.setView(LoginView)
   display.init()
