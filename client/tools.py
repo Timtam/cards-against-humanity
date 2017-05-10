@@ -93,16 +93,16 @@ class Button:
     if event.type == pygame.MOUSEMOTION and self.button_rect.collidepoint(
             event.pos):
       self.color = BUTTON_COLOR_HOVER
+    
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and \
-            self.button_rect.collidepoint(
-            event.pos):
+            self.button_rect.collidepoint(event.pos):
       self.display.button_up_sound.stop()
       self.display.button_up_sound.play()
       self.color = BUTTON_COLOR_HOVER
       self.clicked = True
+    
     elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
-            self.button_rect.collidepoint(
-            event.pos):
+            self.button_rect.collidepoint(event.pos):
       self.display.button_down_sound.stop()
       self.display.button_down_sound.play()
       self.color = BUTTON_COLOR_HOVER
@@ -110,6 +110,7 @@ class Button:
         if self.callback:
           self.callback()
         self.clicked = False
+    
     else:
       self.color = BUTTON_COLOR
       self.clicked = False
@@ -150,6 +151,7 @@ class TextInput:
     self.cursor_hotspot = (6, 12)
     self.cursor = pygame.cursors.compile(textmarker)
     self.cursor_is_textmarker = False
+    self.clicked = False
     
     # to get the height of text with this font
     text_height = font.size("Dummy")[1]
@@ -158,8 +160,8 @@ class TextInput:
                                       max_width=width - 2 * INPUT_PADDING)
     self.x_end = x + width
     self.y_end = y + text_height + 2 * INPUT_PADDING
-    self.input_rect = pygame.Rect(
-      x, y - INPUT_PADDING, width, text_height + 2 * INPUT_PADDING)
+    self.input_rect = pygame.Rect(x, y - INPUT_PADDING, width,
+                                  text_height + 2 * INPUT_PADDING)
   
   
   def setFocus(self, flag):
@@ -180,22 +182,33 @@ class TextInput:
         pygame.mouse.set_cursor(self.cursor_size, self.cursor_hotspot,
                                 *self.cursor)
         self.cursor_is_textmarker = True
+      
       elif self.cursor_is_textmarker and not self.input_rect.collidepoint(
               event.pos):
         pygame.mouse.set_cursor(*pygame.cursors.arrow)
         self.cursor_is_textmarker = False
     
     # set focus if clicked
-    if event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
-            self.input_rect.collidepoint(
-              event.pos):  # TODO: constant for button == 1
-      self.setFocus(True)
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and \
+            self.input_rect.collidepoint(event.pos):
+      # TODO: constant for button == 1
+      self.clicked = True
+    elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
+            self.input_rect.collidepoint(event.pos):
+      if self.clicked:
+        self.setFocus(True)
+      self.clicked = False
       # self.rect_color = (255, 0, 0) # debug
+    
     # if left mouse button clicked anywhere else, focus is gone ("dirty"
     # solution)
-    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+    elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and not \
+            self.input_rect.collidepoint(event.pos):
       self.setFocus(False)
+      self.clicked = False
       # self.rect_color = (0, 0, 0)  # debug
+    else:
+      self.clicked = False
   
   
   def update(self):

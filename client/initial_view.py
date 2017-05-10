@@ -42,29 +42,28 @@ class InitialView(View):
     self.input_x = hmiddle + space - 100
     
     # create text inputs with positions
-    self.server_input = TextInput(display, font,
-                                  (self.input_x, self.server_y),
+    self.server_input = TextInput(display, font, (self.input_x, self.server_y),
                                   TEXT_INPUT_WIDTH, 'Server address')
-    self.uname_input = TextInput(display, font,
-                                 (self.input_x, self.uname_y), TEXT_INPUT_WIDTH, 'Username')
-    self.pword_input = TextInput(display, font,
-                                 (self.input_x, self.pword_y), TEXT_INPUT_WIDTH, 'Password')
+    self.uname_input = TextInput(display, font, (self.input_x, self.uname_y),
+                                 TEXT_INPUT_WIDTH, 'Username')
+    self.pword_input = TextInput(display, font, (self.input_x, self.pword_y),
+                                 TEXT_INPUT_WIDTH, 'Password')
     
-    # buttons connect and close
-    self.button_connect = Button(self.display, "Connect", font,
-                                 (0, 0, 0), (hmiddle - 100,
-                                             vmiddle + 100))  # dummy positions,
-    # for auto-determine width and height
-    self.button_connect.setPosition((
-      hmiddle - self.button_connect.getWidth() - space,
-      vmiddle + 150))  # calc position with own width
+    # buttons connect and close (dummy positions, for auto-determine width
+    # and height)
+    self.button_connect = Button(self.display, "Connect", font, (0, 0, 0),
+                                 (hmiddle - 100, vmiddle + 100))
+    # now calc position with own width
+    self.button_connect.setPosition((hmiddle - self.button_connect.getWidth()
+                                     - space, vmiddle + 150))
     self.button_close = Button(self.display, "Close", font, (0, 0, 0),
                                (hmiddle, vmiddle + 150))
-
+    
     self.button_close.setCallback(self.onClose)
-
-    self.tab_order = [self.server_input, self.uname_input, self.pword_input, self.button_connect, self.button_close]
-
+    
+    self.tab_order = [self.server_input, self.uname_input, self.pword_input,
+                      self.button_connect, self.button_close]
+  
   
   def handleEvent(self, event):
     View.handleEvent(self, event)
@@ -101,13 +100,13 @@ class InitialView(View):
     self.server_input.update()
     self.uname_input.update()
     self.pword_input.update()
-
-
+  
+  
   def firstUpdate(self):
     self.speak("Welcome to Cards Against Humanity Online")
     self.display.start_sound.play()
     View.firstUpdate(self)
-
-
+  
+  
   def onClose(self):
     pygame.event.post(pygame.event.Event(pygame.QUIT))
