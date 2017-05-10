@@ -1,3 +1,6 @@
+import os.path
+
+from shared.path import getScriptDirectory
 from tools import *
 from .message_view import MessageView
 from .view import View
@@ -12,6 +15,8 @@ class LoginView(View):
     View.__init__(self, display)
     
     font = display.getFont()
+    font_note = pygame.font.Font(
+      os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 14)
     size = display.getSize()
     
     # calc middle of screen
@@ -37,9 +42,9 @@ class LoginView(View):
     self.server_label_x = hmiddle - self.server_label.get_width() - space - 100
     self.server_y = vmiddle - 70
     self.uname_label_x = hmiddle - self.uname_label.get_width() - space - 100
-    self.uname_y = vmiddle + 0
+    self.uname_y = self.server_y + 70
     self.pword_label_x = hmiddle - self.pword_label.get_width() - space - 100
-    self.pword_y = vmiddle + 35
+    self.pword_y = self.uname_y + 35
     self.input_x = hmiddle + space - 100
     
     # create text inputs with positions
@@ -49,6 +54,15 @@ class LoginView(View):
                                  TEXT_INPUT_WIDTH, 'Username')
     self.pword_input = TextInput(display, font, (self.input_x, self.pword_y),
                                  TEXT_INPUT_WIDTH, 'Password')
+    
+    # note for first login/create account
+    self.login_note = font_note.render(
+      "NOTE: If username won't be found a new account will be created with "
+      "the entered password!",
+      1, (224, 0, 0))
+    
+    self.login_note_x = hmiddle - self.login_note.get_width() / 2
+    self.login_note_y = self.pword_y + 50
     
     # buttons connect and close (dummy positions, for auto-determine width
     # and height)
@@ -92,6 +106,10 @@ class LoginView(View):
     self.uname_input.render()
     self.pword_input.render()
     
+    # first login note
+    self.display.screen.blit(self.login_note,
+                             (self.login_note_x, self.login_note_y))
+    
     # draw buttons
     self.button_connect.render()
     self.button_close.render()
@@ -112,8 +130,8 @@ class LoginView(View):
   
   def onClose(self):
     pygame.event.post(pygame.event.Event(pygame.QUIT))
-
-
+  
+  
   def onConnect(self):
     self.display.connect(self.server_input.input.get_text(), self.uname_input.input.get_text(), self.pword_input.input.get_text())
     self.display.setView(MessageView)
