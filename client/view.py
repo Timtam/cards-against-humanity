@@ -66,11 +66,11 @@ class View(object):
       
       elif event.key == pl.K_RETURN:
         
-        self.display.button_up_sound.stop()
-        self.display.button_up_sound.play()
-        
         try:
-          self.tab_order[self.tab_position].getCallback()()
+          if self.tab_order[self.tab_position].getEnable():
+            self.tab_order[self.tab_position].getCallback()()
+            self.display.button_up_sound.stop()
+            self.display.button_up_sound.play()
         except (AttributeError, TypeError):
           pass
   

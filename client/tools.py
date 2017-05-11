@@ -40,6 +40,7 @@ textmarker = (  # sized 16x24
 class Button:
   def __init__(self, display, text, font, tcolor, (x, y), width=-1, height=-1):
     # init values
+    self.enable = True
     self.display = display
     # used for accessibility purposes
     self.label = text
@@ -127,7 +128,10 @@ class Button:
   
   
   def getLabel(self):
-    return self.label + " button"
+    label = self.label + " button"
+    if not self.getEnable():
+      label += " (disabled)"
+    return label
   
   
   def setCallback(self, cb):
@@ -137,6 +141,13 @@ class Button:
   def getCallback(self):
     return self.callback
 
+
+  def getEnable(self):
+    return self.enable
+
+
+  def setEnable(self, value):
+    self.enable = value
 
 
 # own TextInput class, which we added a rectangle

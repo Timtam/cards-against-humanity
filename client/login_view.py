@@ -75,6 +75,7 @@ class LoginView(View):
     self.button_connect.setPosition((hmiddle - self.button_connect.getWidth()
                                      - space, vmiddle + 150))
     self.button_connect.setCallback(self.onConnect)
+    self.button_connect.setEnable(False)
     self.button_close = Button(self.display, "Close", font, (0, 0, 0),
                                (hmiddle, vmiddle + 150))
     
@@ -123,6 +124,10 @@ class LoginView(View):
     self.server_input.update()
     self.uname_input.update()
     self.pword_input.update()
+    if self.server_input.input.get_text() == '' or self.uname_input.input.get_text() == '' or self.pword_input.input.get_text() == '':
+      self.button_connect.setEnable(False)
+    else:
+      self.button_connect.setEnable(True)
   
   
   def firstUpdate(self):
