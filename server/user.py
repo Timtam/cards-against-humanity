@@ -15,7 +15,7 @@ class User(object):
     return bool(cursor.fetchone()[0])
 
   def loggedIn(self):
-    return id > 0
+    return self.id > 0
 
   def login(self, name, password):
 
@@ -51,3 +51,7 @@ class User(object):
     self.log.info("user {name} registered successfully, continuing logging in", name=name)
 
     return self.login(name, password)
+
+
+  def unlink(self):
+    del self.protocol.factory.users[self.protocol.factory.users.index(self)]

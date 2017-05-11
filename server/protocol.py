@@ -6,24 +6,15 @@ from shared.protocol import JSONReceiver
 class ServerProtocol(JSONReceiver):
 
   def __init__(self,factory):
-    self.authenticated=False
-    self.callbacks = {
-                       MSG_USER_AUTHENTIFICATION: self.userAuthentification
-                     }
-    self.factory = factory
+    JSONReceiver.__init__(self, factory)
+    self.addCallback(MODE_CLIENT_AUTHENTIFICATION, MSG_CLIENT_AUTHENTIFICATION, self.clientAuthentification)
+    self.addCallback(MODE_USER_AUTHENTIFICATION, MSG_USER_AUTHENTIFICATION, self.userAuthentification)
+    self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.user = User(self)
 
   def connectionMade(self):
-    self.log.info("connection established from {connection}", connection=self.transport.getPeer())
-
-  def messageReceived(self, code, data):
-    if not self.authenticated and code!=MSG_CLIENT_AUTHENTIFICATION:
-      self.log.warn("received message {code}:{message} before actual client authentification", code=code, message=data)
-      return
-    if not code in self.callbacks:
-      self.log.warn("received unsupported message {message} with code {code} from {connection}", message=data, connection=self.transport.getPeer(), code=code)
-    else:
-      self.callbacks[code](**data)
+    self.identification = self.transport.getPeer().host
+    self.log.info("{log_source.identification!r} established connection")
 
   def userAuthentification(self, username, password):
     if len(username)>30 or len(password)!=128:
@@ -33,3 +24,17 @@ class ServerProtocol(JSONReceiver):
       self.sendMessage(MSG_USER_LOGIN, success=self.user.login(username, password))
     else:
       self.sendMessage(MSG_USER_REGISTRATION, success=self.user.register(username, password))
+
+  def clientAuthentification(self, major, minor, revision):
+    self.log.info('{log_source.identification!r} using client version {major}.{minor}.{revision}', major=major, minor=minor, revision=revision)
+    if major < version.MAJOR or minor < version.MINOR:
+      self.log.info('incompatible client version, connection refused')
+      self.sendMessage(MSG_CLIENT_REFUSED, reason='incompatible client and server versions')
+      self.loseConnection()
+    else:
+      self.sendMessage(MSG_CLIENT_ACCEPTED)
+
+  def connectionLost(self, reason):
+    self.log.info('{log_source.identification!r} lost connection')
+    self.log.debug(reason.getErrorMessage())
+    self.user.unlink()
