@@ -19,6 +19,7 @@ class MessageView(View):
     self.display_size = display.getSize()
     self.hmiddle = self.display_size[0] / 2
     self.vmiddle = self.display_size[1] / 2
+    self.button = None
     
     self.text = ""
     dummy_text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
@@ -27,6 +28,7 @@ class MessageView(View):
                  "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
                  "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
                  "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
+                 "" \
                  "" \
                  "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
                  "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
@@ -57,8 +59,15 @@ class MessageView(View):
   # window may also exist without any button
   # if callback is None, the button will be removed
   # otherwise it will be created
-  def setButton(self, text='', callback=None):
-    pass
+  def setButton(self, text="", callback=None):
+    if callback is not None:
+      self.button = Button(self.message_box, text, self.display.getFont(),
+                           (100, 100))
+      self.button.setPosition((self.width - self.button.getWidth() -
+                               PADDING_LEFT_RIGHT,
+                               self.height - self.button.getHeight() -
+                               PADDING_TOP_BOTTOM))
+      self.button.setCallback(callback)
   
   
   def render(self):
@@ -66,8 +75,11 @@ class MessageView(View):
     self.message_box.fill((255, 255, 255))
     pygame.draw.rect(self.message_box, (0, 0, 0), self.message_border, 3)
     self.scrolled_text.render()
+    if self.button is not None:
+      self.button.render()
     self.display.screen.blit(self.message_box, (self.box_x, self.box_y))
   
   
   def handleEvent(self, event):
-    pass
+    if self.button is not None:
+      self.button.handleEvent(event)
