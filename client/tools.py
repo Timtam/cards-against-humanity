@@ -5,6 +5,9 @@ import text_input
 BUTTON_PADDING = 5
 BUTTON_COLOR = (128, 128, 128)
 BUTTON_COLOR_HOVER = (100, 100, 100)
+BUTTON_COLOR_DISABLED = (192, 192, 192)
+BUTTON_TEXT_COLOR = (0, 0, 0)
+BUTTON_TEXT_COLOR_DISABLED = (96, 96, 96)
 INPUT_PADDING = 5
 MOUSE_BUTTON_LEFT = 1
 
@@ -38,13 +41,15 @@ textmarker = (  # sized 16x24
 
 
 class Button:
-  def __init__(self, display, text, font, tcolor, (x, y), width=-1, height=-1):
+  def __init__(self, display, text, font, (x, y), width=-1, height=-1):
+    # label used for accessibility purposes
+    self.label = text
     # init values
     self.enable = True
     self.display = display
-    # used for accessibility purposes
-    self.label = text
-    self.text = font.render(text, 1, tcolor)
+    self.text = text
+    self.font = font
+    self.text_color = BUTTON_TEXT_COLOR
     self.callback = None
     self.x = x
     self.y = y
@@ -74,14 +79,14 @@ class Button:
     
     # if width or height == -1 -> width and height depend on text size
     if self.width == -1:
-      self.w = self.text.get_width() + 2 * BUTTON_PADDING
+      self.w = self.font.size(self.text)[0] + 2 * BUTTON_PADDING
       self.text_x = x + BUTTON_PADDING
     else:
       self.w = self.width
       self.text_x = x + self.width / 2 - self.text.get_width() / 2
     
     if self.height == -1:
-      self.h = self.text.get_height() + 2 * BUTTON_PADDING
+      self.h = self.font.size(self.text)[1] + 2 * BUTTON_PADDING
       self.text_y = y + BUTTON_PADDING
     else:
       self.h = self.height
@@ -91,6 +96,14 @@ class Button:
   
   
   def handleEvent(self, event):
+    # set colors of button and text depending on whether enabled or not
+    if not self.enable:
+      self.color = BUTTON_COLOR_DISABLED
+      self.text_color = BUTTON_TEXT_COLOR_DISABLED
+      return
+    else:
+      self.text_color = BUTTON_TEXT_COLOR
+    
     # hover over button and click events
     if event.type == pygame.MOUSEMOTION and self.button_rect.collidepoint(
             event.pos):
@@ -119,8 +132,9 @@ class Button:
   
   
   def render(self):
+    text = self.font.render(self.text, 1, self.text_color)
     pygame.draw.rect(self.display.screen, self.color, self.button_rect, 0)
-    self.display.screen.blit(self.text, (self.text_x, self.text_y))
+    self.display.screen.blit(text, (self.text_x, self.text_y))
   
   
   def setLabel(self, text):
@@ -140,14 +154,15 @@ class Button:
   
   def getCallback(self):
     return self.callback
-
-
+  
+  
   def getEnable(self):
     return self.enable
-
-
+  
+  
   def setEnable(self, value):
     self.enable = value
+
 
 
 # own TextInput class, which we added a rectangle

@@ -69,14 +69,14 @@ class LoginView(View):
     
     # buttons connect and close (dummy positions, for auto-determine width
     # and height)
-    self.button_connect = Button(self.display, "Connect", font, (0, 0, 0),
+    self.button_connect = Button(self.display, "Connect", font,
                                  (hmiddle - 100, vmiddle + 100))
     # now calc position with own width
     self.button_connect.setPosition((hmiddle - self.button_connect.getWidth()
                                      - space, vmiddle + 150))
     self.button_connect.setCallback(self.onConnect)
     self.button_connect.setEnable(False)
-    self.button_close = Button(self.display, "Close", font, (0, 0, 0),
+    self.button_close = Button(self.display, "Close", font,
                                (hmiddle, vmiddle + 150))
     
     self.button_close.setCallback(self.onClose)
@@ -124,7 +124,9 @@ class LoginView(View):
     self.server_input.update()
     self.uname_input.update()
     self.pword_input.update()
-    if self.server_input.input.get_text() == '' or self.uname_input.input.get_text() == '' or self.pword_input.input.get_text() == '':
+    if self.server_input.input.get_text() == '' or \
+                    self.uname_input.input.get_text() == '' or \
+                    self.pword_input.input.get_text() == '':
       self.button_connect.setEnable(False)
     else:
       self.button_connect.setEnable(True)
@@ -141,5 +143,7 @@ class LoginView(View):
   
   
   def onConnect(self):
-    self.display.connect(self.server_input.input.get_text(), self.uname_input.input.get_text(), self.pword_input.input.get_text())
+    self.display.connect(self.server_input.input.get_text(),
+                         self.uname_input.input.get_text(),
+                         self.pword_input.input.get_text())
     self.display.setView(MessageView)
