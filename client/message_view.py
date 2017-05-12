@@ -107,7 +107,8 @@ class MessageView(View):
          PADDING_LEFT_RIGHT,
          self.vmiddle + self.height / 2 - self.button.getHeight() -
          PADDING_TOP_BOTTOM))
-  
+    else:
+      self.button = None
   
   # handy mehtod to check maxheight befor setting height
   def setHeight(self, new_height):
