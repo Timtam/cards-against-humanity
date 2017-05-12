@@ -6,6 +6,23 @@ PADDING_LEFT_RIGHT = 20
 PADDING_TOP_BOTTOM = 20
 
 
+# function for blurring a surface through smoothscaling to lower resolution and back to original
+def blurSurf(surface, val=2.0):
+  """
+  Blur the given surface by the given 'amount'.  Only values 1 and greater
+  are valid.  Value = 1 -> no blur.
+  """
+  if val < 1.0:
+    raise ValueError(
+      "Arg 'val' must be greater than 1.0, passed in value is %s" % val)
+  scale = 1.0 / float(val)
+  surf_size = surface.get_size()
+  scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
+  surf = pygame.transform.smoothscale(surface, scale_size)
+  surf = pygame.transform.smoothscale(surf, surf_size)
+  return surf
+
+
 
 class MessageView(View):
   def __init__(self, display, width=480, height=480):
@@ -16,6 +33,7 @@ class MessageView(View):
     self.height = height
     self.old_screen = display.screen.copy()
     self.old_screen.set_alpha(86)
+    self.old_screen = blurSurf(self.old_screen, 1.5)
     self.display_size = display.getSize()
     self.hmiddle = self.display_size[0] / 2
     self.vmiddle = self.display_size[1] / 2
@@ -83,3 +101,6 @@ class MessageView(View):
   def handleEvent(self, event):
     if self.button is not None:
       self.button.handleEvent(event)
+
+
+  
