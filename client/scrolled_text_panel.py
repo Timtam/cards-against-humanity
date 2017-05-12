@@ -8,9 +8,8 @@ from shared.path import getScriptDirectory
 
 
 class ScrolledTextPanel:
-  def __init__(self, screen, text, x, y, width, height):
+  def __init__(self, screen, x, y, width, height):
     self.screen = screen
-    self.text = text
     self.x = x
     self.y = y
     self.width = width
@@ -18,9 +17,8 @@ class ScrolledTextPanel:
     self.font = pygame.font.Font(
       os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 16)
     self.text_surfaces = []
+    self.text_lines = []
     
-    self.setText(text)
-  
   
   @staticmethod
   def truncline(text, font, maxwidth):
@@ -64,12 +62,21 @@ class ScrolledTextPanel:
     return list(lines)
   
   
-  def setText(self, text=""):
-    self.text_lines = self.wrap_multi_line(text, self.font, self.width)
-    for line in self.text_lines:
-      self.text_surfaces.append(self.font.render(line, 1, (0, 0, 0)))
+  def addText(self, text):
+    length = len(self.text_lines)
+    self.text_lines += self.wrap_multi_line(text, self.font, self.width)
+    for i in range(length, len(self.text_lines)):
+      self.text_surfaces.append(self.font.render(self.text_lines[i], 1, (0, 0, 0)))
   
   
+  def clearText(self):
+    self.text_surfaces = []
+    self.text_lines = []
+
+
+  def getText(self):
+    return '\n'.join(self.text_lines)
+
   def getHeight(self):
     self.height = 0
     for text_line in self.text_surfaces:

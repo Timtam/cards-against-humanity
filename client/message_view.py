@@ -43,7 +43,6 @@ class MessageView(View):
     self.vmiddle = self.display_size[1] / 2
     self.button = None
     
-    self.text = ""
     self.message_box = pygame.Surface((width, self.height))
     self.message_border = pygame.Rect(0, 0, width, self.height)
     
@@ -63,16 +62,16 @@ class MessageView(View):
                  "dolor sit amet."
     self.setText(dummy_text)
   
-  
   # setting some automatically formatted and rendered text onto the screen
   def setText(self, text):
-    self.text = text
     
-    self.scrolled_text = ScrolledTextPanel(self.message_box, self.text,
+    self.scrolled_text = ScrolledTextPanel(self.message_box,
                                            PADDING_LEFT_RIGHT,
                                            PADDING_TOP_BOTTOM,
                                            self.width - 2 * PADDING_LEFT_RIGHT,
                                            self.height - 2 * PADDING_TOP_BOTTOM)
+    self.scrolled_text.addText(text)
+
     button_height = 0
     if self.button is not None:
       button_height = self.button.getHeight() + PADDING_TOP_BOTTOM
@@ -101,7 +100,7 @@ class MessageView(View):
       self.button.setCallback(callback)
       # need to call setText as you can call setButton from external; after that
       # we got a new height, so we need to position the buton again
-      self.setText(self.text)
+      self.setText(self.scrolled_text.getText())
       self.button.setPosition(
         (self.hmiddle + self.width / 2 - self.button.getWidth() -
          PADDING_LEFT_RIGHT,
