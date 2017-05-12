@@ -13,6 +13,7 @@ class ClientProtocol(JSONReceiver):
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.identification = 'server'
     self.server_version = {'MAJOR': 0, 'MINOR': 0, 'REVISION': 0}
+    self.factory.client = self
 
   def connectionMade(self):
     self.sendMessage(MSG_CLIENT_AUTHENTIFICATION, major=version.MAJOR, minor=version.MINOR, revision=version.REVISION)
@@ -21,15 +22,20 @@ class ClientProtocol(JSONReceiver):
     self.server_version = {'MAJOR': major, 'MINOR': minor, 'REVISION': revision}
 
   def clientRefused(self, reason):
-    print reason
+    self.factory.display.view.clientRefusedMessage(reason)
 
   def clientAccepted(self):
     username, password = self.factory.display.getLoginCredentials()
     self.sendMessage(MSG_USER_AUTHENTIFICATION, username=username, password=password)
     self.setMode(MODE_USER_AUTHENTIFICATION)
+    self.factory.display.view.loginMessage()
 
   def userLogin(self, success, message):
-    print message
+    if success:
+      self.factory.display.view.errorMessage(message)
+    else:
+      self.factory.display.view.loggedInMessage(message)
 
   def userRegistration(self, success, message):
-    print message
+    if success:
+      self.factory.display.view.errorMessage(message)

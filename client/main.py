@@ -15,5 +15,5 @@ def main(accessibility=False):
   globalLogBeginner.beginLoggingTo([textFileLogObserver(sys.stdout)])
   
   display = Display(accessibility=accessibility)
-  display.setView(LoginView)
+  display.setView('LoginView')
   display.init()

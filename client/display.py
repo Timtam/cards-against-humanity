@@ -6,7 +6,9 @@ from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ClientEndpoint
 from twisted.internet.task import LoopingCall
 
+from .connection_view import ConnectionView
 from .factory import ClientFactory
+from .login_view import LoginView
 from shared.path import getScriptDirectory
 
 
@@ -97,7 +99,7 @@ class Display(object):
   
   
   def setView(self, view):
-    self.view = view(self)
+    self.view = eval(view)(self)
 
 
   # unhashed password is required here

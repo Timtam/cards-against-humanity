@@ -8,8 +8,15 @@ class ClientFactory(Factory):
   log = Logger()
 
   def __init__(self, display):
+    self.client = None
     self.display = display
 
 
   def buildProtocol(self, addr):
-    return ClientProtocol(self)
+    self.client = ClientProtocol(self)
+    return self.client
+
+  def closeClient(self):
+    if self.client:
+      self.client.loseConnection()
+      self.client = None

@@ -2,7 +2,6 @@ import os.path
 
 from shared.path import getScriptDirectory
 from tools import *
-from .message_view import MessageView
 from .view import View
 
 SPACE_BETWEEN_LABEL_AND_INPUT = 20
@@ -146,5 +145,5 @@ class LoginView(View):
     self.display.connect(self.server_input.input.get_text(),
                          self.uname_input.input.get_text(),
                          self.pword_input.input.get_text())
-    self.display.setView(MessageView)
-    #self.display.view.setButton("Close", self.onClose)  # debug
+    self.display.setView('ConnectionView')
+    self.display.view.connectingMessage(self.server_input.input.get_text())
