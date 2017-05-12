@@ -81,6 +81,7 @@ class Display(object):
   
   
   def init(self):
+    self.start_sound.play()
     self.loop.start(1.0 / 30.0)
     self.reactor = reactor
     self.reactor.run()
