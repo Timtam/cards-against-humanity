@@ -19,12 +19,11 @@ class ScrolledTextPanel:
       os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 16)
     self.text_surfaces = []
     
-    self.text_lines = self.wrap_multi_line(text, self.font, width)
-    for line in self.text_lines:
-      self.text_surfaces.append(self.font.render(line, 1, (0, 0, 0)))
+    self.setText(text)
   
   
-  def truncline(self, text, font, maxwidth):
+  @staticmethod
+  def truncline(text, font, maxwidth):
     real = len(text)
     stext = text
     l = font.size(text)[0]
@@ -64,6 +63,24 @@ class ScrolledTextPanel:
       *(self.wrapline(line, font, maxwidth) for line in text.splitlines()))
     return list(lines)
   
+  
+  def setText(self, text=""):
+    self.text_lines = self.wrap_multi_line(text, self.font, self.width)
+    for line in self.text_lines:
+      self.text_surfaces.append(self.font.render(line, 1, (0, 0, 0)))
+  
+  
+  def getHeight(self):
+    self.height = 0
+    for text_line in self.text_surfaces:
+      self.height += text_line.get_height()
+      
+    return self.height
+  
+  
+  def setNewScreen(self, surface):
+    self.screen = surface
+    
   
   def handleEvent(self, event):
     pass

@@ -147,3 +147,4 @@ class LoginView(View):
                          self.uname_input.input.get_text(),
                          self.pword_input.input.get_text())
     self.display.setView(MessageView)
+    #self.display.view.setButton("Close", self.onClose)  # debug
