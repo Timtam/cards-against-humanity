@@ -1,3 +1,4 @@
+import hashlib
 import os.path
 
 import pygame
@@ -20,6 +21,8 @@ class Display(object):
     self.loop = LoopingCall(self.process)
     self.reactor = None
     self.running = True
+    self.login_name = ''
+    self.login_password = ''
     
     self.screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Cards Against Humanity Online')
@@ -99,6 +102,12 @@ class Display(object):
 
   # unhashed password is required here
   def connect(self, host, username, password):
+    self.login_name = username
+    self.login_password = hashlib.sha512(password).hexdigest()
     self.endpoint = TCP4ClientEndpoint(self.reactor, host, 11337)
     deferred = self.endpoint.connect(self.factory)
     deferred.addErrback(lambda err: err.printTraceback())
+
+
+  def getLoginCredentials(self):
+    return (self.login_name, self.login_password)
