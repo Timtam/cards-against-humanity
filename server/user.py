@@ -20,38 +20,36 @@ class User(object):
   def login(self, name, password):
 
     if self.loggedIn():
-      self.log.warn("user {log_source.name}:{log_source.id} already logged in, not able to log in once more")
-      return False
+      return self.formatted(success=False, message='user %s currently logged in'%username)
 
     cursor = self.protocol.factory.serverDatabase.cursor()
     cursor.execute("SELECT id FROM users WHERE name = ? AND password = ?", (name, password, ))
     result = cursor.fetchone()
-    if len(result)==0:
-      self.log.info("wrong login credentials supplied for user {name} or user not registered yet", name=name)
-      return False
+    if not result:
+      return self.formatted(success=False, message='wrong login credentials supplied')
 
     self.name = name
     self.id = int(result[0])
 
-    self.log.info("user {log_source.name!r} logged on for id {log_source.id!r}")
-
-    return True
+    return self.formatted(success=True, message='login successful')
 
   def register(self, name, password):
 
     if self.exists(name):
-      self.log.warn("user {name} already exists, so no registration possible", name=name)
-      return False
+      return self.formatted(success=False, message='username already in use')
 
     cursor = self.protocol.factory.serverDatabase.cursor()
     cursor.execute("INSERT INTO users (name, password) VALUES (?, ?)", (name, password, ))
 
     self.protocol.factory.serverDatabase.commit()
 
-    self.log.info("user {name} registered successfully, continuing logging in", name=name)
-
-    return self.login(name, password)
-
+    return self.formatted(success=True, message='registration successful')
 
   def unlink(self):
     del self.protocol.factory.users[self.protocol.factory.users.index(self)]
+
+  # this is quite a dirty way
+  # it just formats the keyword arguments into a dict and returns it
+  # that's actually just for pretty printing purposes
+  def formatted(self, **kwargs):
+    return kwargs

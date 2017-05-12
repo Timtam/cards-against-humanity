@@ -19,7 +19,8 @@ class TextInput:
                antialias=True,
                text_color=(0, 0, 0),
                cursor_color=(0, 0, 1),
-               max_width=DEFAULT_LENGTH):
+               max_width=DEFAULT_LENGTH,
+               password = False):
     """
     Args:
         #font_family: Name or path of the font that should be used. Default is
@@ -39,6 +40,7 @@ class TextInput:
     
     # max width of text input
     self.max_width = max_width
+    self.password = password
     
     # focus
     self.focus = False
@@ -69,7 +71,7 @@ class TextInput:
       
       if event.key == pl.K_BACKSPACE:  # FIXME: Delete at beginning of line?
         try:
-          self.display.view.speak(self.input_string[-1], True)
+          self.display.view.speak(self.input_string[-1] if not self.password else '*', True)
         except IndexError:
           self.display.view.speak('', True)
         self.input_string = self.input_string[
@@ -82,7 +84,7 @@ class TextInput:
       
       elif event.key == pl.K_DELETE:
         try:
-          self.display.view.speak(self.input_string[self.cursor_position], True)
+          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
         except IndexError:
           self.display.view.speak('', True)
         self.input_string = self.input_string[:self.cursor_position] + \
@@ -98,7 +100,7 @@ class TextInput:
         self.cursor_position = min(self.cursor_position + 1,
                                    len(self.input_string))
         try:
-          self.display.view.speak(self.input_string[self.cursor_position], True)
+          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -108,7 +110,7 @@ class TextInput:
         # Subtract one from cursor_pos, but do not go below zero:
         self.cursor_position = max(self.cursor_position - 1, 0)
         try:
-          self.display.view.speak(self.input_string[self.cursor_position], True)
+          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -117,7 +119,7 @@ class TextInput:
       elif event.key == pl.K_END:
         self.cursor_position = len(self.input_string)
         try:
-          self.display.view.speak(self.input_string[self.cursor_position], True)
+          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -126,7 +128,7 @@ class TextInput:
       elif event.key == pl.K_HOME:
         self.cursor_position = 0
         try:
-          self.display.view.speak(self.input_string[self.cursor_position], True)
+          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -149,7 +151,7 @@ class TextInput:
                               self.input_string[self.cursor_position:]
           self.cursor_position += len(
             event.unicode)  # Some are empty, e.g. K_UP
-        self.display.view.speak(event.unicode, True)
+        self.display.view.speak(event.unicode if not self.password else '*', True)
         if len(event.unicode):
           self.display.tap_sound.stop()
           self.display.tap_sound.play()
@@ -160,7 +162,7 @@ class TextInput:
   def render(self):
     
     # Rerender text surface:
-    self.surface = self.font_object.render(self.input_string, self.antialias,
+    self.surface = self.font_object.render(self.input_string if not self.password else '*'*len(self.input_string), self.antialias,
                                            self.text_color)
     
     if self.cursor_visible:

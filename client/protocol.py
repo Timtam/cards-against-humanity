@@ -8,6 +8,8 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_CLIENT_AUTHENTIFICATION, MSG_CLIENT_ACCEPTED, self.clientAccepted)
     self.addCallback(MODE_CLIENT_AUTHENTIFICATION, MSG_CLIENT_REFUSED, self.clientRefused)
     self.addCallback(MODE_CLIENT_AUTHENTIFICATION, MSG_SERVER_AUTHENTIFICATION, self.serverAuthentification)
+    self.addCallback(MODE_USER_AUTHENTIFICATION, MSG_USER_LOGIN, self.userLogin)
+    self.addCallback(MODE_USER_AUTHENTIFICATION, MSG_USER_REGISTRATION, self.userRegistration)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.identification = 'server'
     self.server_version = {'MAJOR': 0, 'MINOR': 0, 'REVISION': 0}
@@ -22,4 +24,12 @@ class ClientProtocol(JSONReceiver):
     print reason
 
   def clientAccepted(self):
-    print 'client accepted'
+    username, password = self.factory.display.getLoginCredentials()
+    self.sendMessage(MSG_USER_AUTHENTIFICATION, username=username, password=password)
+    self.setMode(MODE_USER_AUTHENTIFICATION)
+
+  def userLogin(self, success, message):
+    print message
+
+  def userRegistration(self, success, message):
+    print message

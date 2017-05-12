@@ -56,7 +56,7 @@ class LoginView(View):
     self.uname_input = TextInput(display, font, (self.input_x, self.uname_y),
                                  TEXT_INPUT_WIDTH, 'Username')
     self.pword_input = TextInput(display, font, (self.input_x, self.pword_y),
-                                 TEXT_INPUT_WIDTH, 'Password')
+                                 TEXT_INPUT_WIDTH, 'Password', True)
     
     # note for first login/create account
     self.login_note = font_note.render(
