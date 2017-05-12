@@ -252,8 +252,5 @@ class TextInput:
     if self.input.get_text() == '':
       label += "empty"
     else:
-      if self.input.password:
-        label += '*'*len(self.input.get_text())
-      else:
-        label += self.input.get_text()
+      label += self.input.getPrintText()
     return label

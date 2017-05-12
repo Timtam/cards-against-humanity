@@ -71,7 +71,7 @@ class TextInput:
       
       if event.key == pl.K_BACKSPACE:  # FIXME: Delete at beginning of line?
         try:
-          self.display.view.speak(self.input_string[-1] if not self.password else '*', True)
+          self.display.view.speak(self.getPrintText()[-1], True)
         except IndexError:
           self.display.view.speak('', True)
         self.input_string = self.input_string[
@@ -84,7 +84,7 @@ class TextInput:
       
       elif event.key == pl.K_DELETE:
         try:
-          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
+          self.display.view.speak(self.getPrintText()[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
         self.input_string = self.input_string[:self.cursor_position] + \
@@ -100,7 +100,7 @@ class TextInput:
         self.cursor_position = min(self.cursor_position + 1,
                                    len(self.input_string))
         try:
-          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
+          self.display.view.speak(self.getPrintText()[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -110,7 +110,7 @@ class TextInput:
         # Subtract one from cursor_pos, but do not go below zero:
         self.cursor_position = max(self.cursor_position - 1, 0)
         try:
-          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
+          self.display.view.speak(self.getPrintText()[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -119,7 +119,7 @@ class TextInput:
       elif event.key == pl.K_END:
         self.cursor_position = len(self.input_string)
         try:
-          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
+          self.display.view.speak(self.getPrintText()[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -128,7 +128,7 @@ class TextInput:
       elif event.key == pl.K_HOME:
         self.cursor_position = 0
         try:
-          self.display.view.speak(self.input_string[self.cursor_position] if not self.password else '*', True)
+          self.display.view.speak(self.getPrintText()[self.cursor_position], True)
         except IndexError:
           self.display.view.speak('', True)
         self.display.cursor_sound.stop()
@@ -162,12 +162,12 @@ class TextInput:
   def render(self):
     
     # Rerender text surface:
-    self.surface = self.font_object.render(self.input_string if not self.password else '*'*len(self.input_string), self.antialias,
+    self.surface = self.font_object.render(self.getPrintText(), self.antialias,
                                            self.text_color)
     
     if self.cursor_visible:
       cursor_y_pos = \
-        self.font_object.size(self.input_string[:self.cursor_position])[0]
+        self.font_object.size(self.getPrintText()[:self.cursor_position])[0]
       # Without this, the cursor is invisible when self.cursor_position > 0:
       if self.cursor_position > 0:
         cursor_y_pos -= self.cursor_surface.get_width()
@@ -203,3 +203,12 @@ class TextInput:
       self.clock.tick()
     else:
       self.cursor_visible = False
+
+
+  # returns the text to be shown on the screen
+  # either only stars (password) or the real text
+  def getPrintText(self):
+    if self.password:
+      return '*'*len(self.input_string)
+    else:
+      return self.input_string
