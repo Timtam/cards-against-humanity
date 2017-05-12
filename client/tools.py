@@ -179,13 +179,12 @@ class TextInput:
     self.cursor = pygame.cursors.compile(textmarker)
     self.cursor_is_textmarker = False
     self.clicked = False
-    self.password = password
     
     # to get the height of text with this font
     text_height = font.size("Dummy")[1]
     
     self.input = text_input.TextInput(self.display, font,
-                                      max_width=width - 2 * INPUT_PADDING)
+                                      max_width=width - 2 * INPUT_PADDING, password = password)
     self.x_end = x + width
     self.y_end = y + text_height + 2 * INPUT_PADDING
     self.input_rect = pygame.Rect(x, y - INPUT_PADDING, width,
