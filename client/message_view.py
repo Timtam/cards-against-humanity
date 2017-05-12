@@ -82,6 +82,8 @@ class MessageView(View):
     self.message_border = pygame.Rect(0, 0, self.width, self.height)
     self.box_y = self.vmiddle - self.height / 2
     self.scrolled_text.setNewScreen(self.message_box)
+    self.tab_position = 0
+    self.tab_order = [self.scrolled_text]
   
   
   # may display a button (not needed)
@@ -106,8 +108,13 @@ class MessageView(View):
          PADDING_LEFT_RIGHT,
          self.vmiddle + self.height / 2 - self.button.getHeight() -
          PADDING_TOP_BOTTOM))
+      self.tab_order.append(self.button)
     else:
       self.button = None
+      if len(self.tab_order)>1:
+        del self.tab_order[1]
+        if self.tab_position >0:
+          self.tab_position = 0
   
   # handy mehtod to check maxheight befor setting height
   def setHeight(self, new_height):
@@ -128,5 +135,7 @@ class MessageView(View):
   
   
   def handleEvent(self, event):
+    View.handleEvent(self, event)
+    self.scrolled_text.handleEvent(event, self.display)
     if self.button is not None:
       self.button.handleEvent(event)
