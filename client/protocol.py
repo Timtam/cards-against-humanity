@@ -32,9 +32,9 @@ class ClientProtocol(JSONReceiver):
 
   def userLogin(self, success, message):
     if success:
-      self.factory.display.view.errorMessage(message)
-    else:
       self.factory.display.view.loggedInMessage(message)
+    else:
+      self.factory.display.view.errorMessage(message)
 
   def userRegistration(self, success, message):
     if success:

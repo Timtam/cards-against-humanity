@@ -92,7 +92,10 @@ class Display(object):
     
     self.button_down_sound = sound('button_down')
     self.button_up_sound = sound('button_up')
+    self.connect_sound = sound('connect')
     self.cursor_sound = sound('cursor')
+    self.error_sound = sound('error')
+    self.login_sound = sound('login')
     self.start_sound = sound('start')
     self.tap_sound = sound('tap')
     self.tap_delete_sound = sound('tap_delete')
