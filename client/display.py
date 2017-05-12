@@ -4,6 +4,7 @@ import os.path
 import pygame
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ClientEndpoint
+from twisted.internet.error import ConnectionRefusedError
 from twisted.internet.task import LoopingCall
 
 from .connection_view import ConnectionView
@@ -107,10 +108,14 @@ class Display(object):
 
   # unhashed password is required here
   def connect(self, host, username, password):
+    def connectionRefusedErrback(failure):
+      failure.trap(ConnectionRefusedError)
+      self.view.errorMessage(failure.getErrorMessage())
     self.login_name = username
     self.login_password = hashlib.sha512(password).hexdigest()
     self.endpoint = TCP4ClientEndpoint(self.reactor, host, 11337)
     deferred = self.endpoint.connect(self.factory)
+    deferred.addErrback(connectionRefusedErrback)
     deferred.addErrback(lambda err: err.printTraceback())
 
 

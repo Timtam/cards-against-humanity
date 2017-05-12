@@ -23,7 +23,6 @@ class ConnectionView(MessageView):
     self.display.login_sound.play()
 
   def errorMessage(self, message):
-    print message
     self.setText(message)
     self.setButton('OK', self.onOK)
     self.display.error_sound.stop()
