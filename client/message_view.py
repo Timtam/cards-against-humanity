@@ -6,6 +6,23 @@ PADDING_LEFT_RIGHT = 20
 PADDING_TOP_BOTTOM = 20
 
 
+# function for blurring a surface through smoothscaling to lower resolution and back to original
+def blurSurf(surface, val=2.0):
+  """
+  Blur the given surface by the given 'amount'.  Only values 1 and greater
+  are valid.  Value = 1 -> no blur.
+  """
+  if val < 1.0:
+    raise ValueError(
+      "Arg 'val' must be greater than 1.0, passed in value is %s" % val)
+  scale = 1.0 / float(val)
+  surf_size = surface.get_size()
+  scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
+  surf = pygame.transform.smoothscale(surface, scale_size)
+  surf = pygame.transform.smoothscale(surf, surf_size)
+  return surf
+
+
 
 class MessageView(View):
   def __init__(self, display, width=480, height=480):
@@ -16,9 +33,11 @@ class MessageView(View):
     self.height = height
     self.old_screen = display.screen.copy()
     self.old_screen.set_alpha(86)
+    self.old_screen = blurSurf(self.old_screen, 1.5)
     self.display_size = display.getSize()
     self.hmiddle = self.display_size[0] / 2
     self.vmiddle = self.display_size[1] / 2
+    self.button = None
     
     self.text = ""
     dummy_text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
@@ -27,6 +46,7 @@ class MessageView(View):
                  "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
                  "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
                  "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
+                 "" \
                  "" \
                  "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
                  "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
@@ -57,8 +77,15 @@ class MessageView(View):
   # window may also exist without any button
   # if callback is None, the button will be removed
   # otherwise it will be created
-  def setButton(self, text='', callback=None):
-    pass
+  def setButton(self, text="", callback=None):
+    if callback is not None:
+      self.button = Button(self.message_box, text, self.display.getFont(),
+                           (100, 100))
+      self.button.setPosition((self.width - self.button.getWidth() -
+                               PADDING_LEFT_RIGHT,
+                               self.height - self.button.getHeight() -
+                               PADDING_TOP_BOTTOM))
+      self.button.setCallback(callback)
   
   
   def render(self):
@@ -66,8 +93,14 @@ class MessageView(View):
     self.message_box.fill((255, 255, 255))
     pygame.draw.rect(self.message_box, (0, 0, 0), self.message_border, 3)
     self.scrolled_text.render()
+    if self.button is not None:
+      self.button.render()
     self.display.screen.blit(self.message_box, (self.box_x, self.box_y))
   
   
   def handleEvent(self, event):
-    pass
+    if self.button is not None:
+      self.button.handleEvent(event)
+
+
+  
