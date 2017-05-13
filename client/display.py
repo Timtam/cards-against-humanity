@@ -26,6 +26,7 @@ class Display(object):
     self.running = True
     self.login_name = ''
     self.login_password = ''
+    self.server_name = ''
     
     self.screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Cards Against Humanity Online')
@@ -113,7 +114,8 @@ class Display(object):
       failure.trap(ConnectionRefusedError)
       self.view.errorMessage(failure.getErrorMessage())
     self.login_name = username
-    self.login_password = hashlib.sha512(password).hexdigest()
+    self.login_password = password
+    self.server_name = host
     self.endpoint = TCP4ClientEndpoint(self.reactor, host, 11337)
     deferred = self.endpoint.connect(self.factory)
     deferred.addErrback(connectionRefusedErrback)
@@ -121,4 +123,4 @@ class Display(object):
 
 
   def getLoginCredentials(self):
-    return (self.login_name, self.login_password)
+    return (self.login_name, hashlib.sha512(self.login_password).hexdigest())

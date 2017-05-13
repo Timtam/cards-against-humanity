@@ -52,10 +52,13 @@ class LoginView(View):
     # create text inputs with positions
     self.server_input = TextInput(display, font, (self.input_x, self.server_y),
                                   TEXT_INPUT_WIDTH, 'Server address')
+    self.server_input.input.input_string = self.display.server_name
     self.uname_input = TextInput(display, font, (self.input_x, self.uname_y),
                                  TEXT_INPUT_WIDTH, 'Username')
+    self.uname_input.input.input_string = self.display.login_name
     self.pword_input = TextInput(display, font, (self.input_x, self.pword_y),
                                  TEXT_INPUT_WIDTH, 'Password', True)
+    self.pword_input.input.input_string = self.display.login_password
     
     # note for first login/create account
     self.login_note = font_note.render(
