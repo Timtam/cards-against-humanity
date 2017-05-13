@@ -103,6 +103,7 @@ class ScrolledTextPanel:
   def handleEvent(self, event, display):
     if display.accessibility and self.focus:
       if event.type == pygame.KEYDOWN:
+        speech = True
         if event.key == pl.K_UP:
           self.line_cursor = max(0, self.line_cursor-1)
         elif event.key == pl.K_DOWN:
@@ -111,7 +112,10 @@ class ScrolledTextPanel:
           self.line_cursor = 0
         elif event.key == pl.K_END:
           self.line_cursor = len(self.text_lines)-1
-        display.view.speak(self.text_lines[self.line_cursor], True)
+        else:
+          speech = False
+        if speech:
+          display.view.speak(self.text_lines[self.line_cursor], True)
   
   def update(self):
     pass

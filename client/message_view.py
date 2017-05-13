@@ -70,6 +70,7 @@ class MessageView(View):
                                            PADDING_TOP_BOTTOM,
                                            self.width - 2 * PADDING_LEFT_RIGHT,
                                            self.height - 2 * PADDING_TOP_BOTTOM)
+    self.scrolled_text.setLabel('information')
     self.scrolled_text.addText(text)
 
     button_height = 0
