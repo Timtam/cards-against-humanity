@@ -85,6 +85,9 @@ class MessageView(View):
     self.scrolled_text.setNewScreen(self.message_box)
     self.tab_position = 0
     self.tab_order = [self.scrolled_text]
+    if self.display.accessibility:
+      self.scrolled_text.setFocus(True)
+      self.speak(text, False)
   
   
   # may display a button (not needed)
@@ -140,3 +143,6 @@ class MessageView(View):
     self.scrolled_text.handleEvent(event, self.display)
     if self.button is not None:
       self.button.handleEvent(event)
+
+  def firstUpdate(self):
+    pass
