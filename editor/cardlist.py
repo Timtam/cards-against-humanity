@@ -133,13 +133,14 @@ class ScrolledGrid(wx.ScrolledWindow):
   
   
   # retrieves the panel related to a card object or card id
-  def getCard(self, card=None, card_id=-1):
-    if card is None:
-      temp = card_id
+  def getCard(self, card):
+    if type(card) is int:
+      card_id = card
     else:
-      temp = card.id
+      card_id = card.id
+
     for child in self.grid.GetChildren():
-      if isinstance(child.Window, CardPanel) and child.Window.card.id == temp:
+      if isinstance(child.Window, CardPanel) and child.Window.card.id == card_id:
           return child.Window
     
     return None
@@ -151,7 +152,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     panel = self.getCard(card)
     
     if panel is not None:
-      index = self.grid.GetItemIndex(panel)
+      index = card.id - 1
       self.grid.Remove(panel)
       panel.Destroy()
       del panel
@@ -159,12 +160,14 @@ class ScrolledGrid(wx.ScrolledWindow):
       
       prev_card = None
       for i in range(index, 0, -1):
-        prev_card = self.getCard(card_id=i)
+        prev_card = self.getCard(i)
         if prev_card is not None:
           break
       if prev_card is not None:
         self.active_card = prev_card.card
         prev_card.onClick(None)
+      else:
+        self.GetTopLevelParent().right_window.Disable()
 
 
 

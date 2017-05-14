@@ -118,7 +118,6 @@ class CurrCardWindow(wx.Panel):
     cursor.execute('DELETE FROM cards WHERE id = ?', (self.related_card.id,))
     
     frame.left_window.card_grid.deleteCard(self.related_card)
-    self.Disable()
     
     frame.unsaved_changes = True
   

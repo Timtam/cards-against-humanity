@@ -70,9 +70,11 @@ class CardPanel(wx.Panel):
     parent = self.GetParent()
     if parent.active_card is not None and parent.active_card != self.card:
       active_card = parent.getCard(parent.active_card)
-      active_card.clicked = False
-      active_card.setColors()
-      active_card.Refresh()
+      # if active_card not found, the previous one got deleted
+      if active_card is not None:
+        active_card.clicked = False
+        active_card.setColors()
+        active_card.Refresh()
     # set a color for clicked card ("active")
     self.SetBackgroundColour(COLOR_ACTIVE_CARD)
     self.Refresh()
