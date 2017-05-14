@@ -138,9 +138,8 @@ class CardPanel(wx.Panel):
   
   
   def onKeyPress(self, e):
-    
     key_code = e.GetKeyCode()
-
+    
     if key_code == wx.WXK_RETURN:
       self.onClick(e)
       return

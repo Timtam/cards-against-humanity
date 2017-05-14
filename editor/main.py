@@ -87,11 +87,11 @@ class MainFrame(wx.Frame):
     #   + Q also quits)
     file_menu.AppendItem(menu_item)
     
-    self.Bind(wx.EVT_MENU, self.onNewCard, id=MENU_NEW_CARD)
-    self.Bind(wx.EVT_MENU, self.onApplyChanges, id=MENU_APPLY_CHANGES)
-    self.Bind(wx.EVT_MENU, self.onSaveAll, id=MENU_SAVE_ALL)
-    self.Bind(wx.EVT_MENU, self.onUndoAll, id=MENU_UNDO_ALL)
-    self.Bind(wx.EVT_MENU, self.onQuit, id=MENU_EXIT)
+    file_menu.Bind(wx.EVT_MENU, self.onNewCard, id=MENU_NEW_CARD)
+    file_menu.Bind(wx.EVT_MENU, self.onApplyChanges, id=MENU_APPLY_CHANGES)
+    file_menu.Bind(wx.EVT_MENU, self.onSaveAll, id=MENU_SAVE_ALL)
+    file_menu.Bind(wx.EVT_MENU, self.onUndoAll, id=MENU_UNDO_ALL)
+    file_menu.Bind(wx.EVT_MENU, self.onQuit, id=MENU_EXIT)
     self.Bind(wx.EVT_CLOSE, self.closeIntervention)
     
     menubar.Append(file_menu, "&File")
@@ -257,9 +257,9 @@ class MainFrame(wx.Frame):
     # key up event of that panel, the new card menu event is called
     # luckily the GetEventObject() returns the panel in this case
     # that means we can prevent this from happening
-    if not isinstance(e.GetEventObject(), wx.Menu):
-      e.Skip()
-      return
+    #if not isinstance(e.GetEventObject(), wx.Menu):
+    #  e.Skip()
+    #  return
 
     self.left_window.toolbar.onNewCard(None)
   
