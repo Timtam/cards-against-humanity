@@ -145,7 +145,6 @@ class CardPanel(wx.Panel):
     
     if key_code == wx.WXK_RETURN:
       self.onClick(e)
-      frame.right_window.setCard(self.card)
       return
     
     e.Skip()
