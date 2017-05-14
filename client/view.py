@@ -27,9 +27,6 @@ class View(object):
   
   def handleEvent(self, event):
     
-    if not self.display.accessibility:
-      return
-    
     if len(self.tab_order) == 0:
       return
     
@@ -102,9 +99,6 @@ class View(object):
   
   # will only be called once the view receives it's first update
   def firstUpdate(self):
-    if not self.display.accessibility:
-      return
-    
     if len(self.tab_order) == 0:
       return
     
