@@ -4,7 +4,7 @@ import os.path
 import pygame
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ClientEndpoint
-from twisted.internet.error import ConnectionRefusedError
+from twisted.internet.error import ConnectionRefusedError, DNSLookupError
 from twisted.internet.task import LoopingCall
 
 from .connection_view import ConnectionView
@@ -113,12 +113,16 @@ class Display(object):
     def connectionRefusedErrback(failure):
       failure.trap(ConnectionRefusedError)
       self.view.errorMessage(failure.getErrorMessage())
+    def dnsLookupErrback(failure):
+      failure.trap(DNSLookupError)
+      self.view.errorMessage('unable to lookup ip adress for servername: %s'%failure.getErrorMessage())
     self.login_name = username
     self.login_password = password
     self.server_name = host
     self.endpoint = TCP4ClientEndpoint(self.reactor, host, 11337)
     deferred = self.endpoint.connect(self.factory)
     deferred.addErrback(connectionRefusedErrback)
+    deferred.addErrback(dnsLookupErrback)
     deferred.addErrback(lambda err: err.printTraceback())
 
 
