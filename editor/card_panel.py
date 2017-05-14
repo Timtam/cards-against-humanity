@@ -141,8 +141,6 @@ class CardPanel(wx.Panel):
     
     key_code = e.GetKeyCode()
 
-    frame = self.GetTopLevelParent()
-    
     if key_code == wx.WXK_RETURN:
       self.onClick(e)
       return
