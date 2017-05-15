@@ -42,7 +42,7 @@ class ServerProtocol(JSONReceiver):
     if major < version.MAJOR or minor < version.MINOR:
       self.log.info('incompatible client version, connection refused')
       self.sendMessage(MSG_CLIENT_REFUSED, reason='incompatible client and server versions')
-      self.loseConnection()
+      self.transport.loseConnection()
     else:
       self.sendMessage(MSG_CLIENT_ACCEPTED)
       self.setMode(MODE_USER_AUTHENTIFICATION)
