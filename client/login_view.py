@@ -145,7 +145,7 @@ class LoginView(View):
   
   def onConnect(self):
     self.display.setView('ConnectionView')
-    self.display.view.connectingMessage(self.server_input.input.get_text())
-    self.display.connect(self.server_input.input.get_text(),
+    self.display.callFunction('self.view.connectingMessage', self.server_input.input.get_text())
+    self.display.callFunction('self.connect', self.server_input.input.get_text(),
                          self.uname_input.input.get_text(),
                          self.pword_input.input.get_text())

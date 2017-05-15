@@ -8,6 +8,7 @@ from twisted.internet.error import ConnectionRefusedError, DNSLookupError
 from twisted.internet.task import LoopingCall
 
 from .connection_view import ConnectionView
+from .events import *
 from .factory import ClientFactory
 from .login_view import LoginView
 from shared.path import getScriptDirectory
@@ -52,18 +53,25 @@ class Display(object):
   def handleEvent(self, event):
     if event.type == pygame.QUIT:
       self.stop()
-      return
-    self.view.handleEvent(event)
+    elif event.type == EVENT_VIEWCHANGE:
+      self.view = eval(event.view)(self)
+    elif event.type == EVENT_FUNCALL:
+      eval(event.function)(*event.args, **event.kwargs)
+    else:
+      if self.view:
+        self.view.handleEvent(event)
   
   
   def update(self):
-    self.view.update()
+    if self.view:
+      self.view.update()
   
   
   def render(self):
-    self.screen.fill((255, 255, 255))
-    self.view.render()
-    pygame.display.flip()
+    if self.view:
+      self.screen.fill((255, 255, 255))
+      self.view.render()
+      pygame.display.flip()
   
   
   def process(self):
@@ -105,8 +113,11 @@ class Display(object):
   
   
   def setView(self, view):
-    self.view = eval(view)(self)
+    pygame.event.post(pygame.event.Event(EVENT_VIEWCHANGE, view=view))
 
+
+  def callFunction(self, function, *args, **kwargs):
+    pygame.event.post(pygame.event.Event(EVENT_FUNCALL, function=function, args=args, kwargs=kwargs))
 
   # unhashed password is required here
   def connect(self, host, username, password):

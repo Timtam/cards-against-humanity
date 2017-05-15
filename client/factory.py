@@ -18,5 +18,5 @@ class ClientFactory(Factory):
 
   def closeClient(self):
     if self.client:
-      self.client.loseConnection()
+      self.client.transport.loseConnection()
       self.client = None

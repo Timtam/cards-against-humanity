@@ -37,5 +37,5 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.view.errorMessage(message)
 
   def userRegistration(self, success, message):
-    if success:
+    if not success:
       self.factory.display.view.errorMessage(message)

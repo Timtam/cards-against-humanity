@@ -4,7 +4,6 @@ import pygame
 from twisted.logger import globalLogBeginner, textFileLogObserver
 
 from .display import Display
-from .login_view import LoginView
 
 
 

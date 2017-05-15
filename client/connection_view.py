@@ -29,5 +29,5 @@ class ConnectionView(MessageView):
     self.display.error_sound.play()
 
   def onOK(self):
-    self.display.factory.closeClient()
+    self.display.callFunction('self.factory.closeClient')
     self.display.setView('LoginView')
