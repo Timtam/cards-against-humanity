@@ -63,6 +63,7 @@ class MainFrame(wx.Frame):
   def onResizing(self, e):
     e.Skip()
     wx.CallAfter(self.left_window.card_grid.calcBestColumns)
+    wx.CallAfter(self.left_window.Layout)
     
   
   def initUI(self):

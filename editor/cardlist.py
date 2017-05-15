@@ -65,7 +65,8 @@ class ScrolledGrid(wx.ScrolledWindow):
     # at first calculate columns from the available width and let the grid calc
     #   the rows
     columns = self.ClientSize.width / FULL_ELEMENT
-    self.grid.SetCols(columns)
+    if columns != self.grid.GetCols():
+      self.grid.SetCols(columns)
     (rows, columns) = self.grid.CalcRowsCols()
     
     # then calculate the possible row from the available height
@@ -79,8 +80,9 @@ class ScrolledGrid(wx.ScrolledWindow):
     
     # finally also set the number of columns and return them just to be on the
     #   safe side
-    self.grid.SetCols(columns)
-    self.GetParent().Layout()
+    if columns != self.grid.GetCols():
+      self.grid.SetCols(columns)
+      self.GetParent().Layout()
     return columns
   
   
