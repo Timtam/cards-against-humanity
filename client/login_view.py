@@ -128,7 +128,9 @@ class LoginView(View):
     self.pword_input.update()
     if self.server_input.input.get_text() == '' or \
                     self.uname_input.input.get_text() == '' or \
-                    self.pword_input.input.get_text() == '':
+                    self.pword_input.input.get_text() == '' or \
+                    len(self.uname_input.input.get_text())<6 or \
+                    len(self.uname_input.input.get_text())>30:
       self.button_connect.setEnable(False)
     else:
       self.button_connect.setEnable(True)

@@ -20,8 +20,8 @@ class ServerProtocol(JSONReceiver):
     self.log.info("{log_source.identification!r} established connection")
 
   def userAuthentification(self, username, password):
-    if len(username)>30 or len(password)!=128:
-      self.log.warn('{log_source.identification!r} too long username or password with incorrect length specified')
+    if len(username)<6 or len(username)>30 or len(password)!=128:
+      self.log.warn('{log_source.identification!r} username or password with incorrect length specified')
       self.sendMessage(MSG_USER_LOGIN, success=False, message='invalid username or password specified')
       return
     if not self.user.exists(username):
