@@ -90,6 +90,7 @@ ENV/
 # databases
 server.db
 cards.db
+database/
 
 # PyCharm settings
 .idea/
