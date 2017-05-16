@@ -10,7 +10,11 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_CLIENT_AUTHENTIFICATION, MSG_SERVER_AUTHENTIFICATION, self.serverAuthentification)
     self.addCallback(MODE_USER_AUTHENTIFICATION, MSG_USER_LOGIN, self.userLogin)
     self.addCallback(MODE_USER_AUTHENTIFICATION, MSG_USER_REGISTRATION, self.userRegistration)
+    self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_QUERY, self.databaseQuery)
+    self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_PUSH, self.databasePush)
+    self.addCallback(MODE_INITIAL_SYNC, MSG_SYNC_FINISHED, self.syncFinished)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
+    self.database_hash = None
     self.identification = 'server'
     self.server_version = {'MAJOR': 0, 'MINOR': 0, 'REVISION': 0}
     self.factory.client = self
@@ -32,10 +36,30 @@ class ClientProtocol(JSONReceiver):
 
   def userLogin(self, success, message):
     if success:
-      self.factory.display.view.loggedInMessage(message)
+      self.factory.display.view.syncMessage()
+      self.setMode(MODE_INITIAL_SYNC)
+      self.sendMessage(MSG_DATABASE_QUERY)
     else:
       self.factory.display.view.errorMessage(message)
 
   def userRegistration(self, success, message):
     if not success:
       self.factory.display.view.errorMessage(message)
+
+  def databaseQuery(self, hash):
+    self.factory.card_database.loadPath(self.factory.display.server_name, hash)
+    if not self.factory.card_database.loaded:
+      self.sendMessage(MSG_DATABASE_PULL)
+      self.database_hash = hash
+    else:
+      self.sendMessage(MSG_DATABASE_KNOWN)
+
+  def databasePush(self, size):
+    self.receiveRawData(size, self.databaseKnown)
+
+  def databaseKnown(self):
+    self.factory.card_database.loadData(self.raw_data, self.factory.display.server_name, self.database_hash)
+    self.sendMessage(MSG_DATABASE_KNOWN)
+
+  def syncFinished(self):
+    self.factory.display.view.loggedInMessage()

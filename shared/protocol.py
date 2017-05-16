@@ -12,6 +12,10 @@ class JSONReceiver(LineReceiver):
     self.factory = factory
     self.identification = '' # should be shadowed for proper usage
     self.mode = MODE_NONE
+    self.raw_args = []
+    self.raw_callback = None
+    self.raw_data = ''
+    self.raw_remaining = 0
 
   def lineReceived(self, line):
     data = json.loads(line)
@@ -36,3 +40,22 @@ class JSONReceiver(LineReceiver):
 
   def setMode(self, mode):
     self.mode = mode
+
+  def sendRawData(self, data):
+    while len(data):
+      self.transport.write(data[:self.MAX_LENGTH])
+      data = data[self.MAX_LENGTH:]
+
+  def receiveRawData(self, length, callback, *args):
+    self.raw_args = args
+    self.raw_callback = callback
+    self.raw_data = ''
+    self.raw_remaining = length
+    self.setRawMode()
+
+  def rawDataReceived(self, data):
+    self.raw_remaining -= len(data)
+    self.raw_data += data
+    if self.raw_remaining == 0:
+      self.setLineMode()
+      self.raw_callback(*self.raw_args)

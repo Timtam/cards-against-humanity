@@ -121,16 +121,6 @@ class MainFrame(wx.Frame):
                          'text' VARCHAR(1000),
                          'type' TINYINT(1))
                        """)
-        cursor.execute("""
-                       CREATE TABLE 'config' (
-                         'key' VARCHAR(30),
-                         'value' VARCHAR(30))
-                       """)
-        cursor.execute("""
-                       INSERT INTO 'config' (
-                         'key', 'value') VALUES (
-                         ?, ?)
-                       """, ('version', '1',))
         self.database.commit()
     else:
       self.database = sqlite3.connect(

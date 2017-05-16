@@ -2,12 +2,13 @@ from twisted.internet.protocol import Factory
 from twisted.logger import Logger
 
 from .protocol import ClientProtocol
+from shared.card_database_manager import CardDatabaseManager
 
 class ClientFactory(Factory):
-  display = None
   log = Logger()
 
   def __init__(self, display):
+    self.card_database = CardDatabaseManager()
     self.client = None
     self.display = display
 

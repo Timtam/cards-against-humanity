@@ -16,8 +16,12 @@ class ConnectionView(MessageView):
     self.setText('logging in...')
     self.setButton('', None)
 
-  def loggedInMessage(self, message):
-    self.setText(message)
+  def syncMessage(self):
+    self.setText('syncing data...')
+    self.setButton('', None)
+
+  def loggedInMessage(self):
+    self.setText('logged in successfully')
     self.setButton('OK', self.onOK)
     self.display.login_sound.stop()
     self.display.login_sound.play()

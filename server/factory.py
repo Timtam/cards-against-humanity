@@ -20,11 +20,12 @@ class ServerFactory(Factory):
     self.serverDatabase = sqlite3.connect(os.path.join(getScriptDirectory(), "server.db"))
     self.serverDatabase.cursor().execute("CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY, 'name' VARCHAR(30), 'password' CHAR(128))")
     self.serverDatabase.commit()
-    self.log.info("Opened server database")
+    self.log.info("Loaded server database")
 
   def startFactory(self):
-    self.card_database = CardDatabaseManager('cards.db')
-    self.log.info("Loaded card database version {log_source.card_database.version!r}")
+    self.card_database = CardDatabaseManager()
+    self.card_database.loadPath('cards.db')
+    self.log.info("Loaded card database")
 
     self.openServerDatabase()
 
