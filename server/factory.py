@@ -18,7 +18,9 @@ class ServerFactory(Factory):
 
   def openServerDatabase(self):
     self.serverDatabase = sqlite3.connect(os.path.join(getScriptDirectory(), "server.db"))
-    self.serverDatabase.cursor().execute("CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY, 'name' VARCHAR(30), 'password' CHAR(128))")
+    cursor = self.serverDatabase.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY, 'name' VARCHAR(30), 'password' CHAR(128))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS 'games' ('id' BIGINT NOT NULL, 'players' TEXT, 'cards' TEXT, 'database_hash' CHAR(128))")
     self.serverDatabase.commit()
     self.log.info("Loaded server database")
 

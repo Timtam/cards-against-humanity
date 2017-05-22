@@ -1,1 +1,3 @@
 CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY NOT NULL, 'name' VARCHAR(30) NOT NULL, 'password' CHAR(128));
+
+CREATE TABLE IF NOT EXISTS 'games' ('id' BIGINT NOT NULL, 'players' TEXT, 'cards' TEXT, 'database_hash' CHAR(128));
