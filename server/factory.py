@@ -37,7 +37,7 @@ class ServerFactory(Factory):
     self.log.info("Server up and running, waiting for incoming connections")
 
   def createGame(self, name, password = None):
-    game = Game(name = name, password_hash = password)
+    game = Game(self, name = name, password_hash = password)
     self.games.append(game)
     return game
 

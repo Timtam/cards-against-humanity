@@ -21,11 +21,11 @@ class Game(object):
       return self.formatted(success=False, message='unable to join')
     if joinable['password'] and password != self.password_hash:
       return self.formatted(success=False, message='wrong password supplied')
-    if self.users.index(user)>=0:
+    if user in self.users:
       return self.formatted(success=False, message='user joined already')
     self.users.append(user)
     return self.formatted(success=True)
 
   @staticmethod
-  def formatted(self, **kwargs):
+  def formatted(**kwargs):
     return kwargs

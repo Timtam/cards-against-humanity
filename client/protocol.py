@@ -13,6 +13,8 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_QUERY, self.databaseQuery)
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_PUSH, self.databasePush)
     self.addCallback(MODE_INITIAL_SYNC, MSG_SYNC_FINISHED, self.syncFinished)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
     self.identification = 'server'
@@ -63,3 +65,17 @@ class ClientProtocol(JSONReceiver):
 
   def syncFinished(self):
     self.factory.display.view.loggedInMessage()
+    self.sendMessage(MSG_CREATE_GAME, name='test')
+    self.setMode(MODE_FREE_TO_JOIN)
+
+  def createGame(self, success, id = '', message = ''):
+    print success
+    if success:
+      print id
+      self.sendMessage(MSG_JOIN_GAME, id=id)
+
+  def joinGame(self, success, message = ''):
+    print success
+    print message
+    if success:
+      self.setMode(MODE_IN_GAME)
