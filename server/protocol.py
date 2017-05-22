@@ -12,6 +12,8 @@ class ServerProtocol(JSONReceiver):
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_QUERY, self.databaseQuery)
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_PULL, self.databasePull)
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_KNOWN, self.databaseKnown)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.user = User(self)
 
@@ -62,6 +64,30 @@ class ServerProtocol(JSONReceiver):
   def databaseKnown(self):
     self.log.info("{log_source.identification!r} knows current card database")
     self.sendMessage(MSG_SYNC_FINISHED)
+    self.setMode(MODE_FREE_TO_JOIN)
+
+  def createGame(self, name, password = None):
+    if len(name)==0 or len(name)>30:
+      self.sendMessage(MSG_CREATE_GAME, success=False, message='invalid name')
+      self.log.warn("{log_source.identification!r} tried to create game with invalid name {name}", name=name)
+      return
+    game = self.factory.createGame(name, password)
+    self.sendMessage(MSG_CREATE_GAME, success=True, id=game.id)
+    self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=name, id = game.id)
+
+  def joinGame(self, id, password = None):
+    game = self.factory.findGame(id)
+    if not game:
+      self.sendMessage(MSG_JOIN_GAME, success = False, message='game not found')
+      self.log.warn("{log_source.identification!r} tried to join non-existant game")
+      return
+    result = game.join(self.user, password)
+    if not result['success']:
+      self.log.info("{log_source.identification!r} failed to join game {id}: {message}", id = game.id, message = result['message'])
+    else:
+      self.log.info("{log_source.identification!r} joined game {id}", id = game.id)
+      self.setMode(MODE_IN_GAME)
+    self.sendMessage(MSG_JOIN_GAME, **result)
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')

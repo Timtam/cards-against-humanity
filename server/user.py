@@ -51,5 +51,6 @@ class User(object):
   # this is quite a dirty way
   # it just formats the keyword arguments into a dict and returns it
   # that's actually just for pretty printing purposes
+  @staticmethod
   def formatted(self, **kwargs):
     return kwargs
