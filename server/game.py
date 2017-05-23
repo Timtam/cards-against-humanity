@@ -37,7 +37,7 @@ class Game(object):
       return self.formatted(success=False, message=joinable['message'])
     if joinable['password'] and password != self.password_hash:
       return self.formatted(success=False, message='wrong password supplied')
-    possible_users = [u for u in self.users if u['user'] == user]
+    possible_users = [u for u in self.users if u['user'] == user.id]
 
     if len(possible_users)>0:
       return self.formatted(success=False, message='already joined this game')
@@ -46,10 +46,10 @@ class Game(object):
     return self.formatted(success=True)
 
   def getAllUsers(self):
-    return [u['user'] for u in self.users]
+    return [self.factory.findUser(u['user']) for u in self.users if u['joined']]
 
   def start(self):
-    if len(self.users)<3:
+    if len(self.getAllUsers())<3:
       return self.formatted(success=False, message='not enough players in this game')
 
     if not self.open:
@@ -76,12 +76,13 @@ class Game(object):
     return self.black_cards[0]
 
   def getAllWhiteCardsForUsers(self):
-    return [(self.users[i]['user'], self.users[i]['white_cards']) for i in range(len(self.users))]
+    return [(self.factory.findUser(self.users[i]['user']), self.users[i]['white_cards']) for i in range(len(self.users))]
 
   @staticmethod
   def userdict(user):
     return {
-            user: user,
+            user: user.id,
+            joined: True,
             black_cards: [],
             white_cards: []
            }

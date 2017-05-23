@@ -47,3 +47,11 @@ class ServerFactory(Factory):
     if len(possible_games) != 1:
       return None
     return possible_games[0]
+
+  def findUser(self, id):
+    possible_users = [u for u in self.users if u.id == id]
+
+    if len(possible_users)!=1:
+      return None
+
+    return possible_users[0]
