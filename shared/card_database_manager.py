@@ -3,10 +3,12 @@ import os
 import os.path
 import sqlite3
 
+from .card import *
 from .path import getScriptDirectory
 
 class CardDatabaseManager(object):
 
+  cards = []
   data = None
   database = None
   hash = ''
@@ -69,3 +71,22 @@ class CardDatabaseManager(object):
       path = path+".%s"%hash
 
     return path
+
+  def loadCards(self):
+
+    if not self.loaded:
+      return
+
+    self.cards = []
+
+    cursor = self.database.cursor()
+    cursor.execute('SELECT id, text, type FROM cards')
+
+    for card in cursor.fetchall():
+      self.cards.append(Card(card[0], card[1], card[2]))
+
+  def getBlackCards(self):
+    return [c for c in self.cards if c.type == CARD_BLACK]
+
+  def getWhiteCards(self):
+    return [c for c in self.cards if c.type == CARD_WHITE]

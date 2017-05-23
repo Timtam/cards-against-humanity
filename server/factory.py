@@ -29,6 +29,7 @@ class ServerFactory(Factory):
   def startFactory(self):
     self.card_database = CardDatabaseManager()
     self.card_database.loadPath('cards.db')
+    self.card_database.loadCards()
     self.log.info("Loaded card database")
 
     self.openServerDatabase()
