@@ -54,7 +54,7 @@ class Card(object):
     placeholders = [p[2] for p in format_iterator if p[2] is not None]
     # we don't accept already well formatted placeholders inside the actual card text
     if len(placeholders)>0:
-       raise CardValidityError({'id':self.id, 'text': 'invalid text found inside the card text: {%s}'%(placeholders[0])})
+      raise CardValidityError({'id':self.id, 'text': 'invalid text found inside the card text: {%s}'%(placeholders[0])})
     internal_text = self.formatInternalText(text)
     self.setInternalText(internal_text)
 
