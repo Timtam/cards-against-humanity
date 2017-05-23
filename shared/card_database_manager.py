@@ -6,6 +6,8 @@ import sqlite3
 from .card import *
 from .path import getScriptDirectory
 
+MAX_PLAYERS_PER_GAME = 10
+
 class CardDatabaseManager(object):
 
   cards = []
@@ -90,3 +92,7 @@ class CardDatabaseManager(object):
 
   def getWhiteCards(self):
     return [c for c in self.cards if c.type == CARD_WHITE]
+
+  @property
+  def max_players_per_game(self):
+    return min(MAX_PLAYERS_PER_GAME, len(self.getWhiteCards())/10, len(self.getBlackCards()))
