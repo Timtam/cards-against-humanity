@@ -37,10 +37,20 @@ class Game(object):
       return self.formatted(success=False, message=joinable['message'])
     if joinable['password'] and password != self.password_hash:
       return self.formatted(success=False, message='wrong password supplied')
-    if user in self.users:
-      return self.formatted(success=False, message='user joined already')
-    self.users.append(user)
+    possible_users = [u for u in self.users if u['user'] == user]
+
+    if len(possible_users)>0:
+      return self.formatted(success=False, message='already joined this game')
+
+    self.users.append(self.userdict(user))
     return self.formatted(success=True)
+
+  @staticmethod
+  def userdict(user):
+    return {
+            user: user,
+            black_cards: []
+           }
 
   @staticmethod
   def formatted(**kwargs):
