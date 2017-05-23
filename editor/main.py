@@ -163,6 +163,7 @@ class MainFrame(wx.Frame):
     panel = None
     cursor = self.database.cursor()
     cursor.execute(sql, tuple(filter_prm))
+    self.left_window.card_grid.Hide()
     self.left_window.card_grid.clearCards()
     for card in cursor.fetchall():
       new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
@@ -170,6 +171,7 @@ class MainFrame(wx.Frame):
         panel = new_card
     if self.left_window.card_grid.initialized is False:
       self.left_window.card_grid.createGrid()
+    self.left_window.card_grid.Show()
     self.left_window.Layout()
     
     if panel is not None and focus:
