@@ -4,6 +4,7 @@ class User(object):
   log = Logger()
 
   def __init__(self, protocol):
+    self.game = None
     self.id = 0
     self.name = ""
     self.protocol = protocol
@@ -44,6 +45,12 @@ class User(object):
     self.protocol.factory.serverDatabase.commit()
 
     return self.formatted(success=True, message='registration successful')
+
+  def setGame(self, game):
+    self.game = game
+
+  def getGame(self):
+    return self.game
 
   def unlink(self):
     del self.protocol.factory.users[self.protocol.factory.users.index(self)]

@@ -14,6 +14,7 @@ class ServerProtocol(JSONReceiver):
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_KNOWN, self.databaseKnown)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
+    self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.user = User(self)
 
@@ -91,7 +92,27 @@ class ServerProtocol(JSONReceiver):
     else:
       self.log.info("{log_source.identification!r} joined game {id}", id = game.id)
       self.setMode(MODE_IN_GAME)
+      self.user.setGame(game)
     self.sendMessage(MSG_JOIN_GAME, **result)
+
+  def startGame(self):
+    game = self.user.getGame()
+    result = game.start()
+    if not result['success']:
+      self.log.info("{log_source.identification!r} failed to start game {id}: {message}", id = game.id, message=result['message'])
+    else:
+      self.log.info("{log_source.identification!r} started game {id}", id = game.id)
+    self.sendMessage(MSG_START_GAME, **result)
+    if not result['success']:
+      return
+
+    pairs = game.getAllWhiteCardsForUsers()
+    black_card = game.getCurrentBlackCard()
+
+    for pair in pairs:
+      pair[0].protocol.sendMessage(MSG_STARTED_GAME, player = self.user.name)
+      pair[0].protocol.sendMessage(MSG_DRAW_CARDS, cards = [c.id for c in pair[1]])
+      pair[0].protocol.sendMessage(MSG_CZAR_CHANGE, czar = pairs[0][0].name, card = black_card.id)
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')
