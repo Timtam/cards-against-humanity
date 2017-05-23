@@ -45,11 +45,45 @@ class Game(object):
     self.users.append(self.userdict(user))
     return self.formatted(success=True)
 
+  def getAllUsers(self):
+    return [u['user'] for u in self.users]
+
+  def start(self):
+    if len(self.users)<3:
+      return self.formatted(success=False, message='not enough players in this game')
+
+    if not self.open:
+      return self.formatted(success=False, message='already running')
+
+    self.open = False
+
+    # all users need to get 10 cards
+    for i in range(len(self.users)*10):
+      self.users[i/10]['white_cards'].append(self.white_cards[i])
+    self.white_cards=self.white_cards[len(self.users)*10:]
+
+    # and we need to shuffle all users and determine the one
+    # with the black card
+
+    random.shuffle(self.users)
+
+    # index at 0 will always be the czar
+    # and black_cards 0 will always be the current black card
+
+    return self.formatted(success=True)
+
+  def getCurrentBlackCard(self):
+    return self.black_cards[0]
+
+  def getAllWhiteCardsForUsers(self):
+    return [(self.users[i]['user'], self.users[i]['white_cards']) for i in range(len(self.users))]
+
   @staticmethod
   def userdict(user):
     return {
             user: user,
-            black_cards: []
+            black_cards: [],
+            white_cards: []
            }
 
   @staticmethod
