@@ -7,10 +7,12 @@ from twisted.internet.endpoints import TCP4ClientEndpoint
 from twisted.internet.error import ConnectionRefusedError, DNSLookupError
 from twisted.internet.task import LoopingCall
 
-from .connection_view import ConnectionView
 from .events import *
 from .factory import ClientFactory
 from .login_view import LoginView
+from .connection_view import ConnectionView
+from .message_view import MessageView
+from .game_view import GameView
 from shared.path import getScriptDirectory
 
 

@@ -58,6 +58,7 @@ class Button:
     self.text_x = x + BUTTON_PADDING
     self.text_y = y + BUTTON_PADDING
     self.button_rect = pygame.Rect(self.x, self.y, self.w, self.h)
+    self.border_rect = pygame.Rect(self.x, self.y, self.w, self.h)
     self.color = BUTTON_COLOR
     self.clicked = False
     
@@ -93,6 +94,7 @@ class Button:
       self.text_y = y + self.height / 2 - self.text.get_height() / 2
     
     self.button_rect = pygame.Rect(self.x, self.y, self.w, self.h)
+    self.border_rect = pygame.Rect(self.x, self.y, self.w, self.h)
   
   
   def handleEvent(self, event):
@@ -134,6 +136,7 @@ class Button:
   def render(self):
     text = self.font.render(self.text, 1, self.text_color)
     pygame.draw.rect(self.display.screen, self.color, self.button_rect, 0)
+    pygame.draw.rect(self.display.screen, (0, 0, 0), self.border_rect, 1)
     self.display.screen.blit(text, (self.text_x, self.text_y))
   
   
