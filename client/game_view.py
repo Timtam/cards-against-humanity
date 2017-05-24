@@ -58,8 +58,10 @@ class GameView(View):
 
   def setCardTexts(self, cards):
     for i in range(0, 10, 1):
-      card_text = ScrolledTextPanel(self.card_surfaces[i], TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2 * TEXT_PADDING, self.surface_black_card.get_height() - 2 * TEXT_PADDING)
-      self.card_texts.append(card_text)
+      if cards[i] is not None:
+        card_text = ScrolledTextPanel(self.card_surfaces[i], TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2 * TEXT_PADDING, self.surface_black_card.get_height() - 2 * TEXT_PADDING)
+        card_text.addText(cards[i].text)
+        self.card_texts.append(card_text)
   
 
   def handleEvent(self, event):
