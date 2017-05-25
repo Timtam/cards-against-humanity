@@ -19,12 +19,14 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_IN, self.loggedIn)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_OFF, self.loggedOff)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
     self.addCallback(MODE_IN_GAME, MSG_DRAW_CARDS, self.drawCards)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_CHANGE, self.czarChange)
     self.addCallback(MODE_IN_GAME, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_IN, self.loggedIn)
+    self.addCallback(MODE_IN_GAME, MSG_LOGGED_OFF, self.loggedOff)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
     self.identification = 'server'
@@ -103,6 +105,9 @@ class ClientProtocol(JSONReceiver):
   def loggedIn(self, user_id, user_name):
     self.factory.addUser(user_id, user_name)
     print user_name+ ' logged in'
+
+  def loggedOff(self, user_id):
+    self.factory.removeUser(user_id)
 
   def startedGame(self):
     pass

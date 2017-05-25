@@ -130,3 +130,5 @@ class ServerProtocol(JSONReceiver):
     self.log.info('{log_source.identification!r} lost connection')
     self.log.debug(reason.getErrorMessage())
     self.user.unlink()
+    for u in self.factory.getAllUsers():
+      u.protocol.sendMessage(MSG_LOGGED_OFF, user_id = self.user.id)
