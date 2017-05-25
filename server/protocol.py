@@ -39,6 +39,10 @@ class ServerProtocol(JSONReceiver):
     if result['success']:
       self.identification = self.user.name
       self.setMode(MODE_INITIAL_SYNC)
+      for user in self.factory.getAllUsers():
+        if user is not self.user:
+          user.protocol.sendMessage(MSG_LOGGED_IN, user_id = self.user.id, user_name = self.user.name)
+
     self.log.info('{log_source.identification!r} {message}', message=result['message'])
     self.sendMessage(MSG_USER_LOGIN, **result)
     if not result['success']:
@@ -93,6 +97,9 @@ class ServerProtocol(JSONReceiver):
       self.log.info("{log_source.identification!r} joined game {id}", id = game.id)
       self.setMode(MODE_IN_GAME)
       self.user.setGame(game)
+      for user in game.getAllUsers():
+        if user is not self.user:
+          user.protocol.sendMessage(MSG_JOINED_GAME, user_id = self.user.id, game_id = game.id)
     self.sendMessage(MSG_JOIN_GAME, **result)
 
   def startGame(self):

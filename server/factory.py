@@ -55,3 +55,6 @@ class ServerFactory(Factory):
       return None
 
     return possible_users[0]
+
+  def getAllUsers(self):
+    return self.users

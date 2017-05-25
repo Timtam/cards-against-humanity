@@ -15,10 +15,14 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_INITIAL_SYNC, MSG_SYNC_FINISHED, self.syncFinished)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_JOINED_GAME, self.joinedGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
     self.addCallback(MODE_IN_GAME, MSG_DRAW_CARDS, self.drawCards)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_CHANGE, self.czarChange)
+    self.addCallback(MODE_IN_GAME, MSG_JOINED_GAME, self.joinedGame)
+    self.addCallback(MODE_IN_GAME, MSG_LOGGED_IN, self.loggedIn)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
     self.identification = 'server'
@@ -90,6 +94,13 @@ class ClientProtocol(JSONReceiver):
   def startGame(self, success, message=''):
     if not success:
       self.factory.display.callFunction('self.view.writeLogError', message)
+
+  def joinedGame(self, user_id, game_id):
+    pass
+
+  def loggedIn(self, id, name):
+    self.factory.addUser(id, name)
+    print name+ ' logged in'
 
   def startedGame(self):
     pass

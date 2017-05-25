@@ -41,6 +41,9 @@ class JSONReceiver(LineReceiver):
   def setMode(self, mode):
     self.mode = mode
 
+  def getMode(self):
+    return self.mode
+
   def sendRawData(self, data):
     while len(data):
       self.transport.write(data[:self.MAX_LENGTH])
