@@ -19,12 +19,13 @@ class GameView(View):
     self.font = self.display.getFont()
     
     self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.8, self.display_size[1] * 0.5))
+    self.button_start_leave.setCallback(self.onStartLeave)
     self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.8, self.display_size[1] * 0.6))
     
     self.surface_gamelog = pygame.Surface((300, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
     self.gamelog_text = ScrolledTextPanel(self.display.screen, 2*TEXT_PADDING, 2*TEXT_PADDING, self.surface_gamelog.get_width() - 4*TEXT_PADDING, self.surface_gamelog.get_height() - 4*TEXT_PADDING)
-    self.gamelog_text.addText('you joined the game')
+    self.writeLog('you joined the game')
     self.gamelog_text.setLabel('game log')
 
     self.cards = []
@@ -83,6 +84,18 @@ class GameView(View):
 
     if len(cards)>0:
       self.log.warn('{count} cards remaining, but no place left', count = len(cards))
+
+  def writeLog(self, text):
+    self.gamelog_text.addText(text)
+    self.speak(text, False)
+
+  def writeLogError(self, text):
+    self.writeLog('An error occured: '+text)
+    self.display.game_error_sound.stop()
+    self.display.game_error_sound.play()
+
+  def onStartLeave(self):
+    self.display.factory.client.sendStartGame()
 
   def handleEvent(self, event):
     View.handleEvent(self, event)

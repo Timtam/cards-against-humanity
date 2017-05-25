@@ -15,6 +15,10 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_INITIAL_SYNC, MSG_SYNC_FINISHED, self.syncFinished)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
+    self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
+    self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
+    self.addCallback(MODE_IN_GAME, MSG_DRAW_CARDS, self.drawCards)
+    self.addCallback(MODE_IN_GAME, MSG_CZAR_CHANGE, self.czarChange)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
     self.identification = 'server'
@@ -82,3 +86,19 @@ class ClientProtocol(JSONReceiver):
     else:
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
+
+  def startGame(self, success, message=''):
+    if not success:
+      self.factory.display.callFunction('self.view.writeLogError', message)
+
+  def startedGame(self):
+    pass
+
+  def drawCards(self):
+    pass
+
+  def czarChange(self):
+    pass
+
+  def sendStartGame(self):
+    self.sendMessage(MSG_START_GAME)
