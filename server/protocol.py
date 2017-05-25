@@ -48,7 +48,7 @@ class ServerProtocol(JSONReceiver):
     if not result['success']:
       self.transport.loseConnection()
     else:
-      users = [{'id': u.id, 'name': u.name} for u in self.factory.getAllUsers()]
+      users = [{'id': u.id, 'name': u.name} for u in self.factory.getAllUsers() if u['id'] != self.user.id]
       self.sendMessage(MSG_CURRENT_USERS, users = users)
       games = [{'id': g.id, 'name': g.name} for g in self.factory.getAllGames()]
       self.sendMessage(MSG_CURRENT_GAMES, games = games)
