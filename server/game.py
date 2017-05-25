@@ -5,7 +5,7 @@ class Game(object):
 
   def __init__(self, factory, name, password_hash = None):
     self.black_cards = []
-    self.database_hash = self.factory.card_database.hash
+    self.database_hash = factory.card_database.hash
     self.factory = factory
     self.id = uuid.uuid4().int
     self.name = name
