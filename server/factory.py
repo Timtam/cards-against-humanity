@@ -58,3 +58,6 @@ class ServerFactory(Factory):
 
   def getAllUsers(self):
     return self.users
+
+  def getAllGames(self):
+    return self.games

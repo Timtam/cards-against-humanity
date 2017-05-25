@@ -47,7 +47,12 @@ class ServerProtocol(JSONReceiver):
     self.sendMessage(MSG_USER_LOGIN, **result)
     if not result['success']:
       self.transport.loseConnection()
- 
+    else:
+      users = [{'id': u.id, 'name': u.name} for u in self.factory.getAllUsers()]
+      self.sendMessage(MSG_CURRENT_USERS, users = users)
+      games = [{'id': g.id, 'name': g.name} for g in self.factory.getAllGames()]
+      self.sendMessage(MSG_CURRENT_GAMES, games = games)
+
   def clientAuthentification(self, major, minor, revision):
     self.log.info('{log_source.identification!r} using client version {major}.{minor}.{revision}', major=major, minor=minor, revision=revision)
     if major < version.MAJOR or minor < version.MINOR:

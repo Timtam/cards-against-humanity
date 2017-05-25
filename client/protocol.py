@@ -10,6 +10,8 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_CLIENT_AUTHENTIFICATION, MSG_SERVER_AUTHENTIFICATION, self.serverAuthentification)
     self.addCallback(MODE_USER_AUTHENTIFICATION, MSG_USER_LOGIN, self.userLogin)
     self.addCallback(MODE_USER_AUTHENTIFICATION, MSG_USER_REGISTRATION, self.userRegistration)
+    self.addCallback(MODE_INITIAL_SYNC, MSG_CURRENT_GAMES, self.currentGames)
+    self.addCallback(MODE_INITIAL_SYNC, MSG_CURRENT_USERS, self.currentUsers)
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_QUERY, self.databaseQuery)
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_PUSH, self.databasePush)
     self.addCallback(MODE_INITIAL_SYNC, MSG_SYNC_FINISHED, self.syncFinished)
@@ -98,9 +100,9 @@ class ClientProtocol(JSONReceiver):
   def joinedGame(self, user_id, game_id):
     pass
 
-  def loggedIn(self, id, name):
-    self.factory.addUser(id, name)
-    print name+ ' logged in'
+  def loggedIn(self, user_id, user_name):
+    self.factory.addUser(user_id, user_name)
+    print user_name+ ' logged in'
 
   def startedGame(self):
     pass
@@ -110,6 +112,14 @@ class ClientProtocol(JSONReceiver):
 
   def czarChange(self):
     pass
+
+  def currentUsers(self, users):
+    for u in users:
+      self.factory.addUser(**u)
+
+  def currentGames(self, games):
+    for g in games:
+      self.factory.addGame(**g)
 
   def sendStartGame(self):
     self.sendMessage(MSG_START_GAME)

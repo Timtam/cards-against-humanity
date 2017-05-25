@@ -11,6 +11,7 @@ class ClientFactory(Factory):
     self.card_database = CardDatabaseManager()
     self.client = None
     self.display = display
+    self.games = []
     self.users = []
 
   def buildProtocol(self, addr):
@@ -33,3 +34,15 @@ class ClientFactory(Factory):
     if len(user)==0:
       return ''
     return user[0]['name']
+
+  def addGame(self, id, name):
+    self.games.append({
+      'id': id,
+      'name': name
+    })
+
+  def findGamename(self, id):
+    game = [g for g in self.games if g['id'] == id]
+    if len(game)==0:
+      return ''
+    return game[0]['name']
