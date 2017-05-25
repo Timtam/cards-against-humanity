@@ -25,6 +25,7 @@ class ScrolledTextPanel:
     # for now only used to memorize the text the visually impaired user
     # is currently looking at
     self.line_cursor = 0
+    self.speak_lines = True
     self.getHeight()
     self.surface = pygame.Surface((self.width, self.height))
     self.surface_rect = self.surface.get_rect()
@@ -94,7 +95,7 @@ class ScrolledTextPanel:
     self.knob = pygame.Rect(self.track)
     self.knob.height = self.track.height * self.ratio
     self.scrolling = False
-    
+
 
   def clearText(self):
     self.text_surfaces = []
@@ -181,5 +182,16 @@ class ScrolledTextPanel:
     self.label = label
 
 
+  def setSpeakLines(self, value):
+    self.speak_lines = value
+
+
   def getLabel(self):
-    return self.label + ' text: ' + self.text_lines[self.line_cursor]+ ' (line %d of %d'%(self.line_cursor+1, len(self.text_lines))
+    label = self.label+" text: "
+    if len(self.text_lines):
+      label += self.text_lines[self.line_cursor]
+      if self.speak_lines:
+        label += ' (line %d of %d'%(self.line_cursor+1, len(self.text_lines))
+    else:
+      label += "empty"
+    return label

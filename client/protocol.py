@@ -69,13 +69,16 @@ class ClientProtocol(JSONReceiver):
     self.setMode(MODE_FREE_TO_JOIN)
 
   def createGame(self, success, id = '', message = ''):
-    print success
     if success:
-      print id
       self.sendMessage(MSG_JOIN_GAME, id=id)
+    else:
+      self.factory.display.setView('ConnectionView')
+      self.factory.display.callFunction('self.view.errorMessage', message = message)
 
   def joinGame(self, success, message = ''):
-    print success
-    print message
     if success:
       self.setMode(MODE_IN_GAME)
+      self.factory.display.setView('GameView')
+    else:
+      self.factory.display.setView('ConnectionView')
+      self.factory.display.callFunction('self.view.errorMessage', message = message)

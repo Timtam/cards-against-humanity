@@ -13,7 +13,6 @@ class GameView(View):
   def __init__(self, display):
     View.__init__(self, display)
     
-    self.display = display
     self.display_size = self.display.getSize()
     self.hmiddle = self.display_size[0] / 2
     self.vmiddle = self.display_size[1] / 2
@@ -25,10 +24,12 @@ class GameView(View):
     self.surface_gamelog = pygame.Surface((300, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
     self.gamelog_text = ScrolledTextPanel(self.display.screen, 2*TEXT_PADDING, 2*TEXT_PADDING, self.surface_gamelog.get_width() - 4*TEXT_PADDING, self.surface_gamelog.get_height() - 4*TEXT_PADDING)
-    
-    self.card_surfaces = []
-    self.card_positions = []
-    self.card_texts = []
+    self.gamelog_text.addText('you joined the game')
+    self.gamelog_text.setLabel('game log')
+
+    self.cards = []
+
+    self.tab_order = [self.button_start_leave, self.button_confirm, self.gamelog_text]
     self.createCardSurfaces()
     
     
@@ -45,32 +46,56 @@ class GameView(View):
     
     self.surface_black_card = pygame.Surface((card_surface.get_width(), card_surface.get_height()))
     self.black_card_text = ScrolledTextPanel(self.surface_black_card, TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2*TEXT_PADDING, self.surface_black_card.get_height() - 2*TEXT_PADDING)
+    self.black_card_text.addText('no black card')
+    self.black_card_text.setLabel('black card')
     
-    for i in range(0, 10, 1):
-      self.card_surfaces.append(card_surface)
+    for i in range(10):
       card_position = ((i * (card_surface.get_width() + CARD_PADDING)) - (
       int(i / 5) * (
       self.surface_cards.get_width() - CARD_PADDING)) + CARD_PADDING,
                        int(i / 5) * (
                        card_surface.get_height() + CARD_PADDING) + CARD_PADDING)
-      self.card_positions.append(card_position)
+      self.cards.append({
+        # we need to copy the surface, otherwise we will have the same
+        # printed on every surface
+        'surface': card_surface.copy(),
+        'position': card_position,
+        'text': None,
+        'card': None
+      })
+      self.cards[i]['text']=ScrolledTextPanel(self.cards[i]['surface'], TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2 * TEXT_PADDING, self.surface_black_card.get_height() - 2 * TEXT_PADDING)
+      self.cards[i]['text'].addText('no card')
+      self.cards[i]['text'].setLabel('white card %d'%(i+1))
+      self.cards[i]['text'].setSpeakLines(False)
+      self.tab_order.append(self.cards[i]['text'])
 
-
-  def setCardTexts(self, cards):
-    for i in range(0, 10, 1):
-      if cards[i] is not None:
-        card_text = ScrolledTextPanel(self.card_surfaces[i], TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2 * TEXT_PADDING, self.surface_black_card.get_height() - 2 * TEXT_PADDING)
-        card_text.addText(cards[i].text)
-        self.card_texts.append(card_text)
+    self.tab_order.append(self.black_card_text)
   
+  def setCards(self, *cards):
+    for i in range(10):
+      if len(cards)==0:
+        return
+      if not self.cards[i]['card']:
+        self.cards[i]['card'] = cards[0]
+        self.cards[i]['text'].clearText()
+        self.cards[i]['text'].addText(cards[0].getCardText())
+        del cards[0]
+
+    if len(cards)>0:
+      self.log.warn('{count} cards remaining, but no place left', count = len(cards))
 
   def handleEvent(self, event):
+    View.handleEvent(self, event)
     self.button_start_leave.handleEvent(event)
     self.button_confirm.handleEvent(event)
+    for i in range(10):
+      self.cards[i]['text'].handleEvent(event, self.display)
+    self.black_card_text.handleEvent(event, self.display)
+    self.gamelog_text.handleEvent(event, self.display)
   
   
   def update(self):
-    pass
+    View.update(self)
   
   
   def render(self):
@@ -83,11 +108,11 @@ class GameView(View):
     
     self.display.screen.blit(self.surface_black_card, (self.hmiddle - self.surface_black_card.get_width()/2, 50))
     
-    for i in range(0, 10, 1):
-      self.card_surfaces[i].fill((255, 255, 255))
-      pygame.draw.rect(self.card_surfaces[i], (0, 0, 0), self.card_border, 5)
-      #self.card_texts[i].render()
-      self.surface_cards.blit(self.card_surfaces[i], self.card_positions[i])
+    for i in range(10):
+      self.cards[i]['surface'].fill((255, 255, 255))
+      pygame.draw.rect(self.cards[i]['surface'], (0, 0, 0), self.card_border, 5)
+      self.cards[i]['text'].render()
+      self.surface_cards.blit(self.cards[i]['surface'], self.cards[i]['position'])
     
     self.display.screen.blit(self.surface_cards, (self.hmiddle - self.surface_cards.get_width()/2, self.display_size[1] - self.surface_cards.get_height() - 50))
 

@@ -56,7 +56,8 @@ class Display(object):
     if event.type == pygame.QUIT:
       self.stop()
     elif event.type == EVENT_VIEWCHANGE:
-      self.view = eval(event.view)(self)
+      if not isinstance(self.view, eval(event.view)):
+        self.view = eval(event.view)(self)
     elif event.type == EVENT_FUNCALL:
       eval(event.function)(*event.args, **event.kwargs)
     else:

@@ -81,10 +81,10 @@ class Game(object):
   @staticmethod
   def userdict(user):
     return {
-            user: user.id,
-            joined: True,
-            black_cards: [],
-            white_cards: []
+            'user': user.id,
+            'joined': True,
+            'black_cards': [],
+            'white_cards': []
            }
 
   @staticmethod

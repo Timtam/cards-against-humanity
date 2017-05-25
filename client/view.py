@@ -1,9 +1,10 @@
 import pygame
 import pygame.locals as pl
 
-
+from twisted.logger import Logger
 
 class View(object):
+  log = Logger()
   def __init__(self, display):
     self.display = display
     self.first_call = False
