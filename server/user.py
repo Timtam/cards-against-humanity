@@ -29,8 +29,13 @@ class User(object):
     if not result:
       return self.formatted(success=False, message='wrong login credentials supplied')
 
+    id = int(result[0])
+    user = self.protocol.factory.findUser(id)
+    if user is None:
+      return self.formatted(success = False, message = 'user currently logged in')
+
     self.name = name
-    self.id = int(result[0])
+    self.id = id
 
     return self.formatted(success=True, message='login successful')
 
