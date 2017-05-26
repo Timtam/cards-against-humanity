@@ -49,6 +49,7 @@ class MessageView(View):
     self.box_x = self.hmiddle - width / 2
     self.box_y = self.vmiddle - height / 2
     
+    # long text for checking scrolled text panel
     dummy_text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
                  "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
                  "magna aliquyam erat, sed diam voluptua. At vero eos et " \
@@ -59,7 +60,41 @@ class MessageView(View):
                  "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
                  "et accusam et justo duo dolores et ea rebum. Stet clita " \
                  "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
+                 "dolor sit amet. \n" \
+                 "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
+                 "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
+                 "magna aliquyam erat, sed diam voluptua. At vero eos et " \
+                 "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
+                 "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
+                 "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
+                 "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
+                 "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
+                 "et accusam et justo duo dolores et ea rebum. Stet clita " \
+                 "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
+                 "dolor sit amet. \n" \
+                 "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
+                 "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
+                 "magna aliquyam erat, sed diam voluptua. At vero eos et " \
+                 "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
+                 "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
+                 "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
+                 "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
+                 "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
+                 "et accusam et justo duo dolores et ea rebum. Stet clita " \
+                 "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
+                 "dolor sit amet. \n" \
+                 "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
+                 "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
+                 "magna aliquyam erat, sed diam voluptua. At vero eos et " \
+                 "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
+                 "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
+                 "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
+                 "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
+                 "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
+                 "et accusam et justo duo dolores et ea rebum. Stet clita " \
+                 "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
                  "dolor sit amet."
+    
     self.setText(dummy_text)
   
   # setting some automatically formatted and rendered text onto the screen
@@ -69,7 +104,8 @@ class MessageView(View):
                                            PADDING_LEFT_RIGHT,
                                            PADDING_TOP_BOTTOM,
                                            self.width - 2 * PADDING_LEFT_RIGHT,
-                                           self.height - 2 * PADDING_TOP_BOTTOM)
+                                           self.height - 2 * PADDING_TOP_BOTTOM,
+                                           self.maxheight - 2 * PADDING_TOP_BOTTOM)
     self.scrolled_text.setLabel('information')
     self.scrolled_text.addText(text)
 
@@ -83,6 +119,14 @@ class MessageView(View):
     self.message_border = pygame.Rect(0, 0, self.width, self.height)
     self.box_y = self.vmiddle - self.height / 2
     self.scrolled_text.setNewScreen(self.message_box)
+    self.scrolled_text = ScrolledTextPanel(self.message_box,
+                                           PADDING_LEFT_RIGHT,
+                                           PADDING_TOP_BOTTOM,
+                                           self.width - 2 * PADDING_LEFT_RIGHT,
+                                           self.height - 2 * PADDING_TOP_BOTTOM,
+                                           self.maxheight - 2 * PADDING_TOP_BOTTOM)
+    self.scrolled_text.setLabel('information')
+    self.scrolled_text.addText(text)
     self.tab_position = 0
     self.tab_order = [self.scrolled_text]
     if self.display.accessibility:
