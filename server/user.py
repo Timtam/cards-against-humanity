@@ -37,7 +37,7 @@ class User(object):
     self.name = name
     self.id = id
 
-    return self.formatted(success=True, message='login successful')
+    return self.formatted(success=True, message='login successful', user_id = self.id)
 
   def register(self, name, password):
 

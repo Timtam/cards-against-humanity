@@ -32,6 +32,8 @@ class ClientProtocol(JSONReceiver):
     self.identification = 'server'
     self.server_version = {'MAJOR': 0, 'MINOR': 0, 'REVISION': 0}
     self.factory.client = self
+    self.user_id = 0
+    self.game_id = 0
 
   def connectionMade(self):
     self.sendMessage(MSG_CLIENT_AUTHENTIFICATION, major=version.MAJOR, minor=version.MINOR, revision=version.REVISION)
@@ -48,8 +50,9 @@ class ClientProtocol(JSONReceiver):
     self.setMode(MODE_USER_AUTHENTIFICATION)
     self.factory.display.view.loginMessage()
 
-  def userLogin(self, success, message):
+  def userLogin(self, success, message, user_id = 0):
     if success:
+      self.user_id = user_id
       self.factory.display.view.syncMessage()
       self.setMode(MODE_INITIAL_SYNC)
       self.sendMessage(MSG_DATABASE_QUERY)
@@ -92,8 +95,9 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
 
-  def joinGame(self, success, message = ''):
+  def joinGame(self, success, message = '', game_id = 0):
     if success:
+      self.game_id = game_id
       self.setMode(MODE_IN_GAME)
       self.factory.display.setView('GameView')
     else:
@@ -105,7 +109,9 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.callFunction('self.view.writeLogError', message)
 
   def joinedGame(self, user_id, game_id):
-    pass
+    if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
+      self.factory.display.callFunction('self.view.writeLog', '%s joined the game'%self.factory.findUsername(user_id))
+
 
   def loggedIn(self, user_id, user_name):
     self.factory.addUser(user_id, user_name)
@@ -115,7 +121,12 @@ class ClientProtocol(JSONReceiver):
     self.factory.removeUser(user_id)
 
   def startedGame(self, user_id):
-    self.factory.display.callFunction('self.view.writeLog', '%s started the game'%self.factory.findUsername(user_id))
+    if user_id == self.user_id:
+      user = 'you'
+    else:
+      user = self.factory.findUsername(user_id)
+
+    self.factory.display.callFunction('self.view.writeLog', '%s started the game'%user)
 
   def drawCards(self, cards):
     cards = [self.factory.card_database.getCard(c) for c in cards]

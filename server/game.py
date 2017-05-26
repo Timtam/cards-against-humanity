@@ -43,7 +43,7 @@ class Game(object):
       return self.formatted(success=False, message='already joined this game')
 
     self.users.append(self.userdict(user))
-    return self.formatted(success=True)
+    return self.formatted(success=True, game_id = self.id)
 
   def getAllUsers(self):
     return [self.factory.findUser(u['user']) for u in self.users if u['joined']]
