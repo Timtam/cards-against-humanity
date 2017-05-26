@@ -86,7 +86,7 @@ class ServerProtocol(JSONReceiver):
       self.log.warn("{log_source.identification!r} tried to create a game, but not enough cards available")
       return
     game = self.factory.createGame(name, password)
-    self.sendMessage(MSG_CREATE_GAME, success=True, id=game.id)
+    self.sendMessage(MSG_CREATE_GAME, success=True, game_id=game.id)
     self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=name, id = game.id)
 
   def joinGame(self, id, password = None):
@@ -122,9 +122,9 @@ class ServerProtocol(JSONReceiver):
     black_card = game.getCurrentBlackCard()
 
     for pair in pairs:
-      pair[0].protocol.sendMessage(MSG_STARTED_GAME, player = self.user.name)
+      pair[0].protocol.sendMessage(MSG_STARTED_GAME, user_id = self.user.id)
       pair[0].protocol.sendMessage(MSG_DRAW_CARDS, cards = [c.id for c in pair[1]])
-      pair[0].protocol.sendMessage(MSG_CZAR_CHANGE, czar = pairs[0][0].name, card = black_card.id)
+      pair[0].protocol.sendMessage(MSG_CZAR_CHANGE, user_id = pairs[0][0].id, card = black_card.id)
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')

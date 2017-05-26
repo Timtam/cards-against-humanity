@@ -49,6 +49,7 @@ class GameView(View):
     self.black_card_text = ScrolledTextPanel(self.surface_black_card, TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2*TEXT_PADDING, self.surface_black_card.get_height() - 2*TEXT_PADDING)
     self.black_card_text.addText('no black card')
     self.black_card_text.setLabel('black card')
+    self.black_card = None
     
     for i in range(10):
       card_position = ((i * (card_surface.get_width() + CARD_PADDING)) - (
@@ -84,6 +85,11 @@ class GameView(View):
 
     if len(cards)>0:
       self.log.warn('{count} cards remaining, but no place left', count = len(cards))
+
+  def setBlackCard(self, card):
+    self.black_card_text.clear()
+    self.black_card_text.addText(card.getCardText())
+    self.black_card = card
 
   def writeLog(self, text):
     self.gamelog_text.addText(text)

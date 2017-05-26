@@ -77,12 +77,15 @@ class ClientProtocol(JSONReceiver):
 
   def syncFinished(self):
     self.factory.display.view.loggedInMessage()
-    self.sendMessage(MSG_CREATE_GAME, name='test')
     self.setMode(MODE_FREE_TO_JOIN)
+    if len(self.factory.games)>0:
+      self.sendMessage(MSG_JOIN_GAME, game_id = self.factory.games[0]['id'])
+    else:
+      self.sendMessage(MSG_CREATE_GAME, game_name='test')
 
-  def createGame(self, success, id = '', message = ''):
+  def createGame(self, success, game_id = '', message = ''):
     if success:
-      self.sendMessage(MSG_JOIN_GAME, id=id)
+      self.sendMessage(MSG_JOIN_GAME, game_id=game_id)
     else:
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
@@ -109,14 +112,17 @@ class ClientProtocol(JSONReceiver):
   def loggedOff(self, user_id):
     self.factory.removeUser(user_id)
 
-  def startedGame(self):
-    pass
+  def startedGame(self, user_id):
+    self.display.callFunction('self.view.writeLog', '%s started the game'%self.factory.findUsername(user_id))
 
-  def drawCards(self):
-    pass
+  def drawCards(self, cards):
+    cards = [self.factory.card_database.getCard(c) for c in cards]
+    self.display.callFunction('self.view.setCards', cards)
 
-  def czarChange(self):
-    pass
+  def czarChange(self, user_id, card):
+    self.display.callFunction('self.view.writeLog', '%s is chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
+    card = self.factory.card_database.getCard(card)
+    self.display.callFunction('self.view.setBlackCard', card)
 
   def currentUsers(self, users):
     for u in users:

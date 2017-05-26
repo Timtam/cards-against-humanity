@@ -93,6 +93,12 @@ class CardDatabaseManager(object):
   def getWhiteCards(self):
     return [c for c in self.cards if c.type == CARD_WHITE]
 
+  def getCard(self, id):
+    card = [c for c in self.cards if c.id == id]
+    if len(card) != 1:
+      return None
+    return card[0]
+
   @property
   def max_players_per_game(self):
     return min(MAX_PLAYERS_PER_GAME, len(self.getWhiteCards())/10, len(self.getBlackCards()))
