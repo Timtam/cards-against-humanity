@@ -66,6 +66,7 @@ class ClientProtocol(JSONReceiver):
       self.sendMessage(MSG_DATABASE_PULL)
       self.database_hash = hash
     else:
+      self.factory.card_database.loadCards()
       self.sendMessage(MSG_DATABASE_KNOWN)
 
   def databasePush(self, size):
@@ -73,6 +74,7 @@ class ClientProtocol(JSONReceiver):
 
   def databaseKnown(self):
     self.factory.card_database.loadData(self.raw_data, self.factory.display.server_name, self.database_hash)
+    self.factory.card_database.loadCards()
     self.sendMessage(MSG_DATABASE_KNOWN)
 
   def syncFinished(self):
@@ -113,16 +115,16 @@ class ClientProtocol(JSONReceiver):
     self.factory.removeUser(user_id)
 
   def startedGame(self, user_id):
-    self.display.callFunction('self.view.writeLog', '%s started the game'%self.factory.findUsername(user_id))
+    self.factory.display.callFunction('self.view.writeLog', '%s started the game'%self.factory.findUsername(user_id))
 
   def drawCards(self, cards):
     cards = [self.factory.card_database.getCard(c) for c in cards]
-    self.display.callFunction('self.view.setCards', cards)
+    self.factory.display.callFunction('self.view.setCards', *cards)
 
   def czarChange(self, user_id, card):
-    self.display.callFunction('self.view.writeLog', '%s is chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
+    self.factory.display.callFunction('self.view.writeLog', '%s is chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
     card = self.factory.card_database.getCard(card)
-    self.display.callFunction('self.view.setBlackCard', card)
+    self.factory.display.callFunction('self.view.setBlackCard', card)
 
   def currentUsers(self, users):
     for u in users:

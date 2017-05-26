@@ -74,20 +74,21 @@ class GameView(View):
     self.tab_order.append(self.black_card_text)
   
   def setCards(self, *cards):
+    j = 0
     for i in range(10):
-      if len(cards)==0:
+      if j >= len(cards):
         return
       if not self.cards[i]['card']:
-        self.cards[i]['card'] = cards[0]
+        self.cards[i]['card'] = cards[j]
         self.cards[i]['text'].clearText()
-        self.cards[i]['text'].addText(cards[0].getCardText())
-        del cards[0]
+        self.cards[i]['text'].addText(cards[j].getCardText())
+        j += 1
 
-    if len(cards)>0:
-      self.log.warn('{count} cards remaining, but no place left', count = len(cards))
+    if j < len(cards):
+      self.log.warn('{count} cards remaining, but no place left', count = len(cards)-j)
 
   def setBlackCard(self, card):
-    self.black_card_text.clear()
+    self.black_card_text.clearText()
     self.black_card_text.addText(card.getCardText())
     self.black_card = card
 
