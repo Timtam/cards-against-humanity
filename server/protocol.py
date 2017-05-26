@@ -76,18 +76,18 @@ class ServerProtocol(JSONReceiver):
     self.sendMessage(MSG_SYNC_FINISHED)
     self.setMode(MODE_FREE_TO_JOIN)
 
-  def createGame(self, name, password = None):
-    if len(name)==0 or len(name)>30 or (password is not None and len(password)!=128):
+  def createGame(self, game_name, game_password = None):
+    if len(game_name)==0 or len(game_name)>30 or (game_password is not None and len(game_password)!=128):
       self.sendMessage(MSG_CREATE_GAME, success=False, message='invalid name or password')
-      self.log.warn("{log_source.identification!r} tried to create game with invalid name {name} or password", name=name)
+      self.log.warn("{log_source.identification!r} tried to create game with invalid name {name} or password", name=game_name)
       return
     if self.factory.card_database.max_players_per_game < 3:
       self.sendMessage(MSG_CREATE_GAME, success=False, message='not enough cards available to create a game')
       self.log.warn("{log_source.identification!r} tried to create a game, but not enough cards available")
       return
-    game = self.factory.createGame(name, password)
+    game = self.factory.createGame(game_name, game_password)
     self.sendMessage(MSG_CREATE_GAME, success=True, game_id=game.id)
-    self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=name, id = game.id)
+    self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=game_name, id = game.id)
 
   def joinGame(self, id, password = None):
     game = self.factory.findGame(id)
