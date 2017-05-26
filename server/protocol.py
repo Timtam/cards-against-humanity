@@ -89,13 +89,13 @@ class ServerProtocol(JSONReceiver):
     self.sendMessage(MSG_CREATE_GAME, success=True, game_id=game.id)
     self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=game_name, id = game.id)
 
-  def joinGame(self, id, password = None):
-    game = self.factory.findGame(id)
+  def joinGame(self, game_id, game_password = None):
+    game = self.factory.findGame(game_id)
     if not game:
       self.sendMessage(MSG_JOIN_GAME, success = False, message='game not found')
       self.log.warn("{log_source.identification!r} tried to join non-existant game")
       return
-    result = game.join(self.user, password)
+    result = game.join(self.user, game_password)
     if not result['success']:
       self.log.info("{log_source.identification!r} failed to join game {id}: {message}", id = game.id, message = result['message'])
     else:
