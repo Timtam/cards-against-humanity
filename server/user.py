@@ -31,7 +31,7 @@ class User(object):
 
     id = int(result[0])
     user = self.protocol.factory.findUser(id)
-    if user is None:
+    if user is not None:
       return self.formatted(success = False, message = 'user currently logged in')
 
     self.name = name
