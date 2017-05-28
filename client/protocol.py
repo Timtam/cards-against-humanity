@@ -27,6 +27,8 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_OFF, self.loggedOff)
+    self.addCallback(MODE_IN_GAME, MSG_USER_LEFT_GAME, self.leftGame)
+    self.addCallback(MODE_IN_GAME, MSG_DISCONNECTED_FROM_GAME, self.disconnectedFromGame)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
     self.identification = 'server'
@@ -144,6 +146,12 @@ class ClientProtocol(JSONReceiver):
   def currentGames(self, games):
     for g in games:
       self.factory.addGame(**g)
+
+  def leftGame(self, game_id, user_id):
+    self.factory.display.callFunction('self.view.writeLog', '%s left the game'%self.factory.findUsername(user_id))
+
+  def disconnectedFromGame(self, user_id, game_id):
+    self.factory.display.callFunction('self.view.writeLog', '%s disconnected, thus this game paused.'%self.factory.findUsername(user_id))
 
   def sendStartGame(self):
     self.sendMessage(MSG_START_GAME)

@@ -58,6 +58,8 @@ class User(object):
     return self.game
 
   def unlink(self):
+    if self.game:
+      self.game.disconnect(self)
     del self.protocol.factory.users[self.protocol.factory.users.index(self)]
 
   # this is quite a dirty way

@@ -1,7 +1,10 @@
 import random
 import uuid
 
+from twisted.logger import Logger
+
 class Game(object):
+  log = Logger()
 
   def __init__(self, factory, name, password_hash = None):
     self.black_cards = []
@@ -26,6 +29,8 @@ class Game(object):
     random.shuffle(self.white_cards)
 
   def mayJoin(self, user):
+    if user.getGame() is not None:
+      return self.formatted(success = False, message = 'already in another game')
     if self.running:
       return self.formatted(success = False, message = 'game already running')
     if self.open:
@@ -52,9 +57,11 @@ class Game(object):
 
     if self.open:
       self.users.append(self.userdict(user))
+      user.setGame(self)
     else:
       possible_users = [u for u in self.users if u['user'] == user.id and not u['joined']]
       possible_users[0]['joined'] = True
+      user.setGame(self)
 
     return self.formatted(success=True, game_id = self.id)
 
@@ -92,6 +99,54 @@ class Game(object):
 
   def getAllWhiteCardsForUsers(self):
     return [(self.factory.findUser(self.users[i]['user']), self.users[i]['white_cards']) for i in range(len(self.users))]
+
+  def disconnect(self, user):
+
+    self.pause()
+
+    if user.getGame() is not self:
+      self.log.warn('user {user} not in game {game}', user = user.id, game = self.id)
+      return
+
+    possible_users = [u for u in self.users if u['id'] == user.id and u['joined']]
+    if len(possible_users) != 1:
+      self.log.warn('found {count} users in game {game} while disconnecting user {user}', count = len(possible_users), game = self.id, user = user.id)
+    else:
+      possible_users[0]['joined'] = False
+      user.setGame(None)
+      self.log.info('user {user} disconnected from game {game}', user = user.id, game = self.id)
+
+  def leave(self, user):
+    # forces the user to leave
+    # users which are the current czar in this running game can't leave
+
+    if user.getGame() is not self:
+      return self.formatted(success = False, message = 'user is not in this game')
+
+    users = self.getAllUsers()
+    if len(users) == 0:
+      self.log.warn('no users in this game, {user} tried to leave', user = user.id)
+      return self.formatted(success = False, message = 'no users found in this game')
+
+    if users[0] == user:
+      self.log.info('czar {user} tried to leave the game, but this is not possible', user = user.id)
+      return self.formatted(success = False, message = 'the czar cannot leave the game')
+
+    possible_users = [u for u in self.users if u['id'] == user.id and u['joined']]
+
+    if len(possible_users) != 1:
+      self.log.warn('{user} tried to leave game {game}, but found {count} possible users', user = user.id, game = self.id, count = len(possible_users))
+      return self.formatted(success = False, message = 'unable to find user in this game')
+
+    del self.users[self.users.index(possible_users[0])]
+    user.setGame(None)
+    self.log.info('user {user} left game {game}', user = user.id, game = self.id)
+
+    return self.formatted(success = True)
+
+  def pause(self):
+    self.running = False
+    self.log.info('game {game} paused', game = self.id)
 
   @staticmethod
   def userdict(user):

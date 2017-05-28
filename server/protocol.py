@@ -101,7 +101,6 @@ class ServerProtocol(JSONReceiver):
     else:
       self.log.info("{log_source.identification!r} joined game {id}", id = game.id)
       self.setMode(MODE_IN_GAME)
-      self.user.setGame(game)
       for user in game.getAllUsers():
         if user is not self.user:
           user.protocol.sendMessage(MSG_JOINED_GAME, user_id = self.user.id, game_id = game.id)
@@ -129,6 +128,14 @@ class ServerProtocol(JSONReceiver):
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')
     self.log.debug(reason.getErrorMessage())
+    game = self.user.getGame()
+    if game:
+      if game.open:
+        game.leave(self.user)
+      else:
+        game.disconnect(self.user)
+      for user in game.getAllUsers():
+        user.protocol.sendMessage((MSG_USER_LEFT_GAME if game.open else MSG_USER_DISCONNECTED_FROM_GAME), user_id = self.user.id, game_id = game.id)
     self.user.unlink()
     for u in self.factory.getAllUsers():
       u.protocol.sendMessage(MSG_LOGGED_OFF, user_id = self.user.id)
