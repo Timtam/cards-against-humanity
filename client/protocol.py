@@ -27,7 +27,7 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_OFF, self.loggedOff)
-    self.addCallback(MODE_IN_GAME, MSG_USER_LEFT_GAME, self.leftGame)
+    self.addCallback(MODE_IN_GAME, MSG_LEFT_GAME, self.leftGame)
     self.addCallback(MODE_IN_GAME, MSG_DISCONNECTED_FROM_GAME, self.disconnectedFromGame)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
