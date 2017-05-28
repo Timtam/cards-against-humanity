@@ -108,7 +108,7 @@ class Game(object):
       self.log.warn('user {user} not in game {game}', user = user.id, game = self.id)
       return
 
-    possible_users = [u for u in self.users if u['id'] == user.id and u['joined']]
+    possible_users = [u for u in self.users if u['user'] == user.id and u['joined']]
     if len(possible_users) != 1:
       self.log.warn('found {count} users in game {game} while disconnecting user {user}', count = len(possible_users), game = self.id, user = user.id)
     else:
@@ -118,7 +118,6 @@ class Game(object):
 
   def leave(self, user):
     # forces the user to leave
-    # users which are the current czar in this running game can't leave
 
     if user.getGame() is not self:
       return self.formatted(success = False, message = 'user is not in this game')
@@ -128,11 +127,12 @@ class Game(object):
       self.log.warn('no users in this game, {user} tried to leave', user = user.id)
       return self.formatted(success = False, message = 'no users found in this game')
 
-    if users[0] == user:
+    # users which are the current czar in this running game can't leave
+    if users[0] == user and self.running:
       self.log.info('czar {user} tried to leave the game, but this is not possible', user = user.id)
       return self.formatted(success = False, message = 'the czar cannot leave the game')
 
-    possible_users = [u for u in self.users if u['id'] == user.id and u['joined']]
+    possible_users = [u for u in self.users if u['user'] == user.id and u['joined']]
 
     if len(possible_users) != 1:
       self.log.warn('{user} tried to leave game {game}, but found {count} possible users', user = user.id, game = self.id, count = len(possible_users))
