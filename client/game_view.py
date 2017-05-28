@@ -18,13 +18,13 @@ class GameView(View):
     self.vmiddle = self.display_size[1] / 2
     self.font = self.display.getFont()
     
-    self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.8, self.display_size[1] * 0.5))
+    self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.5))
     self.button_start_leave.setCallback(self.onStartLeave)
-    self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.8, self.display_size[1] * 0.6))
+    self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.6))
     
-    self.surface_gamelog = pygame.Surface((300, self.display_size[1]))
+    self.surface_gamelog = pygame.Surface((200, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
-    self.gamelog_text = ScrolledTextPanel(self.display.screen, 2*TEXT_PADDING, 2*TEXT_PADDING, self.surface_gamelog.get_width() - 4*TEXT_PADDING, self.surface_gamelog.get_height() - 4*TEXT_PADDING)
+    self.gamelog_text = ScrolledTextPanel(self.surface_gamelog, 2*TEXT_PADDING, 2*TEXT_PADDING, self.surface_gamelog.get_width() - 4*TEXT_PADDING, self.surface_gamelog.get_height() - 4*TEXT_PADDING)
     self.writeLog('you joined the game')
     self.gamelog_text.setLabel('game log')
 
@@ -35,7 +35,7 @@ class GameView(View):
     
     
   def createCardSurfaces(self):
-    self.surface_cards = pygame.Surface((self.display_size[0] * 0.5, self.display_size[1] * 0.5))
+    self.surface_cards = pygame.Surface((self.display_size[0] * 0.6, self.display_size[1] * 0.5))
     self.card_border = pygame.Rect(0, 0, (self.surface_cards.get_width() - 6 * CARD_PADDING) / 5, (self.surface_cards.get_height() - 3 * CARD_PADDING) / 2)
 
     card_surface = pygame.Surface(((
@@ -46,7 +46,7 @@ class GameView(View):
                                    CARD_PADDING) / 2))
     
     self.surface_black_card = pygame.Surface((card_surface.get_width(), card_surface.get_height()))
-    self.black_card_text = ScrolledTextPanel(self.surface_black_card, TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2*TEXT_PADDING, self.surface_black_card.get_height() - 2*TEXT_PADDING)
+    self.black_card_text = ScrolledTextPanel(self.surface_black_card, TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2*TEXT_PADDING, self.surface_black_card.get_height() - 2*TEXT_PADDING, (255, 255, 255))
     self.black_card_text.addText('no black card')
     self.black_card_text.setLabel('black card')
     self.black_card = None
@@ -122,10 +122,12 @@ class GameView(View):
     self.surface_cards.fill((255, 255, 255))
     self.surface_black_card.fill((0, 0, 0))
     self.surface_gamelog.fill((255, 255, 255))
-    
+
     pygame.draw.rect(self.surface_gamelog, (0, 0, 0), self.gamelog_border, 5)
+    self.gamelog_text.render()
     self.display.screen.blit(self.surface_gamelog, (0, 0))
     
+    self.black_card_text.render()
     self.display.screen.blit(self.surface_black_card, (self.hmiddle - self.surface_black_card.get_width()/2, 50))
     
     for i in range(10):

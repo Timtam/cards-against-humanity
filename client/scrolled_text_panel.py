@@ -10,7 +10,7 @@ SCROLLBAR_THICKNESS = 20
 
 
 class ScrolledTextPanel:
-  def __init__(self, screen, x, y, width, height, maxheight=480):
+  def __init__(self, screen, x, y, width, height, text_color=(0, 0, 0), maxheight=480):
     self.focus = False
     self.label = ''
     self.screen = screen
@@ -18,6 +18,7 @@ class ScrolledTextPanel:
     self.y = y
     self.width = width
     self.height = height
+    self.text_color = text_color
     self.maxheight = maxheight
     self.font = pygame.font.Font(
       os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 16)
@@ -89,7 +90,7 @@ class ScrolledTextPanel:
     length = len(self.text_lines)
     self.text_lines += self.wrap_multi_line(text, self.font, self.width - SCROLLBAR_THICKNESS)
     for i in range(length, len(self.text_lines)):
-      self.text_surfaces.append(self.font.render(self.text_lines[i], 1, (0, 0, 0)))
+      self.text_surfaces.append(self.font.render(self.text_lines[i], 1, self.text_color))
     self.line_cursor = len(self.text_lines)-1
 
     self.getHeight()
@@ -171,15 +172,23 @@ class ScrolledTextPanel:
   
   
   def render(self):
-    self.surface.fill((255, 255, 255))
-    self.text_surface.fill((255, 255, 255))
+    if self.text_color == (0, 0, 0):
+      self.surface.fill((255, 255, 255))
+      self.text_surface.fill((255, 255, 255))
+    elif self.text_color == (255, 255, 255):
+      self.surface.fill((0, 0, 0))
+      self.text_surface.fill((0, 0, 0))
     pos_y = 0
     for text_line in self.text_surfaces:
       self.text_surface.blit(text_line, (0, pos_y))
       pos_y += text_line.get_height()
     self.surface.blit(self.text_surface, (0, (self.knob.top / self.ratio) * -1))
-    pygame.draw.rect(self.surface, (192, 192, 192), self.track, 0)
-    pygame.draw.rect(self.surface, (0, 0, 0), self.knob.inflate(-2, -2), 3)
+    if self.text_color == (0, 0, 0):
+      pygame.draw.rect(self.surface, (192, 192, 192), self.track, 0)
+      pygame.draw.rect(self.surface, (0, 0, 0), self.knob.inflate(-2, -2), 3)
+    elif self.text_color == (255, 255, 255):
+      pygame.draw.rect(self.surface, (64, 64, 64), self.track, 0)
+      pygame.draw.rect(self.surface, (255, 255, 255), self.knob.inflate(-2, -2), 3)
     self.screen.blit(self.surface, (self.x, self.y))
 
 
