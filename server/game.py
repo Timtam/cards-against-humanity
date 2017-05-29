@@ -142,11 +142,20 @@ class Game(object):
     user.setGame(None)
     self.log.info('user {user} left game {game}', user = user.id, game = self.id)
 
-    return self.formatted(success = True)
+    return self.formatted(success = True, unlinked = self.unlink())
 
   def pause(self):
     self.running = False
     self.log.info('game {game} paused', game = self.id)
+
+  def unlink(self):
+    # can only unlink if no users are left
+    if len(self.users)>0:
+      return False
+
+    self.factory.unlinkGame(self)
+    self.log.info('game {game} deleted', game = self.id)
+    return True
 
   @staticmethod
   def userdict(user):

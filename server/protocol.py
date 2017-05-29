@@ -133,4 +133,7 @@ class ServerProtocol(JSONReceiver):
     for user in self.factory.getAllUsers():
       if game:
         user.protocol.sendMessage((MSG_LEFT_GAME if game.open else MSG_DISCONNECTED_FROM_GAME), user_id = self.user.id, game_id = game.id)
+        if len(game.users) == 0:
+          # this game is empty and should have been unlinked
+          user.protocol.sendMessage(MSG_DELETED_GAME, game_id = game.id)
       user.protocol.sendMessage(MSG_LOGGED_OFF, user_id = self.user.id)

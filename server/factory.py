@@ -42,6 +42,9 @@ class ServerFactory(Factory):
     self.games.append(game)
     return game
 
+  def unlinkGame(self, game):
+    del self.games[self.games.index(game)]
+
   def findGame(self, id):
     possible_games = [g for g in self.games if g.id == id]
     if len(possible_games) != 1:

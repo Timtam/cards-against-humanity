@@ -58,3 +58,6 @@ class ClientFactory(Factory):
     if len(game)==0:
       return ''
     return game[0]['name']
+
+  def removeGame(self, id):
+    self.games = [g for g in self.games if g['id'] != id]
