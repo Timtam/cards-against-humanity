@@ -20,6 +20,8 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_OFF, self.loggedOff)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_DISCONNECTED_FROM_GAME, self.disconnectedFromGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_LEFT_GAME, self.leftGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
     self.addCallback(MODE_IN_GAME, MSG_DRAW_CARDS, self.drawCards)
@@ -114,7 +116,6 @@ class ClientProtocol(JSONReceiver):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       self.factory.display.callFunction('self.view.writeLog', '%s joined the game'%self.factory.findUsername(user_id))
 
-
   def loggedIn(self, user_id, user_name):
     self.factory.addUser(user_id, user_name)
     print user_name+ ' logged in'
@@ -135,7 +136,11 @@ class ClientProtocol(JSONReceiver):
     self.factory.display.callFunction('self.view.setCards', *cards)
 
   def czarChange(self, user_id, card):
-    self.factory.display.callFunction('self.view.writeLog', '%s is chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
+    if user_id == self.user_id:
+      user = 'you'
+    else:
+      user = self.factory.findUsername(user_id)
+    self.factory.display.callFunction('self.view.writeLog', '%s is chosen the new czar and therefore flips a new black card open'%user)
     card = self.factory.card_database.getCard(card)
     self.factory.display.callFunction('self.view.setBlackCard', card)
 
@@ -148,10 +153,17 @@ class ClientProtocol(JSONReceiver):
       self.factory.addGame(**g)
 
   def leftGame(self, game_id, user_id):
-    self.factory.display.callFunction('self.view.writeLog', '%s left the game'%self.factory.findUsername(user_id))
+    if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
+      if user_id != self.user_id:
+        self.factory.display.callFunction('self.view.writeLog', '%s left the game'%self.factory.findUsername(user_id))
+      else:
+        # TODO: going back to overview screen
+        self.setMode(MODE_FREE_TO_JOIN)
 
   def disconnectedFromGame(self, user_id, game_id):
-    self.factory.display.callFunction('self.view.writeLog', '%s disconnected, thus this game paused.'%self.factory.findUsername(user_id))
+    if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
+      if user_id != self.user_id:
+        self.factory.display.callFunction('self.view.writeLog', '%s disconnected, thus this game paused.'%self.factory.findUsername(user_id))
 
   def sendStartGame(self):
     self.sendMessage(MSG_START_GAME)

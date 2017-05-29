@@ -130,8 +130,7 @@ class ServerProtocol(JSONReceiver):
     self.log.debug(reason.getErrorMessage())
     game = self.user.getGame()
     self.user.unlink()
-    if game:
-      for user in game.getAllUsers():
+    for user in self.factory.getAllUsers():
+      if game:
         user.protocol.sendMessage((MSG_LEFT_GAME if game.open else MSG_DISCONNECTED_FROM_GAME), user_id = self.user.id, game_id = game.id)
-    for u in self.factory.getAllUsers():
-      u.protocol.sendMessage(MSG_LOGGED_OFF, user_id = self.user.id)
+      user.protocol.sendMessage(MSG_LOGGED_OFF, user_id = self.user.id)
