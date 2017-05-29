@@ -24,7 +24,7 @@ class GameView(View):
     
     self.surface_gamelog = pygame.Surface((200, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
-    self.gamelog_text = ScrolledTextPanel(self.surface_gamelog, 2*TEXT_PADDING, 2*TEXT_PADDING, self.surface_gamelog.get_width() - 4*TEXT_PADDING, self.surface_gamelog.get_height() - 4*TEXT_PADDING)
+    self.gamelog_text = ScrolledTextPanel(screen = self.surface_gamelog, display = self.display, x = 2*TEXT_PADDING, y = 2*TEXT_PADDING, width = self.surface_gamelog.get_width() - 4*TEXT_PADDING, height = self.surface_gamelog.get_height() - 4*TEXT_PADDING)
     self.writeLog('you joined the game')
     self.gamelog_text.setLabel('game log')
 
@@ -46,7 +46,7 @@ class GameView(View):
                                    CARD_PADDING) / 2))
     
     self.surface_black_card = pygame.Surface((card_surface.get_width(), card_surface.get_height()))
-    self.black_card_text = ScrolledTextPanel(self.surface_black_card, TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2*TEXT_PADDING, self.surface_black_card.get_height() - 2*TEXT_PADDING, (255, 255, 255))
+    self.black_card_text = ScrolledTextPanel(screen = self.surface_black_card, display = self.display, x = TEXT_PADDING, y = TEXT_PADDING, width = self.surface_black_card.get_width() - 2*TEXT_PADDING, height = self.surface_black_card.get_height() - 2*TEXT_PADDING, text_color = (255, 255, 255))
     self.black_card_text.addText('no black card')
     self.black_card_text.setLabel('black card')
     self.black_card = None
@@ -65,7 +65,7 @@ class GameView(View):
         'text': None,
         'card': None
       })
-      self.cards[i]['text']=ScrolledTextPanel(self.cards[i]['surface'], TEXT_PADDING, TEXT_PADDING, self.surface_black_card.get_width() - 2 * TEXT_PADDING, self.surface_black_card.get_height() - 2 * TEXT_PADDING)
+      self.cards[i]['text']=ScrolledTextPanel(screen = self.cards[i]['surface'], display = self.display, x = TEXT_PADDING, y = TEXT_PADDING, width = self.surface_black_card.get_width() - 2 * TEXT_PADDING, height = self.surface_black_card.get_height() - 2 * TEXT_PADDING)
       self.cards[i]['text'].addText('no card')
       self.cards[i]['text'].setLabel('white card %d'%(i+1))
       self.cards[i]['text'].setSpeakLines(False)
@@ -109,9 +109,9 @@ class GameView(View):
     self.button_start_leave.handleEvent(event)
     self.button_confirm.handleEvent(event)
     for i in range(10):
-      self.cards[i]['text'].handleEvent(event, self.display)
-    self.black_card_text.handleEvent(event, self.display)
-    self.gamelog_text.handleEvent(event, self.display)
+      self.cards[i]['text'].handleEvent(event)
+    self.black_card_text.handleEvent(event)
+    self.gamelog_text.handleEvent(event)
   
   
   def update(self):

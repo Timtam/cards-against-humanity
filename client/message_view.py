@@ -7,37 +7,17 @@ PADDING_TOP_BOTTOM = 20
 
 
 
-# function for blurring a surface through smoothscaling to lower resolution
-# and back to original
-def blurSurf(surface, val=2.0):
-  """
-  Blur the given surface by the given 'amount'.  Only values 1 and greater
-  are valid.  Value = 1 -> no blur.
-  """
-  if val < 1.0:
-    raise ValueError(
-      "Arg 'val' must be greater than 1.0, passed in value is %s" % val)
-  scale = 1.0 / float(val)
-  surf_size = surface.get_size()
-  scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
-  surf = pygame.transform.smoothscale(surface, scale_size)
-  surf = pygame.transform.smoothscale(surf, surf_size)
-  return surf
-
-
-
 class MessageView(View):
   def __init__(self, display, width=480, height=480, maxheight=640):
     View.__init__(self, display)
     
-    self.display = display
     self.width = width
     self.height = height
     self.maxheight = maxheight
     self.setHeight(height)
     self.old_screen = display.screen.copy()
     self.old_screen.set_alpha(86)
-    self.old_screen = blurSurf(self.old_screen)
+    self.old_screen = self.blurSurface(self.old_screen)
     self.display_size = display.getSize()
     self.hmiddle = self.display_size[0] / 2
     self.vmiddle = self.display_size[1] / 2
@@ -100,13 +80,14 @@ class MessageView(View):
   # setting some automatically formatted and rendered text onto the screen
   def setText(self, text):
     
-    self.scrolled_text = ScrolledTextPanel(self.message_box,
-                                           PADDING_LEFT_RIGHT,
-                                           PADDING_TOP_BOTTOM,
-                                           self.width - 2 * PADDING_LEFT_RIGHT,
-                                           self.height - 2 * PADDING_TOP_BOTTOM,
-                                           (0, 0, 0),
-                                           self.maxheight - 2 * PADDING_TOP_BOTTOM)
+    self.scrolled_text = ScrolledTextPanel(screen = self.message_box,
+                                           display = self.display,
+                                           x = PADDING_LEFT_RIGHT,
+                                           y = PADDING_TOP_BOTTOM,
+                                           width = self.width - 2 * PADDING_LEFT_RIGHT,
+                                           height = self.height - 2 * PADDING_TOP_BOTTOM,
+                                           text_color = (0, 0, 0),
+                                           maxheight = self.maxheight - 2 * PADDING_TOP_BOTTOM)
     self.scrolled_text.setLabel('information')
     self.scrolled_text.addText(text)
 
@@ -120,13 +101,14 @@ class MessageView(View):
     self.message_border = pygame.Rect(0, 0, self.width, self.height)
     self.box_y = self.vmiddle - self.height / 2
     self.scrolled_text.setNewScreen(self.message_box)
-    self.scrolled_text = ScrolledTextPanel(self.message_box,
-                                           PADDING_LEFT_RIGHT,
-                                           PADDING_TOP_BOTTOM,
-                                           self.width - 2 * PADDING_LEFT_RIGHT,
-                                           self.height - 2 * PADDING_TOP_BOTTOM,
-                                           (0, 0, 0),
-                                           self.maxheight - 2 * PADDING_TOP_BOTTOM)
+    self.scrolled_text = ScrolledTextPanel(screen = self.message_box,
+                                           display = self.display,
+                                           x = PADDING_LEFT_RIGHT,
+                                           y = PADDING_TOP_BOTTOM,
+                                           width = self.width - 2 * PADDING_LEFT_RIGHT,
+                                           height = self.height - 2 * PADDING_TOP_BOTTOM,
+                                           text_color = (0, 0, 0),
+                                           maxheight = self.maxheight - 2 * PADDING_TOP_BOTTOM)
     self.scrolled_text.setLabel('information')
     self.scrolled_text.addText(text)
     self.tab_position = 0
@@ -186,9 +168,28 @@ class MessageView(View):
   
   def handleEvent(self, event):
     View.handleEvent(self, event)
-    self.scrolled_text.handleEvent(event, self.display)
+    self.scrolled_text.handleEvent(event)
     if self.button is not None:
       self.button.handleEvent(event)
 
   def firstUpdate(self):
     pass
+
+  # function for blurring a surface through smoothscaling to lower resolution
+  # and back to original
+  @staticmethod
+  def blurSurface(surface, val=2.0):
+    """
+    Blur the given surface by the given 'amount'.  Only values 1 and greater
+    are valid.  Value = 1 -> no blur.
+    """
+    if val < 1.0:
+      raise ValueError(
+        "Arg 'val' must be greater than 1.0, passed in value is %s" % val)
+    scale = 1.0 / float(val)
+    surf_size = surface.get_size()
+    scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
+    surf = pygame.transform.smoothscale(surface, scale_size)
+    surf = pygame.transform.smoothscale(surf, surf_size)
+    return surf
+

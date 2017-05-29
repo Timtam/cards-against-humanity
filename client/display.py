@@ -35,8 +35,7 @@ class Display(object):
     pygame.display.set_caption('Cards Against Humanity Online')
     
     # global font (may be the original from Cards Against Humanity)
-    self.font = pygame.font.Font(
-      os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 20)
+    self.font = open(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 'rb')
     
     # setting the current view
     self.view = None
@@ -44,8 +43,9 @@ class Display(object):
     self.loadSounds()
   
   
-  def getFont(self):
-    return self.font
+  def getFont(self, size = 20):
+    self.font.seek(0)
+    return pygame.font.Font(self.font, size)
   
   
   def getSize(self):

@@ -10,9 +10,10 @@ SCROLLBAR_THICKNESS = 20
 
 
 class ScrolledTextPanel:
-  def __init__(self, screen, x, y, width, height, text_color=(0, 0, 0), maxheight=480):
+  def __init__(self, screen, display, x, y, width, height, text_color=(0, 0, 0), maxheight=480):
     self.focus = False
     self.label = ''
+    self.display = display
     self.screen = screen
     self.x = x
     self.y = y
@@ -20,8 +21,7 @@ class ScrolledTextPanel:
     self.height = height
     self.text_color = text_color
     self.maxheight = maxheight
-    self.font = pygame.font.Font(
-      os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 16)
+    self.font = display.getFont(16)
     self.text_surfaces = []
     self.text_lines = []
     # for now only used to memorize the text the visually impaired user
@@ -67,22 +67,24 @@ class ScrolledTextPanel:
     return real, done, stext
   
   
-  def wrapline(self, text, font, maxwidth):
+  @classmethod
+  def wrapline(cls, text, font, maxwidth):
     done = False
     wrapped = []
     
     while not done:
-      nl, done, stext = self.truncline(text, font, maxwidth)
+      nl, done, stext = cls.truncline(text, font, maxwidth)
       wrapped.append(stext.strip())
       text = text[nl:]
     return wrapped
   
   
-  def wrap_multi_line(self, text, font, maxwidth):
+  @classmethod
+  def wrap_multi_line(cls, text, font, maxwidth):
     """ returns text taking new lines into account.
     """
     lines = chain(
-      *(self.wrapline(line, font, maxwidth) for line in text.splitlines()))
+      *(cls.wrapline(line, font, maxwidth) for line in text.splitlines()))
     return list(lines)
   
   
@@ -132,10 +134,8 @@ class ScrolledTextPanel:
     self.screen = surface
     
   
-  # a bit different from usual
-  # this class doesn't know the display yet, so we'll have to tell
-  def handleEvent(self, event, display):
-    if display.accessibility and self.focus:
+  def handleEvent(self, event):
+    if self.display.accessibility and self.focus:
       if event.type == pygame.KEYDOWN:
         speech = True
         if event.key == pl.K_UP:
@@ -149,7 +149,7 @@ class ScrolledTextPanel:
         else:
           speech = False
         if speech:
-          display.view.speak(self.text_lines[self.line_cursor], True)
+          self.display.view.speak(self.text_lines[self.line_cursor], True)
 
     if event.type == pygame.MOUSEMOTION and self.scrolling:
   
