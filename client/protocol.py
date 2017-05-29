@@ -106,6 +106,8 @@ class ClientProtocol(JSONReceiver):
       self.game_id = game_id
       self.setMode(MODE_IN_GAME)
       self.factory.display.setView('GameView')
+      self.factory.display.join_game_sound.stop()
+      self.factory.display.join_game_sound.play()
     else:
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
@@ -117,6 +119,8 @@ class ClientProtocol(JSONReceiver):
   def joinedGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       self.factory.display.callFunction('self.view.writeLog', '%s joined the game'%self.factory.findUsername(user_id))
+      self.factory.display.join_game_sound.stop()
+      self.factory.display.join_game_sound.play()
 
   def loggedIn(self, user_id, user_name):
     self.factory.addUser(user_id, user_name)
@@ -161,6 +165,8 @@ class ClientProtocol(JSONReceiver):
       else:
         # TODO: going back to overview screen
         self.setMode(MODE_FREE_TO_JOIN)
+      self.factory.display.leave_game_sound.stop()
+      self.factory.display.leave_game_sound.play()
 
   def disconnectedFromGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:

@@ -110,6 +110,8 @@ class Display(object):
     self.cursor_sound = sound('cursor')
     self.error_sound = sound('error')
     self.game_error_sound = sound('game_error')
+    self.join_game_sound = sound('join_game')
+    self.leave_game_sound = sound('leave_game')
     self.login_sound = sound('login')
     self.start_sound = sound('start')
     self.tap_sound = sound('tap')
