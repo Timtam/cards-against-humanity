@@ -42,7 +42,7 @@ class ScrolledTextPanel(pygame.Surface):
     self.knob.height = self.track.height * self.ratio
     self.scrolling = False
     self.mouse_in_me = False
-
+    
 
   @staticmethod
   def truncline(text, font, maxwidth):
@@ -223,12 +223,11 @@ class ScrolledTextPanel(pygame.Surface):
       move = 0
       if event.button == BUTTON_SCROLL_WHEEL_UP:
         #print("scrolled up")  # debug
-        move = max(-1 * SCROLL_SPEED, self.track.top - self.knob.top)
-        move = min(move, self.track.bottom - self.knob.bottom)
+        move = max(-1 * SCROLL_SPEED * self.ratio, self.track.top - self.knob.top)
       elif event.button == BUTTON_SCROLL_WHEEL_DOWN:
         #print("scolled down")  # debug
-        move = max(SCROLL_SPEED, self.track.top - self.knob.top)
-        move = min(move, self.track.bottom - self.knob.bottom)
+        move = max(SCROLL_SPEED * self.ratio, self.track.top - self.knob.top)
+      move = min(move, self.track.bottom - self.knob.bottom)
       if move != 0:
         self.knob.move_ip(0, move)
     

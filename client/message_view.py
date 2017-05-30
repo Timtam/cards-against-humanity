@@ -8,7 +8,7 @@ PADDING_TOP_BOTTOM = 20
 
 
 class MessageView(View):
-  def __init__(self, display, width=480, height=480, maxheight=640):
+  def __init__(self, display, width=480, height=480, maxheight=480):
     View.__init__(self, display)
     
     self.display = display
