@@ -30,29 +30,29 @@ class Game(object):
 
   def mayJoin(self, user):
     if user.getGame() is not None:
-      return self.formatted(success = False, message = 'already in another game')
+      return self.formatted(join = False, message = 'already in another game')
     if self.running:
-      return self.formatted(success = False, message = 'game already running')
+      return self.formatted(join = False, message = 'game already running')
     if self.open:
       if len(self.users) + 1 > self.factory.card_database.max_players_per_game:
-        return self.formatted(join=False, message='no more players allowed', password=self.password_hash != None)
-      return self.formatted(join=True, password=self.password_hash != None)
+        return self.formatted(join=False, message='no more players allowed')
+      return self.formatted(join=True)
     else:
       possible_users = [u for u in self.users if u['user'] == user.id]
 
       if len(possible_users) != 1:
-        return self.formatted(success = False, message = 'you are no member of this paused game')
+        return self.formatted(join = False, message = 'you are no member of this paused game')
 
       if possible_users[0]['joined']:
-        return self.formatted(success = False, message = 'already joined this game')
+        return self.formatted(join = False, message = 'already joined this game')
 
-      return self.formatted(success = True)
+      return self.formatted(join = True)
 
   def join(self, user, password):
     joinable = self.mayJoin(user)
     if not joinable['join']:
       return self.formatted(success=False, message=joinable['message'])
-    if joinable['password'] and password != self.password_hash:
+    if self.protected and password != self.password_hash:
       return self.formatted(success=False, message='wrong password supplied')
 
     if self.open:
@@ -169,3 +169,7 @@ class Game(object):
   @staticmethod
   def formatted(**kwargs):
     return kwargs
+
+  @property
+  def protected(self):
+    return self.password_hash != None
