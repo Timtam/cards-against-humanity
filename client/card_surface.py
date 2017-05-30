@@ -1,8 +1,7 @@
 import pygame
 from scrolled_text_panel import ScrolledTextPanel
 
-CARD_WHITE = 0
-CARD_BLACK = 1
+from shared.card import CARD_WHITE, CARD_BLACK
 
 BORDER = 5
 COLOR_WHITE = (255, 255, 255)
