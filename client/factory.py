@@ -36,16 +36,7 @@ class ClientFactory(Factory):
     return user[0]['name']
 
   def removeUser(self, id):
-    i = -1
-    for j in range(len(self.users)):
-      if self.users[i]['id'] == id:
-        i = j
-        return
-
-    if i == -1:
-      self.log.warn('no user with id {id} found to remove', id = id)
-    else:
-      del self.users[i]
+    self.users = [u for u in self.users if u['id'] != id]
 
   def addGame(self, id, name):
     self.games.append({
