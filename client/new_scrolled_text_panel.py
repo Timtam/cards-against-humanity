@@ -86,15 +86,8 @@ class ScrolledTextPanel(pygame.Surface):
     return list(lines)
 
 
-  def getTextWidth(self, text_lines=None):
-    if text_lines is None:
-      text_lines = self.text_lines
-      
-    self.text_height = self.getTextHeight(text_lines)
-    if self.text_height > self.height:
-      text_width = self.width - SCROLLBAR_THICKNESS
-    else:
-      text_width = self.width
+  def getTextWidth(self):
+    text_width = self.width - SCROLLBAR_THICKNESS
     return text_width
     
     
@@ -106,18 +99,9 @@ class ScrolledTextPanel(pygame.Surface):
   #   return text_height
 
 
-  def getTextHeight(self, text_lines=None):
-    if text_lines is None:
-      text_lines = self.text_lines
-    
+  def getTextHeight(self):
     font_height = self.font.get_height()
-    if text_lines is self.text_lines:
-      text_height = 0
-    else:
-      text_height = self.text_height
-      
-    text_height += len(text_lines) * font_height
-    return text_height
+    return len(self.text_lines) * font_height
 
 
   def getHeight(self):
@@ -141,8 +125,6 @@ class ScrolledTextPanel(pygame.Surface):
 
   def addText(self, text, color=(0, 0, 0)):
     self.text_width = self.getTextWidth()
-    temp_text_lines = self.text_lines + self.wrap_multi_line(text, self.font, self.text_width)
-    self.text_width = self.getTextWidth(temp_text_lines)
     
     length = len(self.text_lines)
     self.text_lines += self.wrap_multi_line(text, self.font, self.text_width)
