@@ -1,5 +1,4 @@
-#from .scrolled_text_panel import ScrolledTextPanel
-from .new_scrolled_text_panel import ScrolledTextPanel as NewScrolledTextPanel
+from .scrolled_text_panel import ScrolledTextPanel
 from .tools import *
 from .view import View
 
@@ -82,7 +81,7 @@ class MessageView(View):
   # setting some automatically formatted and rendered text onto the screen
   def setText(self, text):
     
-    self.scrolled_text = NewScrolledTextPanel(self.display, self.box_x + PADDING_LEFT_RIGHT, self.box_y + PADDING_TOP_BOTTOM,
+    self.scrolled_text = ScrolledTextPanel(self.display, self.box_x + PADDING_LEFT_RIGHT, self.box_y + PADDING_TOP_BOTTOM,
                                               self.width - 2 * PADDING_LEFT_RIGHT,
                                               self.height - 2 * PADDING_TOP_BOTTOM)
     self.scrolled_text.setLabel('information')
@@ -98,7 +97,7 @@ class MessageView(View):
     self.message_border = pygame.Rect(0, 0, self.width, self.height)
     self.box_y = self.vmiddle - self.height / 2
     #self.scrolled_text.setNewScreen(self.message_box)
-    self.scrolled_text = NewScrolledTextPanel(self.display, self.box_x + PADDING_LEFT_RIGHT, self.box_y + PADDING_TOP_BOTTOM,
+    self.scrolled_text = ScrolledTextPanel(self.display, self.box_x + PADDING_LEFT_RIGHT, self.box_y + PADDING_TOP_BOTTOM,
                                               self.width - 2 *
                                               PADDING_LEFT_RIGHT,
                                               self.height - 2 *

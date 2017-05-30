@@ -1,7 +1,6 @@
 from .view import View
 from .tools import Button
-#from .scrolled_text_panel import ScrolledTextPanel
-from .new_scrolled_text_panel import ScrolledTextPanel as NewScrolledTextPanel
+from .scrolled_text_panel import ScrolledTextPanel
 
 import pygame
 
@@ -25,7 +24,7 @@ class GameView(View):
     
     self.surface_gamelog = pygame.Surface((200, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
-    self.gamelog_text = NewScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.surface_gamelog.get_width() - 2*TEXT_PADDING, self.surface_gamelog.get_height() - 2*TEXT_PADDING)
+    self.gamelog_text = ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.surface_gamelog.get_width() - 2*TEXT_PADDING, self.surface_gamelog.get_height() - 2*TEXT_PADDING)
     self.writeLog('you joined the game')
     self.gamelog_text.setLabel('game log')
 
@@ -47,7 +46,7 @@ class GameView(View):
                                    CARD_PADDING) / 2))
     
     self.surface_black_card = pygame.Surface((self.card_surface.get_width(), self.card_surface.get_height()))
-    self.black_card_text = NewScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.card_surface.get_width() - 2*TEXT_PADDING, self.card_surface.get_height() - 2*TEXT_PADDING, (0, 0, 0))
+    self.black_card_text = ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.card_surface.get_width() - 2*TEXT_PADDING, self.card_surface.get_height() - 2*TEXT_PADDING, (0, 0, 0))
     self.black_card_text.addText('no black card', (255, 255, 255))
     self.black_card_text.setLabel('black card')
     self.black_card = None
@@ -66,7 +65,7 @@ class GameView(View):
         'text': None,
         'card': None
       })
-      self.cards[i]['text']=NewScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.card_surface.get_width() - 2 * TEXT_PADDING, self.card_surface.get_height() - 2 * TEXT_PADDING)
+      self.cards[i]['text']=ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.card_surface.get_width() - 2 * TEXT_PADDING, self.card_surface.get_height() - 2 * TEXT_PADDING)
       self.cards[i]['text'].addText('no card')
       self.cards[i]['text'].setLabel('white card %d'%(i+1))
       self.cards[i]['text'].setSpeakLines(False)
