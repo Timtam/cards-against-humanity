@@ -160,7 +160,7 @@ class ScrolledTextPanel:
         if move != 0:
           self.knob.move_ip(0, move)
 
-    elif event.type == pygame.MOUSEBUTTONDOWN and self.knob.collidepoint(event.pos[0] - 420, event.pos[1] - (360 - (self.screen.get_rect()[2])/2 - 60)):
+    elif event.type == pygame.MOUSEBUTTONDOWN and self.knob.collidepoint(event.pos):
       self.scrolling = True
 
     elif event.type == pygame.MOUSEBUTTONUP:
