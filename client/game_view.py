@@ -3,6 +3,7 @@ from .tools import Button
 from .scrolled_text_panel import ScrolledTextPanel
 
 import pygame
+import pygame.locals as pl
 
 CARD_PADDING = 10
 TEXT_PADDING = 10
@@ -108,10 +109,30 @@ class GameView(View):
     View.handleEvent(self, event)
     self.button_start_leave.handleEvent(event)
     self.button_confirm.handleEvent(event)
+
     for i in range(10):
       self.cards[i]['text'].handleEvent(event)
+      if event.type == pygame.KEYDOWN:
+        if event.key == eval('pl.K_%d'%((i+1)%10)):
+          try:
+            self.tab_order[self.tab_position].setFocus(False)
+          except AttributeError:
+            pass
+          self.cards[i]['text'].setFocus(True)
+          self.tab_position = self.tab_order.index(self.cards[i]['text'])
+          self.speak(self.cards[i]['text'].getLabel(), True)
     self.black_card_text.handleEvent(event)
     self.gamelog_text.handleEvent(event)
+
+    if event.type == pygame.KEYDOWN:
+      if event.key == pl.K_b:
+        try:
+          self.tab_order[self.tab_position].setFocus(False)
+        except AttributeError:
+          pass
+        self.tab_position = self.tab_order.index(self.black_card_text)
+        self.black_card_text.setFocus(True)
+        self.speak(self.black_card_text.getLabel(), True)
   
   
   def update(self):
