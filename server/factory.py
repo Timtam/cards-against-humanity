@@ -22,7 +22,7 @@ class ServerFactory(Factory):
     self.serverDatabase = sqlite3.connect(os.path.join(getScriptDirectory(), "server.db"))
     cursor = self.serverDatabase.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS 'users' ('id' INTEGER PRIMARY KEY, 'name' VARCHAR(30), 'password' CHAR(128))")
-    cursor.execute("CREATE TABLE IF NOT EXISTS 'games' ('id' BIGINT NOT NULL, 'name' VARCHAR(30), 'players' TEXT, 'cards' TEXT, 'password_hash' CHAR(128), 'database_hash' CHAR(128), 'server_version_major' TINYINT, 'server_version_minor' TINYINT, 'server_version_revision' TINYINT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS 'games' ('id' CHAR(32), 'name' VARCHAR(30), 'users' TEXT, 'cards' TEXT, 'password_hash' CHAR(128), 'database_hash' CHAR(128), 'server_version_major' TINYINT, 'server_version_minor' TINYINT, 'server_version_revision' TINYINT)")
     self.serverDatabase.commit()
     self.log.info("Loaded server database")
 
@@ -36,6 +36,19 @@ class ServerFactory(Factory):
 
     # after doing all the startup stuff
     self.log.info("Server up and running, waiting for incoming connections")
+
+  def stopFactory(self):
+    self.log.info('saving games...')
+    cursor = self.serverDatabase.cursor()
+    c = 0
+    for game in self.games:
+      if not game.open:
+        data = game.pack()
+        cursor.execute('INSERT INTO games ('+','.join(data.keys())+') VALUES ('+('?,'*len(data.keys()))[:-1]+')', tuple(data.values()))
+        c += 1
+    if c > 0:
+      self.serverDatabase.commit()
+    self.log.info('saved {count} games into database', count = c)
 
   def createGame(self, name, password = None):
     game = Game(self, name = name, password_hash = password)

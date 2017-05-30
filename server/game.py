@@ -1,7 +1,11 @@
+import copy
+import json
 import random
 import uuid
 
 from twisted.logger import Logger
+
+from . import version
 
 class Game(object):
   log = Logger()
@@ -10,11 +14,11 @@ class Game(object):
     self.black_cards = []
     self.database_hash = factory.card_database.hash
     self.factory = factory
-    self.id = uuid.uuid4().int
     self.name = name
     self.open = True
     self.password_hash = password_hash
     self.running = False
+    self.uuid = uuid.uuid4()
     self.users = []
     self.white_cards = []
 
@@ -157,12 +161,41 @@ class Game(object):
     self.log.info('game {game} deleted', game = self.id)
     return True
 
+  def pack(self):
+    # saves the current game into the database
+    # at first we construct the sql arguments dict
+
+    args = {}
+
+    args['id'] = self.uuid.hex
+    args['name'] = self.name
+
+    users = copy.deepcopy(self.users)
+    for user in users:
+      del user['joined']
+      user['white_cards'] = [c.id for c in user['white_cards']]
+
+    args['users'] = json.dumps(users)
+
+    black_cards = [c.id for c in self.black_cards]
+    white_cards = [c.id for c in self.white_cards]
+
+    args['cards'] = json.dumps({'white_cards': white_cards, 'black_cards': black_cards})
+
+    args['password_hash'] = self.password_hash if self.protected else ''
+    args['database_hash'] = self.database_hash
+    args['server_version_major'] = version.MAJOR
+    args['server_version_minor'] = version.MINOR
+    args['server_version_revision'] = version.REVISION
+
+    return args
+
   @staticmethod
   def userdict(user):
     return {
             'user': user.id,
             'joined': True,
-            'black_cards': [],
+            'black_cards': 0,
             'white_cards': []
            }
 
@@ -173,3 +206,7 @@ class Game(object):
   @property
   def protected(self):
     return self.password_hash != None
+
+  @property
+  def id(self):
+    return self.uuid.int
