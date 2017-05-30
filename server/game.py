@@ -44,6 +44,7 @@ class Game(object):
     game.users = json.loads(data['users'])
     for user in game.users:
       user['joined'] = False
+      user['chosen_cards'] = []
       user['white_cards'] = [factory.card_database.getCard(c) for c in user['white_cards']]
 
     game.white_cards = [factory.card_database.getCard(c) for c in json.loads(data['cards'])['white_cards']]
@@ -177,6 +178,9 @@ class Game(object):
 
   def pause(self):
     self.running = False
+
+    for user in self.users:
+      user.chosen_cards = []
     self.log.info('game {game} paused', game = self.id)
 
   def unlink(self):
@@ -200,6 +204,7 @@ class Game(object):
     users = copy.deepcopy(self.users)
     for user in users:
       del user['joined']
+      del user['chosen_cards']
       user['white_cards'] = [c.id for c in user['white_cards']]
 
     args['users'] = json.dumps(users)
@@ -217,13 +222,29 @@ class Game(object):
 
     return args
 
+  def chooseCards(self, user, cards):
+    d = [u for u in self.users if u['user'] == user.id]
+
+    if len(d) != 1:
+      self.log.warn('user {user} wants to choose cards, but user not found in game {game}', user = user.id, game = self.id)
+      return self.formatted(success = False, message = 'user not in this game')
+
+    d = d[0]
+
+    for card in cards:
+      if not card in d['white_cards']:
+        return self.formatted(success = False, message = 'user doesn\'t hold this card in his hand')
+
+    d['chosen_cards'] = cards
+
   @staticmethod
   def userdict(user):
     return {
             'user': user.id,
             'joined': True,
             'black_cards': 0,
-            'white_cards': []
+            'white_cards': [],
+            'chosen_cards': []
            }
 
   @staticmethod
