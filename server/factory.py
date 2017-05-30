@@ -5,6 +5,7 @@ import sqlite3
 
 from .game import Game
 from .protocol import ServerProtocol
+from . import version
 from shared.card_database_manager import CardDatabaseManager
 from shared.path import getScriptDirectory
 
@@ -26,6 +27,24 @@ class ServerFactory(Factory):
     self.serverDatabase.commit()
     self.log.info("Loaded server database")
 
+  def loadGames(self):
+    cursor = self.serverDatabase.cursor()
+    cursor.execute('SELECT * FROM games where database_hash = ? and server_version_major = ? and server_version_minor = ?', (self.card_database.hash, version.MAJOR, version.MINOR, ))
+    
+    game_rows = cursor.fetchall()
+
+    for row in game_rows:
+      game = {}
+      for colid in range(len(row)):
+        game[cursor.description[colid][0]] = row[colid]
+      game = Game.load(self, **game)
+      self.games.append(game)
+
+    cursor.execute('DELETE FROM games')
+    cursor.execute('VACUUM')
+    self.serverDatabase.commit()
+    self.log.info('loaded {count} games from database', count = len(self.games))
+
   def startFactory(self):
     self.card_database = CardDatabaseManager()
     self.card_database.loadPath('cards.db')
@@ -33,6 +52,7 @@ class ServerFactory(Factory):
     self.log.info("Loaded card database")
 
     self.openServerDatabase()
+    self.loadGames()
 
     # after doing all the startup stuff
     self.log.info("Server up and running, waiting for incoming connections")
@@ -51,7 +71,7 @@ class ServerFactory(Factory):
     self.log.info('saved {count} games into database', count = c)
 
   def createGame(self, name, password = None):
-    game = Game(self, name = name, password_hash = password)
+    game = Game.create(self, name = name, password_hash = password)
     self.games.append(game)
     return game
 

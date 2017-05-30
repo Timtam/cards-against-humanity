@@ -10,19 +10,46 @@ from . import version
 class Game(object):
   log = Logger()
 
-  def __init__(self, factory, name, password_hash = None):
-    self.black_cards = []
-    self.database_hash = factory.card_database.hash
+  def __init__(self, factory):
     self.factory = factory
-    self.name = name
+    self.black_cards = []
+    self.database_hash = None
+    self.name = ''
     self.open = True
-    self.password_hash = password_hash
+    self.password_hash = None
     self.running = False
-    self.uuid = uuid.uuid4()
+    self.uuid = None
     self.users = []
     self.white_cards = []
 
-    self.loadCards()
+  @classmethod
+  def create(cls, factory, name, password_hash = None):
+    game = cls(factory)
+    game.database_hash = factory.card_database.hash
+    game.name = name
+    game.password_hash = password_hash
+    game.uuid = uuid.uuid4()
+    game.loadCards()
+    return game
+
+  @classmethod
+  def load(cls, factory, **data):
+    game = cls(factory)
+    game.name = data['name']
+    game.password_hash = data['password_hash'] if len(data['password_hash']) else None
+    game.open = False
+    game.database_hash = data['database_hash']
+    game.uuid = uuid.UUID(data['id'])
+
+    game.users = json.loads(data['users'])
+    for user in game.users:
+      user['joined'] = False
+      user['white_cards'] = [factory.card_database.getCard(c) for c in user['white_cards']]
+
+    game.white_cards = [factory.card_database.getCard(c) for c in json.loads(data['cards'])['white_cards']]
+    game.black_cards = [factory.card_database.getCard(c) for c in json.loads(data['cards'])['black_cards']]
+
+    return game
 
   def loadCards(self):
 
