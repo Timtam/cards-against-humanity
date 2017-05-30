@@ -63,3 +63,8 @@ class Card(object):
 
   def formatCardText(self, text):
     return re.sub("{}", "_"*CARD_PLACEHOLDER_LENGTH, text)
+
+  @property
+  def placeholders(self):
+    format_iterator = string.Formatter().parse(self.__text)
+    return len([p[2] for p in format_iterator if p[2] is not None])

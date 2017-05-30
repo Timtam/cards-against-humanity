@@ -15,6 +15,7 @@ class ServerProtocol(JSONReceiver):
     self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
+    self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.user = User(self)
 
@@ -124,6 +125,23 @@ class ServerProtocol(JSONReceiver):
       pair[0].protocol.sendMessage(MSG_STARTED_GAME, user_id = self.user.id)
       pair[0].protocol.sendMessage(MSG_DRAW_CARDS, cards = [c.id for c in pair[1]])
       pair[0].protocol.sendMessage(MSG_CZAR_CHANGE, user_id = pairs[0][0].id, card = black_card.id)
+
+  def chooseCards(self, cards):
+    game = self.user.getGame()
+    card = game.getCurrentBlackCard()
+    if len(cards) != card.placeholders:
+      self.log.warn('{log_source.identification!r} sent an invalid amount of cards for placeholders ({placeholders} placeholders, {cards} cards)', placeholders = card.placeholders, card = len(cards))
+      self.sendMessage(MSG_CHOOSE_CARDS, success = False, message = 'invalid amount of cards selected')
+      return
+
+    result = game.chooseCards(self.user, [self.factory.card_database.findCard(c) for c in cards])
+
+    if not result['success']:
+      self.log.info('{log_source.identification!r} unable to choose cards: {message}', message = result['message'])
+      self.sendMessage(MSG_CHOOSE_CARDS, **result)
+      return
+
+    self.sendMessage(MSG_CHOOSE_CARDS, success = True)
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')
