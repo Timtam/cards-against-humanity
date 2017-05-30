@@ -67,22 +67,24 @@ class ScrolledTextPanel(pygame.Surface):
     return real, done, stext
 
 
-  def wrapline(self, text, font, maxwidth):
+  @classmethod
+  def wrapline(cls, text, font, maxwidth):
     done = False
     wrapped = []
   
     while not done:
-      nl, done, stext = self.truncline(text, font, maxwidth)
+      nl, done, stext = cls.truncline(text, font, maxwidth)
       wrapped.append(stext.strip())
       text = text[nl:]
     return wrapped
 
 
-  def wrap_multi_line(self, text, font, maxwidth):
+  @classmethod
+  def wrap_multi_line(cls, text, font, maxwidth):
     """ returns text taking new lines into account.
     """
     lines = chain(
-      *(self.wrapline(line, font, maxwidth) for line in text.splitlines()))
+      *(cls.wrapline(line, font, maxwidth) for line in text.splitlines()))
     return list(lines)
 
 
