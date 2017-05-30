@@ -143,7 +143,7 @@ class ClientProtocol(JSONReceiver):
 
   def czarChange(self, user_id, card):
     if user_id == self.user_id:
-      self.factory.display.callFunction('self.view.writeLog', 'you were chosen the new czar and therefore flip a black card open. You won't be able to play any white card until the next player will be the czar.')
+      self.factory.display.callFunction('self.view.writeLog', 'you were chosen the new czar and therefore flip a black card open. You won\'t be able to play any white card until the next player will be chosen to be the czar.')
     else:
       self.factory.display.callFunction('self.view.writeLog', '%s was chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
     card = self.factory.card_database.getCard(card)
