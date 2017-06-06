@@ -24,7 +24,7 @@ class CardSurface(pygame.Surface):
     self.height = height
     self.card_type = card_type
     
-    self.border = pygame.Rect(self.x, self.y, self.width, self.height)
+    self.border = pygame.Rect(0, 0, self.width, self.height)
     if self.card_type is CARD_WHITE:
       self.color = COLOR_WHITE
     elif self.card_type is CARD_BLACK:
@@ -43,13 +43,14 @@ class CardSurface(pygame.Surface):
   
   
   def handleEvent(self, event):
-    # hover over button and click events
-    if event.type == pygame.MOUSEMOTION and self.get_rect().collidepoint(
-            event.pos):
-      self.border_color = BORDER_COLOR_HOVER
+    # hover over card
+    if event.type == pygame.MOUSEMOTION:
+      if self.get_rect().collidepoint(event.pos):
+        self.border_color = BORDER_COLOR_HOVER
+      else:
+        self.border_color = self.color
       
-    else:
-      self.border_color = self.color
+    self.card_text.handleEvent(event)
   
   
   def update(self):
@@ -58,6 +59,6 @@ class CardSurface(pygame.Surface):
   
   def render(self):
     self.fill(self.color)
-    pygame.draw.rect(self, self.border_color, self.border, BORDER)
     self.card_text.render()
     self.blit(self.card_text, (TEXT_PADDING, TEXT_PADDING))
+    pygame.draw.rect(self, self.border_color, self.border, BORDER)
