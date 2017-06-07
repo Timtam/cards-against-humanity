@@ -29,7 +29,7 @@ class CardSurface(pygame.Surface):
       self.color = COLOR_WHITE
     elif self.card_type is CARD_BLACK:
       self.color = COLOR_BLACK
-    self.border_color = self.color
+    self.border_color = COLOR_BLACK
     
     if self.card_type is CARD_WHITE:
       self.text_color = COLOR_BLACK
@@ -42,13 +42,37 @@ class CardSurface(pygame.Surface):
     self.card_text.addText(text, color)
   
   
+  def clearText(self):
+    self.card_text.clearText()
+  
+  
+  def setLabel(self, label):
+    self.card_text.setLabel(label)
+  
+  
+  def getLabel(self):
+    self.card_text.getLabel()
+  
+  
+  def setFocus(self, value):
+    self.card_text.setFocus(value)
+  
+  
+  def setSpeakLines(self, value):
+    self.card_text.setSpeakLines(value)
+  
+  
+  def getCardText(self):
+    return self.card_text
+  
+  
   def handleEvent(self, event):
     # hover over card
     if event.type == pygame.MOUSEMOTION:
-      if self.get_rect().collidepoint(event.pos):
+      if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
         self.border_color = BORDER_COLOR_HOVER
       else:
-        self.border_color = self.color
+        self.border_color = COLOR_BLACK
       
     self.card_text.handleEvent(event)
   
