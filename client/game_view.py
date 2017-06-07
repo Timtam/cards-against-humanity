@@ -59,7 +59,7 @@ class GameView(View):
     self.black_card.setLabel('black card')
     #self.black_card = None
 
-    self.tab_order.append(self.black_card.getCardText())
+    self.tab_order.append(self.black_card)
 
     for i in range(10):
       #card_position = ((i * (CARD_SIZE[0] + CARD_PADDING)) - (int(i / 5) * (self.surface_cards.get_width() - CARD_PADDING)) + CARD_PADDING,
@@ -84,7 +84,7 @@ class GameView(View):
       #self.cards[i]['text'].setSpeakLines(False)
       self.cards[i]['card'].setSpeakLines(False)
       #self.tab_order.append(self.cards[i]['text'])
-      self.tab_order.append(self.cards[i]['card'].getCardText())
+      self.tab_order.append(self.cards[i]['card'])
   
   
   def setCards(self, *cards):

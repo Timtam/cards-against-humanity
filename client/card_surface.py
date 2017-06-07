@@ -51,7 +51,7 @@ class CardSurface(pygame.Surface):
   
   
   def getLabel(self):
-    self.card_text.getLabel()
+    return self.card_text.getLabel()
   
   
   def setFocus(self, value):
