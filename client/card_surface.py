@@ -23,6 +23,7 @@ class CardSurface(pygame.Surface):
     self.width = width
     self.height = height
     self.card_type = card_type
+    self.card = None
     
     self.border = pygame.Rect(0, 0, self.width, self.height)
     if self.card_type is CARD_WHITE:
@@ -64,6 +65,20 @@ class CardSurface(pygame.Surface):
   
   def getCardText(self):
     return self.card_text
+  
+  
+  def setCard(self, card):
+    
+    self.clearText()
+    self.card = card
+    if card.type is CARD_BLACK:
+      self.card_text.addText(card.getCardText(), COLOR_WHITE)
+    else:
+      self.card_text.addText(card.getCardText())
+  
+  
+  def getCard(self):
+    return self.card
   
   
   def handleEvent(self, event):

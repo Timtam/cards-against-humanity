@@ -9,7 +9,7 @@ import pygame.locals as pl
 
 CARD_PADDING = 10
 TEXT_PADDING = 10
-CARD_SIZE = (120, 180)
+CARD_SIZE = (150, 200)
 
 
 
@@ -92,10 +92,11 @@ class GameView(View):
     for i in range(10):
       if j >= len(cards):
         return
-      if not self.cards[i]['card']:
+      if self.cards[i]['card'].getCard() is None:
         #self.cards[i]['card'] = cards[j]
-        self.cards[i]['card'].clearText()
-        self.cards[i]['card'].addText(cards[j].getCardText())
+        #self.cards[i]['card'].clearText()
+        #self.cards[i]['card'].addText(cards[j].getCardText())
+        self.cards[i]['card'].setCard(cards[j])
         j += 1
 
     if j < len(cards):
