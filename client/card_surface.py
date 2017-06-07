@@ -24,6 +24,7 @@ class CardSurface(pygame.Surface):
     self.height = height
     self.card_type = card_type
     self.card = None
+    self.chosen = False
     
     self.border = pygame.Rect(0, 0, self.width, self.height)
     if self.card_type is CARD_WHITE:
@@ -83,11 +84,20 @@ class CardSurface(pygame.Surface):
   
   def handleEvent(self, event):
     # hover over card
-    if event.type == pygame.MOUSEMOTION:
+    if event.type == pygame.MOUSEMOTION and not self.chosen:
       if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
         self.border_color = BORDER_COLOR_HOVER
       else:
         self.border_color = COLOR_BLACK
+      
+    # click on card / chose
+    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+      if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
+        self.border_color = BORDER_COLOR_CHOSEN
+        self.chosen = True
+      else:
+        self.border_color = COLOR_BLACK
+        self.chosen = False
       
     self.card_text.handleEvent(event)
   
