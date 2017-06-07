@@ -104,9 +104,7 @@ class GameView(View):
   
   
   def setBlackCard(self, card):
-    self.black_card.clearText()
-    self.black_card.addText(card.getCardText(), (255, 255, 255))
-    #self.black_card = card
+    self.black_card.setCard(card)
   
   
   def writeLog(self, text):
