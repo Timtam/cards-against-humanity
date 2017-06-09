@@ -91,13 +91,14 @@ class CardSurface(pygame.Surface):
         self.border_color = COLOR_BLACK
       
     # click on card / chose
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+    if self.card is not None and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
       if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
-        self.border_color = BORDER_COLOR_CHOSEN
-        self.chosen = True
-      else:
-        self.border_color = COLOR_BLACK
-        self.chosen = False
+        if self.chosen:
+          self.border_color = BORDER_COLOR_HOVER
+          self.chosen = False
+        else:
+          self.border_color = BORDER_COLOR_CHOSEN
+          self.chosen = True
       
     self.card_text.handleEvent(event)
   
