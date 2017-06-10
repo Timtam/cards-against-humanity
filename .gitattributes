@@ -1,0 +1,7 @@
+* text=auto
+
+*.py text
+*.md text
+*.dll binary
+*.ttf binary
+*.ogg binary
