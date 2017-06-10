@@ -177,10 +177,21 @@ class Game(object):
     return self.formatted(success = True, unlinked = self.unlink())
 
   def pause(self):
+
+    if not self.running:
+      return
+
+    white_cards = []
+
     self.running = False
 
     for user in self.users:
-      user.chosen_cards = []
+      user['chosen_cards'] = []
+      white_cards += user['white_cards']
+      user['white_cards'] = []
+
+    self.white_cards = white_cards
+      
     self.log.info('game {game} paused', game = self.id)
 
   def unlink(self):
