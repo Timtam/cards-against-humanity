@@ -11,9 +11,9 @@ CARD_PLACEHOLDER_LENGTH=3
 class Card(object):
   def __init__(self, id=-1, text='', type=CARD_WHITE):
     self.id=id
-    self.__links = [None] * self.placeholders
     self.__text=text
     self.type=type
+    self.__links = [None] * self.placeholders
 
   def isValid(self, text=None):
     # implementing some safety
@@ -63,6 +63,8 @@ class Card(object):
     return re.sub("( ?)__+([.,?!:;\-/ ])", r"\1{}\2",text)
 
   def formatCardText(self, text):
+    print self.__placeholder_texts
+    print text.format(*self.__placeholder_texts)
     return text.format(*self.__placeholder_texts)
     
   def link(self, card, index = -1):
@@ -83,14 +85,12 @@ class Card(object):
     except ValueError:
       raise CardLinkError("index out of range")
 
-  def unlink(self, index):
+  def unlink(self, card):
 
     try:
-      if self.__links[index] is None:
-        raise CardLinkError("no link established with this index")
-      self.__links[index] = None
+      self.__links[self.__links.index(card)] = None
     except ValueError:
-      raise CardLinkError("index out of range")
+      raise CardLinkError("card not linked")
 
   @property
   def placeholders(self):
