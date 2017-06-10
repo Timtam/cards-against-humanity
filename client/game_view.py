@@ -210,6 +210,10 @@ class GameView(View):
 
 
   def whiteCardCallback(self, i):
+    if self.mode == GAME_MODE_CZAR and self.cards[i]['card'].type == CARD_WHITE:
+      self.writeLog("a czar can't choose white cards. you need to wait until all other players decided which cards to fill into the spaces to select your favorite card combination.")
+      return
+
     # we need to find the selected card, choose / unchoose it, and link/unlink it
     if self.cards[i]['card'].chosen:
       self.black_card.getCard().unlink(self.cards[i]['card'].getCard())
