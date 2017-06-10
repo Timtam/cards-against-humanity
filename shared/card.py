@@ -63,8 +63,6 @@ class Card(object):
     return re.sub("( ?)__+([.,?!:;\-/ ])", r"\1{}\2",text)
 
   def formatCardText(self, text):
-    print self.__placeholder_texts
-    print text.format(*self.__placeholder_texts)
     return text.format(*self.__placeholder_texts)
     
   def link(self, card, index = -1):
