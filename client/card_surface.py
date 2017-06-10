@@ -111,11 +111,14 @@ class CardSurface(pygame.Surface):
     self.blit(self.card_text, (TEXT_PADDING, TEXT_PADDING))
     pygame.draw.rect(self, self.border_color, self.border, BORDER)
 
+  # a bit dirty here
+  # getCallback() doesn't return the value of setCallback(),
+  # but self.toggleChosen() instead, which then calls the actual callback
   def setCallback(self, cb):
     self.callback = cb
 
   def getCallback(self):
-    return self.callback
+    return self.toggleChosen
 
   def getEnable(self):
     return self.card is not None

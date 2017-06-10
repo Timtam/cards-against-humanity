@@ -34,6 +34,8 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_LEFT_GAME, self.leftGame)
     self.addCallback(MODE_IN_GAME, MSG_DISCONNECTED_FROM_GAME, self.disconnectedFromGame)
     self.addCallback(MODE_IN_GAME, MSG_DELETED_GAME, self.deletedGame)
+    self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
+    self.addCallback(MODE_IN_GAME, MSG_CHOICES_REMAINING, self.choicesRemaining)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
     self.identification = 'server'
@@ -137,7 +139,6 @@ class ClientProtocol(JSONReceiver):
       user = self.factory.findUsername(user_id)
 
     self.factory.display.callFunction('self.view.writeLog', '%s started the game'%user)
-    self.factory.display.callFunction('self.view.setMode', GAME_MODE_PLAYER)
 
   def drawCards(self, cards):
     cards = [self.factory.card_database.getCard(c) for c in cards]
@@ -146,12 +147,13 @@ class ClientProtocol(JSONReceiver):
   def czarChange(self, user_id, card):
     if user_id == self.user_id:
       self.factory.display.callFunction('self.view.writeLog', 'you were chosen the new czar and therefore flip a black card open. You won\'t be able to play any white card until the next player will be chosen to be the czar.')
-      self.factory.display.callFunction('self.view.setMode', GAME_MODE_CZAR)
+      self.factory.display.callFunction('self.view.setMode', GAME_MODE_CZAR_WAITING)
     else:
       self.factory.display.callFunction('self.view.writeLog', '%s was chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
+      self.factory.display.callFunction('self.view.setMode', GAME_MODE_PLAYER)
     card = self.factory.card_database.getCard(card)
     self.factory.display.callFunction('self.view.setBlackCard', card)
-
+    
   def currentUsers(self, users):
     for u in users:
       self.factory.addUser(**u)
@@ -180,3 +182,13 @@ class ClientProtocol(JSONReceiver):
 
   def sendStartGame(self):
     self.sendMessage(MSG_START_GAME)
+
+  def chooseCards(self, success, message = ""):
+    if not success:
+      self.factory.display.callFunction('self.view.writeLogError', message)
+
+  def choicesRemaining(self, remaining, out_of):
+    self.factory.display.callFunction('self.view.writeLog', 'A selection was submitted. %d out of %d remaining'%(remaining, out_of))
+
+  def sendChooseCards(self, cards):
+    self.sendMessage(MSG_CHOOSE_CARDS, cards = [c.id for c in cards])

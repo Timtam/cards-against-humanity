@@ -248,6 +248,8 @@ class Game(object):
 
     d['chosen_cards'] = cards
 
+    return self.formatted(success = True)
+
   @staticmethod
   def userdict(user):
     return {
@@ -269,3 +271,7 @@ class Game(object):
   @property
   def id(self):
     return self.uuid.int
+
+  @property
+  def choices_remaining(self):
+    return len([u for u in self.users if len(u['chosen_cards'])>0 and self.users.index(u)>0])

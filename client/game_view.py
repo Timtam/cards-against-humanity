@@ -28,6 +28,7 @@ class GameView(View):
     self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.5))
     self.button_start_leave.setCallback(self.onStartLeave)
     self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.6))
+    self.button_confirm.setCallback(self.onConfirmChoice)
     
     self.surface_gamelog = pygame.Surface((200, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
@@ -210,7 +211,7 @@ class GameView(View):
 
 
   def whiteCardCallback(self, i):
-    if self.mode == GAME_MODE_CZAR and self.cards[i]['card'].type == CARD_WHITE:
+    if self.mode == GAME_MODE_CZAR_WAITING and self.cards[i]['card'].type == CARD_WHITE:
       self.writeLog("a czar can't choose white cards. you need to wait until all other players decided which cards to fill into the spaces to select your favorite card combination.")
       return
 
@@ -224,3 +225,21 @@ class GameView(View):
         self.writeLog("you've already chosen enough cards. If you want to switch cards, you'll have to deselect another card first.")
         return
     self.black_card.setCard(self.black_card.getCard())
+
+
+  def onConfirmChoice(self):
+
+    if self.mode == GAME_MODE_CZAR_WAITING:
+      self.writeLog("You need to wait until all players sent their placeholder ideas.")
+      return
+    elif self.mode == GAME_MODE_PAUSED:
+      self.writeLog("You can't confirm anything when the game isn't running.")
+      return
+
+    cards = [c['card'].getCard() for c in self.cards if c['card'].chosen]
+
+    if len(cards) != self.black_card.getCard().placeholders:
+      self.writeLog("You didn't select enough white cards yet.")
+      return
+
+    self.display.factory.client.sendChooseCards(cards)

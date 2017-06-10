@@ -134,7 +134,7 @@ class ServerProtocol(JSONReceiver):
       self.sendMessage(MSG_CHOOSE_CARDS, success = False, message = 'invalid amount of cards selected')
       return
 
-    result = game.chooseCards(self.user, [self.factory.card_database.findCard(c) for c in cards])
+    result = game.chooseCards(self.user, [self.factory.card_database.getCard(c) for c in cards])
 
     if not result['success']:
       self.log.info('{log_source.identification!r} unable to choose cards: {message}', message = result['message'])
@@ -142,6 +142,9 @@ class ServerProtocol(JSONReceiver):
       return
 
     self.sendMessage(MSG_CHOOSE_CARDS, success = True)
+
+    for user in game.getAllUsers():
+      user.protocol.sendMessage(MSG_CHOICES_REMAINING, remaining = game.choices_remaining, out_of = len(game.getAllUsers())-1)
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')
