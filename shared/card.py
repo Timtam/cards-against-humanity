@@ -1,4 +1,4 @@
-from .exceptions import CardValidityError
+from .exceptions import CardLinkError, CardValidityError
 
 import re
 import string
@@ -11,6 +11,7 @@ CARD_PLACEHOLDER_LENGTH=3
 class Card(object):
   def __init__(self, id=-1, text='', type=CARD_WHITE):
     self.id=id
+    self.__links = [None] * self.placeholders
     self.__text=text
     self.type=type
 
@@ -62,9 +63,47 @@ class Card(object):
     return re.sub("( ?)__+([.,?!:;\-/ ])", r"\1{}\2",text)
 
   def formatCardText(self, text):
-    return re.sub("{}", "_"*CARD_PLACEHOLDER_LENGTH, text)
+    return text.format(*self.__placeholder_texts)
+    
+  def link(self, card, index = -1):
+    if self.type != CARD_BLACK:
+      raise CardLinkError("only black cards may link cards")
+
+    if card.type != CARD_WHITE:
+      raise CardLinkError("only white cards may be linked to black cards")
+
+    if index == -1:
+      try:
+        index = self.__links.index(None)
+      except ValueError:
+        raise CardLinkError("placeholders exceeded")
+
+    try:
+      self.__links[index] = card
+    except ValueError:
+      raise CardLinkError("index out of range")
+
+  def unlink(self, index):
+
+    try:
+      if self.__links[index] is None:
+        raise CardLinkError("no link established with this index")
+      self.__links[index] = None
+    except ValueError:
+      raise CardLinkError("index out of range")
 
   @property
   def placeholders(self):
     format_iterator = string.Formatter().parse(self.__text)
     return len([p[2] for p in format_iterator if p[2] is not None])
+
+  @property
+  def __placeholder_texts(self):
+    texts = []
+    for l in self.__links:
+      if l is None:
+        texts.append('_' * CARD_PLACEHOLDER_LENGTH)
+      else:
+        texts.append(l.getCardText())
+
+    return texts

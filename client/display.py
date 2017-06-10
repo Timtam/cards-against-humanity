@@ -2,7 +2,6 @@ import hashlib
 import os.path
 
 import pygame
-import sys
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ClientEndpoint
 from twisted.internet.error import ConnectionRefusedError, DNSLookupError
@@ -35,9 +34,6 @@ class Display(object):
     self.screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Cards Against Humanity Online')
     
-    # global font (may be the original from Cards Against Humanity)
-    self.font = open(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), 'rb')
-    
     # setting the current view
     self.view = None
     # loading all sounds
@@ -45,12 +41,7 @@ class Display(object):
   
   
   def getFont(self, size = 20):
-    # the preferred way of loading the font from a file doesn't work properly on x64 systems
-    if sys.maxsize>2**32:
-      return pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), size)
-    else:
-      self.font.seek(0)
-      return pygame.font.Font(self.font, size)
+    return pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), size)
   
   
   def getSize(self):
