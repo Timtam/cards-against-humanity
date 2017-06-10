@@ -1,4 +1,5 @@
 from . import version
+from .constants import *
 from shared.messages import *
 from shared.protocol import JSONReceiver
 
@@ -136,6 +137,7 @@ class ClientProtocol(JSONReceiver):
       user = self.factory.findUsername(user_id)
 
     self.factory.display.callFunction('self.view.writeLog', '%s started the game'%user)
+    self.factory.display.callFunction('self.view.setMode', GAME_MODE_PLAYER)
 
   def drawCards(self, cards):
     cards = [self.factory.card_database.getCard(c) for c in cards]
@@ -144,6 +146,7 @@ class ClientProtocol(JSONReceiver):
   def czarChange(self, user_id, card):
     if user_id == self.user_id:
       self.factory.display.callFunction('self.view.writeLog', 'you were chosen the new czar and therefore flip a black card open. You won\'t be able to play any white card until the next player will be chosen to be the czar.')
+      self.factory.display.callFunction('self.view.setMode', GAME_MODE_CZAR)
     else:
       self.factory.display.callFunction('self.view.writeLog', '%s was chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
     card = self.factory.card_database.getCard(card)

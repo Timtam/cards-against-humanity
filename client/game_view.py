@@ -1,4 +1,6 @@
 from shared.card import CARD_BLACK, CARD_WHITE
+from shared.exceptions import CardLinkError
+from .constants import *
 from .view import View
 from .tools import Button
 from .scrolled_text_panel import ScrolledTextPanel
@@ -21,6 +23,7 @@ class GameView(View):
     self.hmiddle = self.display_size[0] / 2
     self.vmiddle = self.display_size[1] / 2
     self.font = self.display.getFont()
+    self.mode = GAME_MODE_PAUSED
     
     self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.5))
     self.button_start_leave.setCallback(self.onStartLeave)
@@ -83,6 +86,7 @@ class GameView(View):
       self.cards[i]['card'].setLabel('white card %d' % (i + 1))
       #self.cards[i]['text'].setSpeakLines(False)
       self.cards[i]['card'].setSpeakLines(False)
+      self.cards[i]['card'].setCallback(self.generateWhiteCardLambda(i))
       #self.tab_order.append(self.cards[i]['text'])
       self.tab_order.append(self.cards[i]['card'])
   
@@ -195,3 +199,24 @@ class GameView(View):
 
     self.button_start_leave.render()
     self.button_confirm.render()
+
+
+  def setMode(self, mode):
+    self.mode = mode
+
+
+  def generateWhiteCardLambda(self, index):
+    return lambda: self.whiteCardCallback(index)
+
+
+  def whiteCardCallback(self, i):
+    # we need to find the selected card, choose / unchoose it, and link/unlink it
+    if self.cards[i]['card'].chosen:
+      self.black_card.getCard().unlink(self.cards[i]['card'].getCard())
+    else:
+      try:
+        self.black_card.getCard().link(self.cards[i]['card'].getCard())
+      except CardLinkError:
+        self.writeLog("you've already chosen enough cards. If you want to switch cards, you'll have to deselect another card first.")
+        return
+    self.black_card.setCard(self.black_card.getCard())

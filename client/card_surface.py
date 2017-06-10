@@ -17,6 +17,7 @@ class CardSurface(pygame.Surface):
   def __init__(self, display, x, y, width, height, card_type=CARD_WHITE):
     pygame.Surface.__init__(self, (width, height))
     
+    self.callback = None
     self.display = display
     self.x = x
     self.y = y
@@ -93,12 +94,9 @@ class CardSurface(pygame.Surface):
     # click on card / chose
     if self.card is not None and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
       if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
-        if self.chosen:
+        self.toggleChosen()
+        if not self.chosen:
           self.border_color = BORDER_COLOR_HOVER
-          self.chosen = False
-        else:
-          self.border_color = BORDER_COLOR_CHOSEN
-          self.chosen = True
       
     self.card_text.handleEvent(event)
   
@@ -112,3 +110,26 @@ class CardSurface(pygame.Surface):
     self.card_text.render()
     self.blit(self.card_text, (TEXT_PADDING, TEXT_PADDING))
     pygame.draw.rect(self, self.border_color, self.border, BORDER)
+
+  def setCallback(self, cb):
+    self.callback = cb
+
+  def getCallback(self):
+    return self.callback
+
+  def getEnable(self):
+    return self.card is not None
+
+  def toggleChosen(self):
+    if not self.getEnable():
+      return
+
+    if self.callback:
+      self.callback()
+
+    if self.chosen:
+      self.border_color = COLOR_BLACK
+    else:
+      self.border_color = BORDER_COLOR_CHOSEN
+
+    self.chosen = not self.chosen
