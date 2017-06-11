@@ -6,10 +6,12 @@ COLOR_BLACK = (0, 0, 0)
 
 
 class GameEntry(pygame.Surface):
-  def __init__(self, display, width, height):
+  def __init__(self, display, x, y, width, height):
     pygame.Surface.__init__(self, (width, height))
     
     self.display = display
+    self.x = x
+    self.y = y
     self.width = width
     self.height = height
     

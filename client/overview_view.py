@@ -29,13 +29,13 @@ class OverviewView(View):
     #self.game_overview.addText("\nThis is a looooooooooooooooooooooooooooooooooooooooooooong dummy entry for a game")
     #self.game_overview.addText("\nThis is a looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooonger dummy entry for a game")
     #self.game_overview.addText("\nThis is a short dummy entry for a game")
-
-    dummy = GameEntry(self.display, self.game_overview.getAvailableWidth() - 20, 50)
+    
+    surface_pos_y = PADDING
     for i in range(10):
+      dummy = GameEntry(self.display, surface_pos_y, PADDING, self.game_overview.getAvailableWidth() - 20, 50)
       self.game_overview.addSurface(dummy)
     
     self.button_join = Button(self.display, "Join Game", self.display.getFont(), (self.screen_size[0] / 2, self.screen_size[1] * 0.8))
-    
     
     
   def handleEvent(self, event):

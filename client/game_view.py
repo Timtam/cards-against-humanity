@@ -94,6 +94,8 @@ class GameView(View):
 
 
   def writeLog(self, text):
+    if self.gamelog_text.getText() != "":
+      self.gamelog_text.addText("\n")
     self.gamelog_text.addText(text)
     self.speak(text, False)
   

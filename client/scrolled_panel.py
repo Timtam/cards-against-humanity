@@ -96,6 +96,9 @@ class ScrolledPanel(pygame.Surface):
   
   
   def handleEvent(self, event):
+    for surface in self.surfaces:
+      surface.handleEvent(event)
+    
     if event.type == pygame.MOUSEMOTION and self.scrolling:
       if event.rel[1] != 0:
         move = max(event.rel[1], self.track.top - self.knob.top)

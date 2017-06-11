@@ -87,8 +87,12 @@ class CardSurface(pygame.Surface):
     if self.card is not None:
       if card.type is CARD_BLACK:
         self.card_text.addText(card.getCardText(), COLOR_WHITE)
+        self.color = COLOR_BLACK
+        self.card_text.setBackgroundColor(COLOR_BLACK)
       else:
         self.card_text.addText(card.getCardText())
+        self.color = COLOR_WHITE
+        self.card_text.setBackgroundColor(COLOR_WHITE)
   
   
   def getCard(self):

@@ -197,6 +197,11 @@ class TextInput:
   def setFocus(self, flag):
     self.focus = flag
     self.input.setFocus(flag)
+    #if flag:
+    #  pygame.mouse.set_cursor(self.cursor_size, self.cursor_hotspot,
+    #                          *self.cursor)
+    #else:
+    #  pygame.mouse.set_cursor(*pygame.cursors.arrow)
   
   
   def handleEvent(self, event):

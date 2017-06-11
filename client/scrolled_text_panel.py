@@ -147,6 +147,7 @@ class ScrolledTextPanel(pygame.Surface):
     self.text_surfaces = []
     self.text_lines = []
     self.line_cursor = 0
+    self.ratio = 1.0
     
     
   def getText(self):
@@ -180,6 +181,10 @@ class ScrolledTextPanel(pygame.Surface):
     else:
       label += "empty"
     return label
+
+
+  def setBackgroundColor(self, color):
+    self.background_color = color
 
     
   def handleEvent(self, event):
