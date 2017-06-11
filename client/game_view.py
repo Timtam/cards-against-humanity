@@ -42,6 +42,7 @@ class GameView(View):
 
     self.tab_order = [self.button_start_leave, self.button_confirm, self.gamelog_text]
     self.createCardSurfaces()
+    self.setMode(GAME_MODE_PAUSED)
     
     
   def createCardSurfaces(self):
@@ -199,9 +200,12 @@ class GameView(View):
   def setMode(self, mode):
     self.mode = mode
 
-    if mode == GAME_MODE_CZAR_WAITING:
+    if mode == GAME_MODE_CZAR_WAITING or mode == GAME_MODE_PAUSED:
+      self.button_confirm.setEnable(False)
       for c in self.cards:
         c['card'].setEnable(False)
+    else:
+      self.button_confirm.setEnable(True)
 
 
   def generateCardLambda(self, index):
@@ -260,6 +264,10 @@ class GameView(View):
       self.clearCard(self.white_cards.index(card))
 
     self.display.factory.client.sendChooseCards(cards)
+
+    for c in self.cards:
+      c['card'].setEnable(False)
+    self.button_confirm.setEnable(False)
 
 
   def clearCard(self, i):

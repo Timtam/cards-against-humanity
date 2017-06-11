@@ -145,9 +145,6 @@ class CardSurface(pygame.Surface):
     return self.card is not None and self.enabled
 
   def toggleChosen(self):
-    if not self.getEnable():
-      return
-
     if self.chosen:
       self.border_color = COLOR_BLACK
     else:
