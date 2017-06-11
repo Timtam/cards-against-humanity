@@ -6,6 +6,7 @@ from .tools import Button
 from .scrolled_text_panel import ScrolledTextPanel
 from card_surface import CardSurface
 
+import copy
 import pygame
 import pygame.locals as pl
 
@@ -37,58 +38,33 @@ class GameView(View):
     self.gamelog_text.setLabel('game log')
 
     self.cards = []
+    self.white_cards = [None] * 10
 
     self.tab_order = [self.button_start_leave, self.button_confirm, self.gamelog_text]
     self.createCardSurfaces()
     
     
   def createCardSurfaces(self):
-    #self.surface_cards = pygame.Surface((self.display_size[0] * 0.6, self.display_size[1] * 0.5))
-    #self.surface_cards = pygame.Surface((CARD_SIZE[0] * 5 + CARD_PADDING * 6, CARD_SIZE[1] * 2 + CARD_PADDING * 3))
-    #self.card_border = pygame.Rect(0, 0, (self.surface_cards.get_width() - 6 * CARD_PADDING) / 5, (self.surface_cards.get_height() - 3 * CARD_PADDING) / 2)
 
-    #self.card_surface = pygame.Surface(((
-    #                               self.surface_cards.get_width() - 6 *
-    #                               CARD_PADDING) / 5,
-    #                               (
-    #                               self.surface_cards.get_height() - 3 *
-    #                               CARD_PADDING) / 2))
-    
-    #self.surface_black_card = pygame.Surface((self.card_surface.get_width(), self.card_surface.get_height()))
     self.black_card_x = self.hmiddle - CARD_SIZE[0]/2
     self.black_card_y = 50
     self.black_card = CardSurface(self.display, self.black_card_x, self.black_card_y, CARD_SIZE[0], CARD_SIZE[1], CARD_BLACK)
-    #self.black_card_text = ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.card_surface.get_width() - 2*TEXT_PADDING, self.card_surface.get_height() - 2*TEXT_PADDING, (0, 0, 0))
-    self.black_card.addText('no black card', (255, 255, 255))
-    self.black_card.setLabel('black card')
-    #self.black_card = None
+    self.black_card.addText('no card', (255, 255, 255))
+    self.black_card.setLabel('your selection')
 
     self.tab_order.append(self.black_card)
 
     for i in range(10):
-      #card_position = ((i * (CARD_SIZE[0] + CARD_PADDING)) - (int(i / 5) * (self.surface_cards.get_width() - CARD_PADDING)) + CARD_PADDING,
-      #                 int(i / 5) * (CARD_SIZE[1] + CARD_PADDING) + CARD_PADDING)
-      #
       card_position = ((i * (CARD_SIZE[0] + CARD_PADDING)) - (int(i / 5) * (CARD_SIZE[0] * 5 + CARD_PADDING * 5)) + self.hmiddle - (CARD_SIZE[0] * 5 + CARD_PADDING * 4)/2,
                        int(i / 5) * (CARD_SIZE[1] + CARD_PADDING) + 300)
       self.cards.append({
-        # we need to copy the surface, otherwise we will have the same
-        # printed on every surface
-        #'surface': self.card_surface.copy(),
         'card': CardSurface(self.display, card_position[0], card_position[1], CARD_SIZE[0], CARD_SIZE[1]),
         'position': card_position,
-        #'text': None,
-        #'card': None
       })
-      #self.cards[i]['text']=ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.card_surface.get_width() - 2 * TEXT_PADDING, self.card_surface.get_height() - 2 * TEXT_PADDING)
-      #self.cards[i]['text'].addText('no card')
       self.cards[i]['card'].addText('no card')
-      #self.cards[i]['text'].setLabel('white card %d'%(i+1))
-      self.cards[i]['card'].setLabel('white card %d' % (i + 1))
-      #self.cards[i]['text'].setSpeakLines(False)
+      self.cards[i]['card'].setLabel('selectable card %d' % (i + 1))
       self.cards[i]['card'].setSpeakLines(False)
       self.cards[i]['card'].setCallback(self.generateWhiteCardLambda(i))
-      #self.tab_order.append(self.cards[i]['text'])
       self.tab_order.append(self.cards[i]['card'])
   
   
@@ -97,21 +73,36 @@ class GameView(View):
     for i in range(10):
       if j >= len(cards):
         return
-      if self.cards[i]['card'].getCard() is None:
-        #self.cards[i]['card'] = cards[j]
-        #self.cards[i]['card'].clearText()
-        #self.cards[i]['card'].addText(cards[j].getCardText())
-        self.cards[i]['card'].setCard(cards[j])
+      if self.white_cards[i] is None:
+        self.white_cards[i] = cards[j]
         j += 1
 
     if j < len(cards):
       self.log.warn('{count} cards remaining, but no place left', count = len(cards)-j)
   
-  
+    for i in range(10):
+      self.cards[i]['card'].setCard(self.white_cards[i])
+
+
   def setBlackCard(self, card):
     self.black_card.setCard(card)
-  
-  
+
+  def setChoices(self, choices):
+    white_cards = copy.copy(self.white_cards)
+
+    for i in range(10):
+      self.clearCard(i)
+
+    for i in range(len(choices)):
+      card = copy.deepcopy(self.black_card.getCard())
+      card.unlinkAll()
+      for j in range(len(choices[i])):
+        card.link(choices[i][j])
+      self.cards[i]['card'].setCard(card)
+
+    self.white_cards = white_cards
+
+
   def writeLog(self, text):
     self.gamelog_text.addText(text)
     self.speak(text, False)
@@ -242,4 +233,14 @@ class GameView(View):
       self.writeLog("You didn't select enough white cards yet.")
       return
 
+    for card in cards:
+      self.clearCard(self.white_cards.index(card))
+
     self.display.factory.client.sendChooseCards(cards)
+
+
+  def clearCard(self, i):
+    self.cards[i]['card'].setCard(None)
+    self.cards[i]['card'].addText("no card")
+    self.cards[i]['card'].setLabel("selectable card %d"%(i+1))
+    self.white_cards[i] = None

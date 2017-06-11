@@ -13,7 +13,7 @@ class Card(object):
     self.id=id
     self.__text=text
     self.type=type
-    self.__links = [None] * self.placeholders
+    self.unlinkAll()
 
   def isValid(self, text=None):
     # implementing some safety
@@ -89,6 +89,9 @@ class Card(object):
       self.__links[self.__links.index(card)] = None
     except ValueError:
       raise CardLinkError("card not linked")
+
+  def unlinkAll(self):
+    self.__links = [None] * self.placeholders
 
   @property
   def placeholders(self):

@@ -36,6 +36,7 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_DELETED_GAME, self.deletedGame)
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
     self.addCallback(MODE_IN_GAME, MSG_CHOICES_REMAINING, self.choicesRemaining)
+    self.addCallback(MODE_IN_GAME, MSG_CHOICES, self.choices)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.database_hash = None
     self.identification = 'server'
@@ -189,6 +190,18 @@ class ClientProtocol(JSONReceiver):
 
   def choicesRemaining(self, remaining, out_of):
     self.factory.display.callFunction('self.view.writeLog', 'A selection was submitted. %d out of %d remaining'%(remaining, out_of))
+
+  def choices(self, choices):
+
+    choices = [[self.factory.card_database.getCard(c) for c in o] for o in choices]
+
+    if self.factory.display.view.mode == GAME_MODE_CZAR_WAITING:
+      self.factory.display.callFunction('self.view.writeLog', 'All players confirmed their choices. You now have to select the choice which you think is the best.')
+      self.factory.display.callFunction('self.view.setMode', GAME_MODE_CZAR_DECIDING)
+    else:
+      self.factory.display.callFunction('self.view.writeLog', 'All players confirmed their choices and the czar now has to select the best one out of them.')
+
+    self.factory.display.callFunction('self.view.setChoices', choices)
 
   def sendChooseCards(self, cards):
     self.sendMessage(MSG_CHOOSE_CARDS, cards = [c.id for c in cards])
