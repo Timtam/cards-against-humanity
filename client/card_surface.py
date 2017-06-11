@@ -99,6 +99,10 @@ class CardSurface(pygame.Surface):
     return self.card
   
   
+  def setFont(self, font):
+    self.card_text.setFont(font)
+    
+  
   def handleEvent(self, event):
     # hover over card
     if event.type == pygame.MOUSEMOTION and not self.chosen:

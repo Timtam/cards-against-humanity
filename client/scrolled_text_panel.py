@@ -91,7 +91,7 @@ class ScrolledTextPanel(pygame.Surface):
 
 
   def getTextWidth(self):
-    text_width = self.width - SCROLLBAR_THICKNESS
+    text_width = self.width - SCROLLBAR_THICKNESS - 5
     return text_width
     
     
@@ -188,7 +188,11 @@ class ScrolledTextPanel(pygame.Surface):
 
   def setBackgroundColor(self, color):
     self.background_color = color
-
+  
+  
+  def setFont(self, font):
+    self.font = font
+  
     
   def handleEvent(self, event):
     

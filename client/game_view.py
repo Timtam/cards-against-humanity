@@ -12,7 +12,7 @@ import pygame.locals as pl
 
 CARD_PADDING = 10
 TEXT_PADDING = 10
-CARD_SIZE = (180, 200)
+CARD_SIZE = (160, 200)
 
 
 
@@ -34,6 +34,7 @@ class GameView(View):
     self.surface_gamelog = pygame.Surface((300, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
     self.gamelog_text = ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.surface_gamelog.get_width() - 2*TEXT_PADDING, self.surface_gamelog.get_height() - 2*TEXT_PADDING, True)
+    self.gamelog_text.setFont(self.display.getFont(16))
     self.writeLog('you joined the game')
     self.gamelog_text.setLabel('game log')
 
@@ -51,6 +52,7 @@ class GameView(View):
     self.black_card_x = surface_cards_x - CARD_SIZE[0] / 2
     self.black_card_y = 45
     self.black_card = CardSurface(self.display, self.black_card_x, self.black_card_y, CARD_SIZE[0], CARD_SIZE[1], CARD_BLACK)
+    self.black_card.setFont(self.display.getFont(18))
     self.black_card.addText('no card', (255, 255, 255))
     self.black_card.setLabel('your selection')
     self.black_card.setEnable(False)
@@ -64,6 +66,7 @@ class GameView(View):
         'card': CardSurface(self.display, card_position[0], card_position[1], CARD_SIZE[0], CARD_SIZE[1]),
         'position': card_position,
       })
+      self.cards[i]['card'].setFont(self.display.getFont(18))
       self.cards[i]['card'].addText('no card')
       self.cards[i]['card'].setLabel('selectable card %d' % (i + 1))
       self.cards[i]['card'].setSpeakLines(False)
