@@ -16,6 +16,7 @@ class ServerProtocol(JSONReceiver):
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
+    self.addCallback(MODE_IN_GAME, MSG_CZAR_DECISION, self.czarDecision)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.user = User(self)
 
@@ -118,13 +119,10 @@ class ServerProtocol(JSONReceiver):
     if not result['success']:
       return
 
-    pairs = game.getAllWhiteCardsForUsers()
-    black_card = game.getCurrentBlackCard()
+    for user in game.getAllUsers():
+      user.protocol.sendMessage(MSG_STARTED_GAME, user_id = self.user.id)
 
-    for pair in pairs:
-      pair[0].protocol.sendMessage(MSG_STARTED_GAME, user_id = self.user.id)
-      pair[0].protocol.sendMessage(MSG_DRAW_CARDS, cards = [c.id for c in pair[1]])
-      pair[0].protocol.sendMessage(MSG_CZAR_CHANGE, user_id = pairs[0][0].id, card = black_card.id)
+    self.sendTurnStarted()
 
   def chooseCards(self, cards):
     game = self.user.getGame()
@@ -154,6 +152,26 @@ class ServerProtocol(JSONReceiver):
       for user in game.getAllUsers():
         user.protocol.sendMessage(MSG_CHOICES, choices = choices)
 
+  def czarDecision(self, cards):
+
+    game = self.user.getGame()
+
+    if self.user is not game.getAllUsers()[0]:
+      self.log.warn("{log_source.identification!r} tried to decide, but isn't the czar")
+      self.sendMessage(MSG_CZAR_DECISION, success = False, message = "you aren't the czar")
+      return
+
+    result = game.decide([self.factory.card_database.getCard(c) for c in cards])
+
+    if not result['success']:
+      self.sendMessage(MSG_CZAR_DECISION, **result)
+      return
+
+    for user in game.getAllUsers():
+      user.protocol.sendMessage(MSG_CZAR_DECISION, success = True, winner = result['winner'].id)
+
+    self.sendTurnStarted()
+
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')
     self.log.debug(reason.getErrorMessage())
@@ -166,3 +184,14 @@ class ServerProtocol(JSONReceiver):
           # this game is empty and should have been unlinked
           user.protocol.sendMessage(MSG_DELETED_GAME, game_id = game.id)
       user.protocol.sendMessage(MSG_LOGGED_OFF, user_id = self.user.id)
+
+  def sendTurnStarted(self):
+    game = self.user.getGame()
+
+    pairs = game.getAllWhiteCardsForUsers()
+    black_card = game.getCurrentBlackCard()
+
+    for pair in pairs:
+      pair[0].protocol.sendMessage(MSG_DRAW_CARDS, cards = [c.id for c in pair[1]])
+      pair[0].protocol.sendMessage(MSG_CZAR_CHANGE, user_id = pairs[0][0].id, card = black_card.id)
+

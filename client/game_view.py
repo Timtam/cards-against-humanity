@@ -38,7 +38,6 @@ class GameView(View):
     self.gamelog_text.setLabel('game log')
 
     self.cards = []
-    self.white_cards = [None] * 10
 
     self.tab_order = [self.button_start_leave, self.button_confirm, self.gamelog_text]
     self.createCardSurfaces()
@@ -71,19 +70,8 @@ class GameView(View):
   
   
   def setCards(self, *cards):
-    j = 0
-    for i in range(10):
-      if j >= len(cards):
-        return
-      if self.white_cards[i] is None:
-        self.white_cards[i] = cards[j]
-        j += 1
-
-    if j < len(cards):
-      self.log.warn('{count} cards remaining, but no place left', count = len(cards)-j)
-  
-    for i in range(10):
-      self.cards[i]['card'].setCard(self.white_cards[i])
+    for i in range(len(cards)):
+      self.cards[i]['card'].setCard(cards[i])
       self.cards[i]['card'].setEnable(True)
 
 
@@ -91,8 +79,6 @@ class GameView(View):
     self.black_card.setCard(card)
 
   def setChoices(self, choices):
-    white_cards = copy.copy(self.white_cards)
-
     for i in range(10):
       self.clearCard(i)
 
@@ -103,8 +89,6 @@ class GameView(View):
         card.link(choices[i][j])
       self.cards[i]['card'].setEnable(self.mode == GAME_MODE_CZAR_DECIDING)
       self.cards[i]['card'].setCard(card)
-
-    self.white_cards = white_cards
 
 
   def writeLog(self, text):
@@ -247,23 +231,26 @@ class GameView(View):
 
   def onConfirmChoice(self):
 
-    if self.mode == GAME_MODE_CZAR_WAITING:
-      self.writeLog("You need to wait until all players sent their placeholder ideas.")
-      return
-    elif self.mode == GAME_MODE_PAUSED:
-      self.writeLog("You can't confirm anything when the game isn't running.")
-      return
+    cards = [c for c in self.cards if c['card'].chosen]
 
-    cards = [c['card'].getCard() for c in self.cards if c['card'].chosen]
+    if self.mode == GAME_MODE_CZAR_DECIDING:
 
-    if len(cards) != self.black_card.getCard().placeholders:
-      self.writeLog("You didn't select enough white cards yet.")
-      return
+      if len(cards) != 1:
+        self.writeLog("You didn't select your favorite yet.")
+        return
 
-    for card in cards:
-      self.clearCard(self.white_cards.index(card))
+      self.display.factory.client.sendCzarDecision(cards[0]['card'].getCard().links)
 
-    self.display.factory.client.sendChooseCards(cards)
+    else:
+
+      if len(cards) != self.black_card.getCard().placeholders:
+        self.writeLog("You didn't select enough white cards yet.")
+        return
+
+      self.display.factory.client.sendChooseCards([c['card'].getCard() for c in cards])
+
+      for card in cards:
+        self.clearCard(self.cards.index(card))
 
     for c in self.cards:
       c['card'].setEnable(False)
@@ -276,4 +263,3 @@ class GameView(View):
     self.cards[i]['card'].setLabel("selectable card %d"%(i+1))
     if self.cards[i]['card'].chosen:
       self.cards[i]['card'].toggleChosen()
-    self.white_cards[i] = None
