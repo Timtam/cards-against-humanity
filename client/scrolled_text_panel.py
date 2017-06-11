@@ -10,6 +10,7 @@ SCROLLBAR_THICKNESS = 20
 SCROLL_SPEED = 20
 
 
+
 class ScrolledTextPanel(pygame.Surface):
   def __init__(self, display, x, y, width, height, background_color=(255, 255, 255)):
     pygame.Surface.__init__(self,(width, height))
