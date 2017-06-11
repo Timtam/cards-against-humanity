@@ -170,7 +170,9 @@ class ScrolledTextPanel(pygame.Surface):
 
 
   def getLabel(self):
-    label = self.label+" text: "
+    label = ""
+    if len(self.label)>0:
+      label += self.label + " text: "
     if len(self.text_lines):
       label += self.text_lines[self.line_cursor]
       if self.speak_lines:

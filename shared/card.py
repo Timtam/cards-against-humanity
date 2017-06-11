@@ -13,7 +13,7 @@ class Card(object):
     self.id=id
     self.__text=text
     self.type=type
-    self.__links = [None] * self.placeholders
+    self.unlinkAll()
 
   def isValid(self, text=None):
     # implementing some safety
@@ -90,6 +90,9 @@ class Card(object):
     except ValueError:
       raise CardLinkError("card not linked")
 
+  def unlinkAll(self):
+    self.__links = [None] * self.placeholders
+
   @property
   def placeholders(self):
     format_iterator = string.Formatter().parse(self.__text)
@@ -105,3 +108,7 @@ class Card(object):
         texts.append(l.getCardText())
 
     return texts
+
+  @property
+  def links(self):
+    return [l for l in self.__links if l is not None]

@@ -146,6 +146,14 @@ class ServerProtocol(JSONReceiver):
     for user in game.getAllUsers():
       user.protocol.sendMessage(MSG_CHOICES_REMAINING, remaining = game.choices_remaining, out_of = len(game.getAllUsers())-1)
 
+    # maybe we already got all choices and can send them to the players
+    if game.choices_remaining == 0:
+    
+      choices = [[c.id for c in o] for o in game.getAllChoices()]
+
+      for user in game.getAllUsers():
+        user.protocol.sendMessage(MSG_CHOICES, choices = choices)
+
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')
     self.log.debug(reason.getErrorMessage())

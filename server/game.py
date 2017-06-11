@@ -250,6 +250,14 @@ class Game(object):
 
     return self.formatted(success = True)
 
+  def getAllChoices(self):
+    # returns all choices from all users, but in shuffled order (important)
+    choices = [u['chosen_cards'] for u in self.users if self.users.index(u)>0]
+
+    random.shuffle(choices)
+
+    return choices
+
   @staticmethod
   def userdict(user):
     return {
@@ -274,4 +282,4 @@ class Game(object):
 
   @property
   def choices_remaining(self):
-    return len([u for u in self.users if len(u['chosen_cards'])>0 and self.users.index(u)>0])
+    return len([u for u in self.users if len(u['chosen_cards']) == 0 and self.users.index(u)>0])
