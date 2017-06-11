@@ -12,7 +12,7 @@ import pygame.locals as pl
 
 CARD_PADDING = 10
 TEXT_PADDING = 10
-CARD_SIZE = (150, 200)
+CARD_SIZE = (180, 200)
 
 
 
@@ -26,12 +26,12 @@ class GameView(View):
     self.font = self.display.getFont()
     self.mode = GAME_MODE_PAUSED
     
-    self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.5))
+    self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.1))
     self.button_start_leave.setCallback(self.onStartLeave)
-    self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.6))
+    self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.2))
     self.button_confirm.setCallback(self.onConfirmChoice)
     
-    self.surface_gamelog = pygame.Surface((200, self.display_size[1]))
+    self.surface_gamelog = pygame.Surface((300, self.display_size[1]))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
     self.gamelog_text = ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.surface_gamelog.get_width() - 2*TEXT_PADDING, self.surface_gamelog.get_height() - 2*TEXT_PADDING, True)
     self.writeLog('you joined the game')
@@ -46,8 +46,10 @@ class GameView(View):
     
   def createCardSurfaces(self):
 
-    self.black_card_x = self.hmiddle - CARD_SIZE[0]/2
-    self.black_card_y = 50
+    surface_cards_x = (self.display_size[0] - self.surface_gamelog.get_width()) / 2 + self.surface_gamelog.get_width()
+
+    self.black_card_x = surface_cards_x - CARD_SIZE[0] / 2
+    self.black_card_y = 45
     self.black_card = CardSurface(self.display, self.black_card_x, self.black_card_y, CARD_SIZE[0], CARD_SIZE[1], CARD_BLACK)
     self.black_card.addText('no card', (255, 255, 255))
     self.black_card.setLabel('your selection')
@@ -56,8 +58,8 @@ class GameView(View):
     self.tab_order.append(self.black_card)
 
     for i in range(10):
-      card_position = ((i * (CARD_SIZE[0] + CARD_PADDING)) - (int(i / 5) * (CARD_SIZE[0] * 5 + CARD_PADDING * 5)) + self.hmiddle - (CARD_SIZE[0] * 5 + CARD_PADDING * 4)/2,
-                       int(i / 5) * (CARD_SIZE[1] + CARD_PADDING) + 300)
+      card_position = ((i * (CARD_SIZE[0] + CARD_PADDING)) - (int(i / 5) * (CARD_SIZE[0] * 5 + CARD_PADDING * 5)) + surface_cards_x - (CARD_SIZE[0] * 5 + CARD_PADDING * 4)/2,
+                       int(i / 5) * (CARD_SIZE[1] + CARD_PADDING) + 290)
       self.cards.append({
         'card': CardSurface(self.display, card_position[0], card_position[1], CARD_SIZE[0], CARD_SIZE[1]),
         'position': card_position,
