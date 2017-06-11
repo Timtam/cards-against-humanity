@@ -249,7 +249,7 @@ class GameView(View):
         self.writeLog("You didn't select enough white cards yet.")
         return
 
-      self.display.factory.client.sendChooseCards([c['card'].getCard() for c in cards])
+      self.display.factory.client.sendChooseCards(self.black_card.getCard().links)
 
       for card in cards:
         self.clearCard(self.cards.index(card))
