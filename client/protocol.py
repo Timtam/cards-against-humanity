@@ -212,7 +212,7 @@ class ClientProtocol(JSONReceiver):
 
     user = 'you' if winner == self.user_id else self.factory.findUsername(winner)
 
-    self.factory.display.callFunction('self.view.writeLog', ('you' if winner == self.user_id else self.factory.findUsername(winner)) + " " + ('win' if self.user_id == winner else 'wins') + ' this round and gains a point.')
+    self.factory.display.callFunction('self.view.writeLog', ('you' if winner == self.user_id else self.factory.findUsername(winner)) + " " + ('win' if self.user_id == winner else 'wins') + ' this round and ' + ('gain' if winner == self.user_id else 'gains' ) + ' a point.')
 
   def sendChooseCards(self, cards):
     self.sendMessage(MSG_CHOOSE_CARDS, cards = [c.id for c in cards])

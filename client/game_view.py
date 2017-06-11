@@ -74,6 +74,8 @@ class GameView(View):
       self.cards[i]['card'].setCard(cards[i])
       self.cards[i]['card'].setEnable(True)
 
+      if self.cards[i]['card'].chosen:
+        self.cards[i]['card'].toggleChosen()
 
   def setBlackCard(self, card):
     self.black_card.setCard(card)
