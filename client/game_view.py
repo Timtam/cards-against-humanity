@@ -51,6 +51,7 @@ class GameView(View):
     self.black_card = CardSurface(self.display, self.black_card_x, self.black_card_y, CARD_SIZE[0], CARD_SIZE[1], CARD_BLACK)
     self.black_card.addText('no card', (255, 255, 255))
     self.black_card.setLabel('your selection')
+    self.black_card.setEnable(False)
 
     self.tab_order.append(self.black_card)
 
@@ -64,7 +65,7 @@ class GameView(View):
       self.cards[i]['card'].addText('no card')
       self.cards[i]['card'].setLabel('selectable card %d' % (i + 1))
       self.cards[i]['card'].setSpeakLines(False)
-      self.cards[i]['card'].setCallback(self.generateWhiteCardLambda(i))
+      self.cards[i]['card'].setCallback(self.generateCardLambda(i))
       self.tab_order.append(self.cards[i]['card'])
   
   
@@ -82,6 +83,7 @@ class GameView(View):
   
     for i in range(10):
       self.cards[i]['card'].setCard(self.white_cards[i])
+      self.cards[i]['card'].setEnable(True)
 
 
   def setBlackCard(self, card):
@@ -98,6 +100,7 @@ class GameView(View):
       card.unlinkAll()
       for j in range(len(choices[i])):
         card.link(choices[i][j])
+      self.cards[i]['card'].setEnable(self.mode == GAME_MODE_CZAR_DECIDING)
       self.cards[i]['card'].setCard(card)
 
     self.white_cards = white_cards
@@ -196,27 +199,47 @@ class GameView(View):
   def setMode(self, mode):
     self.mode = mode
 
+    if mode == GAME_MODE_CZAR_WAITING:
+      for c in self.cards:
+        c['card'].setEnable(False)
 
-  def generateWhiteCardLambda(self, index):
-    return lambda: self.whiteCardCallback(index)
+
+  def generateCardLambda(self, index):
+    return lambda: self.cardCallback(index)
 
 
-  def whiteCardCallback(self, i):
-    if self.mode == GAME_MODE_CZAR_WAITING and self.cards[i]['card'].type == CARD_WHITE:
-      self.writeLog("a czar can't choose white cards. you need to wait until all other players decided which cards to fill into the spaces to select your favorite card combination.")
-      return
+  def cardCallback(self, i):
 
-    # we need to find the selected card, choose / unchoose it, and link/unlink it
-    if self.cards[i]['card'].chosen:
-      self.black_card.getCard().unlink(self.cards[i]['card'].getCard())
+    if self.mode == GAME_MODE_CZAR_DECIDING:
+
+      # if we're choosing a card which is already chosen, we will deselect it
+      # if we choose a card which isn't chosen yet, we will deselect all other cards
+      # and choose this one
+
+      if self.cards[i]['card'].chosen:
+        self.cards[i]['card'].toggleChosen()
+      else:
+
+        chosen_cards = [c['card'] for c in self.cards if c['card'].chosen]
+
+        if len(chosen_cards)>0:
+          for c in chosen_cards:
+            c.toggleChosen()
+
+        self.cards[i]['card'].toggleChosen()
+
     else:
-      try:
-        self.black_card.getCard().link(self.cards[i]['card'].getCard())
-      except CardLinkError:
-        self.writeLog("you've already chosen enough cards. If you want to switch cards, you'll have to deselect another card first.")
-        return
-    self.black_card.setCard(self.black_card.getCard())
-
+      # we need to find the selected card, choose / unchoose it, and link/unlink it
+      if self.cards[i]['card'].chosen:
+        self.black_card.getCard().unlink(self.cards[i]['card'].getCard())
+      else:
+        try:
+          self.black_card.getCard().link(self.cards[i]['card'].getCard())
+        except CardLinkError:
+          self.writeLog("you've already chosen enough cards. If you want to switch cards, you'll have to deselect another card first.")
+          return
+      self.black_card.setCard(self.black_card.getCard())
+      self.cards[i]['card'].toggleChosen()
 
   def onConfirmChoice(self):
 
@@ -243,4 +266,6 @@ class GameView(View):
     self.cards[i]['card'].setCard(None)
     self.cards[i]['card'].addText("no card")
     self.cards[i]['card'].setLabel("selectable card %d"%(i+1))
+    if self.cards[i]['card'].chosen:
+      self.cards[i]['card'].toggleChosen()
     self.white_cards[i] = None

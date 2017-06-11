@@ -19,6 +19,8 @@ class CardSurface(pygame.Surface):
     
     self.callback = None
     self.display = display
+    self.enabled = True
+    self.label = ""
     self.x = x
     self.y = y
     self.width = width
@@ -50,12 +52,21 @@ class CardSurface(pygame.Surface):
   
   
   def setLabel(self, label):
-    self.card_text.setLabel(label)
+    self.label = label
   
   
   def getLabel(self):
-    return self.card_text.getLabel()
-  
+    label = ""
+    if len(self.label)>0:
+      label += self.label + " "
+
+    if self.chosen:
+      label += "(selected)"
+
+    label += ": " + self.card_text.getLabel()
+
+    return label
+
   
   def setFocus(self, value):
     self.card_text.setFocus(value)
@@ -93,11 +104,15 @@ class CardSurface(pygame.Surface):
         self.border_color = COLOR_BLACK
       
     # click on card / chose
-    if self.card is not None and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+    if self.getEnable() and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
       if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
-        self.toggleChosen()
+        if self.callback:
+          self.callback()
+        else:
+          self.toggleChosen()
         if not self.chosen:
           self.border_color = BORDER_COLOR_HOVER
+
       
     self.card_text.handleEvent(event)
   
@@ -119,17 +134,19 @@ class CardSurface(pygame.Surface):
     self.callback = cb
 
   def getCallback(self):
-    return self.toggleChosen
+    return self.callback
+
+
+  def setEnable(self, value):
+    self.enabled = value
+
 
   def getEnable(self):
-    return self.card is not None
+    return self.card is not None and self.enabled
 
   def toggleChosen(self):
     if not self.getEnable():
       return
-
-    if self.callback:
-      self.callback()
 
     if self.chosen:
       self.border_color = COLOR_BLACK

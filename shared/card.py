@@ -108,3 +108,7 @@ class Card(object):
         texts.append(l.getCardText())
 
     return texts
+
+  @property
+  def links(self):
+    return [l for l in self.__links if l is not None]
