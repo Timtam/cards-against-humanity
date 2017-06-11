@@ -40,7 +40,7 @@ class CardSurface(pygame.Surface):
       self.text_color = COLOR_BLACK
     elif self.card_type is CARD_BLACK:
       self.text_color = COLOR_WHITE
-    self.card_text = ScrolledTextPanel(self.display, self.x + TEXT_PADDING, self.y + TEXT_PADDING, self.width - 2 * TEXT_PADDING, self.height - 2 * TEXT_PADDING, self.color)
+    self.card_text = ScrolledTextPanel(self.display, self.x + TEXT_PADDING, self.y + TEXT_PADDING, self.width - 2 * TEXT_PADDING, self.height - 2 * TEXT_PADDING, False, self.color)
   
   
   def addText(self, text, color=(0, 0, 0)):

@@ -12,7 +12,7 @@ SCROLL_SPEED = 20
 
 
 class ScrolledTextPanel(pygame.Surface):
-  def __init__(self, display, x, y, width, height, background_color=(255, 255, 255)):
+  def __init__(self, display, x, y, width, height, mode_set_bottom=False, background_color=(255, 255, 255)):
     pygame.Surface.__init__(self,(width, height))
 
     self.focus = False
@@ -24,6 +24,7 @@ class ScrolledTextPanel(pygame.Surface):
     self.width = width
     self.height = height
     self.font = self.display.getFont()
+    self.mode_set_bottom = mode_set_bottom
     self.background_color = background_color
     self.text_lines = []
     self.text_surfaces = []
@@ -141,7 +142,9 @@ class ScrolledTextPanel(pygame.Surface):
     self.text_surface = pygame.Surface((self.text_width, self.text_height))
 
     self.buildScrollbar()
-
+    if self.mode_set_bottom:
+      self.knob.move_ip(0, self.track.bottom - self.knob.bottom)
+    
 
   def clearText(self):
     self.text_surfaces = []
