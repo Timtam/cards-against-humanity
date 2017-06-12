@@ -1,4 +1,5 @@
 import pygame
+import random
 from scrolled_text_panel import ScrolledTextPanel
 
 from shared.card import CARD_WHITE, CARD_BLACK
@@ -129,6 +130,9 @@ class CardSurface(pygame.Surface):
             self.toggleChosen()
           if not self.chosen:
             self.border_color = BORDER_COLOR_HOVER
+          sound = self.getClickSound()
+          sound.stop()
+          sound.play()
 
       
     self.card_text.handleEvent(event)
@@ -168,3 +172,7 @@ class CardSurface(pygame.Surface):
       self.border_color = BORDER_COLOR_CHOSEN
 
     self.chosen = not self.chosen
+
+
+  def getClickSound(self):
+    return self.display.card_sounds[random.randint(0, len(self.display.card_sounds)-1)]
