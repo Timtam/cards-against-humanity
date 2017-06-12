@@ -111,22 +111,24 @@ class CardSurface(pygame.Surface):
     
   
   def handleEvent(self, event):
-    # hover over card
-    if event.type == pygame.MOUSEMOTION and not self.chosen:
-      if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
-        self.border_color = BORDER_COLOR_HOVER
-      else:
-        self.border_color = COLOR_BLACK
-      
-    # click on card / chose
-    if self.getEnable() and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-      if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
-        if self.callback:
-          self.callback()
-        else:
-          self.toggleChosen()
-        if not self.chosen:
+    # only enable hover and clicking when card is enabled
+    if self.getEnable():
+    # hover
+      if event.type == pygame.MOUSEMOTION and not self.chosen:
+        if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
           self.border_color = BORDER_COLOR_HOVER
+        else:
+          self.border_color = COLOR_BLACK
+      
+      # click / chose
+      if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
+          if self.callback:
+            self.callback()
+          else:
+            self.toggleChosen()
+          if not self.chosen:
+            self.border_color = BORDER_COLOR_HOVER
 
       
     self.card_text.handleEvent(event)
