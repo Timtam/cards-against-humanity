@@ -3,6 +3,8 @@ from .constants import *
 from shared.messages import *
 from shared.protocol import JSONReceiver
 
+import random
+
 class ClientProtocol(JSONReceiver):
   def __init__(self, factory):
     JSONReceiver.__init__(self, factory)
@@ -152,6 +154,8 @@ class ClientProtocol(JSONReceiver):
   def drawCards(self, cards):
     cards = [self.factory.card_database.getCard(c) for c in cards]
     self.factory.display.callFunction('self.view.setCards', *cards)
+
+    self.factory.display.draw_sounds[random.randint(0, len(self.factory.display.draw_sounds)-1)].play()
 
   def czarChange(self, user_id, card):
     if user_id == self.user_id:

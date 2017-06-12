@@ -100,11 +100,20 @@ class Display(object):
     def sound(name):
       return pygame.mixer.Sound(
         os.path.join(getScriptDirectory(), 'assets', 'sound', name + '.ogg'))
-    
+
+    # a helper function which returns multiple sounds with different indices
+    # as list
+    def soundlist(name, amount):
+      sounds = []
+      for i in range(amount):
+        sounds.append(sound(name+"_%d"%(i+1)))
+      return sounds
+
     self.button_down_sound = sound('button_down')
     self.button_up_sound = sound('button_up')
     self.connect_sound = sound('connect')
     self.cursor_sound = sound('cursor')
+    self.draw_sounds = soundlist('draw', 4)
     self.error_sound = sound('error')
     self.game_error_sound = sound('game_error')
     self.join_game_sound = sound('join_game')
