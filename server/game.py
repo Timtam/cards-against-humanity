@@ -310,7 +310,7 @@ class Game(object):
     self.users.append(self.users[0])
     del self.users[0]
 
-    if self.getBlackCard() is None:
+    if self.getCurrentBlackCard() is None:
       # the game finished and we can reset it
       end = True
       self.open = True
@@ -354,3 +354,7 @@ class Game(object):
   @property
   def choices_remaining(self):
     return len([u for u in self.users if len(u['chosen_cards']) == 0 and self.users.index(u)>0])
+
+  @property
+  def points(self):
+    return [(self.factory.findUser(u['user']), u['black_cards'], ) for u in self.users]

@@ -120,7 +120,7 @@ class ServerProtocol(JSONReceiver):
       return
 
     for user in game.getAllUsers():
-      user.protocol.sendMessage(MSG_STARTED_GAME, user_id = self.user.id)
+      user.protocol.sendMessage(MSG_STARTED_GAME, user_id = self.user.id, points = [[p[0].id, p[1]] for p in game.points])
 
     self.sendTurnStarted()
 

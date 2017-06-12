@@ -41,14 +41,39 @@ class ClientFactory(Factory):
   def addGame(self, id, name):
     self.games.append({
       'id': id,
-      'name': name
+      'name': name,
+      'points': {}
     })
 
-  def findGamename(self, id):
+  def findGame(self, id):
     game = [g for g in self.games if g['id'] == id]
-    if len(game)==0:
+    if len(game) != 1:
+      return None
+    return game[0]
+
+  def findGamename(self, id):
+    game = self.findGame(id)
+
+    if game is None:
       return ''
-    return game[0]['name']
+    return game['name']
 
   def removeGame(self, id):
     self.games = [g for g in self.games if g['id'] != id]
+
+  def updateGamePoints(self, id, points):
+    game = self.findGame(id)
+    if game is None:
+      return
+
+    for p in points:
+      try:
+        game['points'][p[0]] += p[1]
+      except KeyError:
+        game['points'][p[0]] = p[1]
+
+  def getGamePoints(self, id):
+    game = self.findGame(id)
+    if game is None:
+      return []
+    return game['points']
