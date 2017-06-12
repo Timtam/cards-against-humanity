@@ -27,8 +27,18 @@ class PlayerIndicators:
     for player in self.player_squares:
       if player.getName() == name:
         return player
-  
-  
+
+
+  def delPlayer(self, name):
+    for player in self.player_squares:
+      if player.getName() == name:
+        self.player_squares.remove(player)
+    tmp_players = self.player_squares
+    self.clearPlayers()
+    for player in tmp_players:
+      self.addPlayer(player.getName())
+
+
   def clearPlayers(self):
     del self.player_squares
     self.pos_x_new_square = self.x
@@ -47,6 +57,11 @@ class PlayerIndicators:
   def setChosen(self, name):
     player = self.getPlayer(name)
     player.setChosen()
+  
+  
+  def setDisconnected(self, name):
+    player = self.getPlayer(name)
+    player.setDisconnected()
   
   
   def handleEvent(self, event):
