@@ -32,14 +32,12 @@ class CardSurface(pygame.Surface):
     self.border = pygame.Rect(0, 0, self.width, self.height)
     if self.card_type is CARD_WHITE:
       self.color = COLOR_WHITE
-    elif self.card_type is CARD_BLACK:
-      self.color = COLOR_BLACK
-    self.border_color = COLOR_BLACK
-    
-    if self.card_type is CARD_WHITE:
       self.text_color = COLOR_BLACK
     elif self.card_type is CARD_BLACK:
+      self.color = COLOR_BLACK
       self.text_color = COLOR_WHITE
+    self.border_color = COLOR_BLACK
+    
     self.card_text = ScrolledTextPanel(self.display, self.x + TEXT_PADDING, self.y + TEXT_PADDING, self.width - 2 * TEXT_PADDING, self.height - 2 * TEXT_PADDING, False, self.color)
   
   
@@ -93,7 +91,16 @@ class CardSurface(pygame.Surface):
         self.card_text.addText(card.getCardText())
         self.color = COLOR_WHITE
         self.card_text.setBackgroundColor(COLOR_WHITE)
-  
+    else:
+      if self.card_type is CARD_BLACK:
+        self.card_text.addText('no card', COLOR_WHITE)
+        self.color = COLOR_BLACK
+        self.card_text.setBackgroundColor(COLOR_BLACK)
+      else:
+        self.card_text.addText('no card')
+        self.color = COLOR_WHITE
+        self.card_text.setBackgroundColor(COLOR_WHITE)
+
   
   def getCard(self):
     return self.card

@@ -168,9 +168,10 @@ class ServerProtocol(JSONReceiver):
       return
 
     for user in game.getAllUsers():
-      user.protocol.sendMessage(MSG_CZAR_DECISION, success = True, winner = result['winner'].id)
+      user.protocol.sendMessage(MSG_CZAR_DECISION, winner = result['winner'].id, end = result['end'])
 
-    self.sendTurnStarted()
+    if not result['end']:
+      self.sendTurnStarted()
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')

@@ -135,7 +135,10 @@ class Game(object):
     return self.formatted(success=True)
 
   def getCurrentBlackCard(self):
-    return self.black_cards[0]
+    try:
+      return self.black_cards[0]
+    except IndexError:
+      return None
 
   def getAllWhiteCardsForUsers(self):
     return [(self.factory.findUser(self.users[i]['user']), self.users[i]['white_cards']) for i in range(len(self.users))]
@@ -307,7 +310,23 @@ class Game(object):
     self.users.append(self.users[0])
     del self.users[0]
 
-    return self.formatted(success = True, winner = self.factory.findUser(user['user']), end = False)
+    if self.getBlackCard() is None:
+      # the game finished and we can reset it
+      end = True
+      self.open = True
+      self.running = False
+      self.white_cards = []
+      self.black_cards = []
+      for user in self.users:
+        user['white_cards'] = []
+        user['black_cards'] = 0
+
+      self.loadCards()
+
+    else:
+      end = False
+
+    return self.formatted(success = True, winner = self.factory.findUser(user['user']), end = end)
 
 
   @staticmethod

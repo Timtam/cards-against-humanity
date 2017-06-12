@@ -53,7 +53,6 @@ class GameView(View):
     self.black_card_y = 45
     self.black_card = CardSurface(self.display, self.black_card_x, self.black_card_y, CARD_SIZE[0], CARD_SIZE[1], CARD_BLACK)
     self.black_card.setFont(self.display.getFont(18))
-    self.black_card.addText('no card', (255, 255, 255))
     self.black_card.setLabel('your selection')
     self.black_card.setEnable(False)
 
@@ -67,7 +66,6 @@ class GameView(View):
         'position': card_position,
       })
       self.cards[i]['card'].setFont(self.display.getFont(18))
-      self.cards[i]['card'].addText('no card')
       self.cards[i]['card'].setLabel('selectable card %d' % (i + 1))
       self.cards[i]['card'].setSpeakLines(False)
       self.cards[i]['card'].setCallback(self.generateCardLambda(i))
@@ -195,8 +193,15 @@ class GameView(View):
 
     if mode == GAME_MODE_CZAR_WAITING or mode == GAME_MODE_PAUSED:
       self.button_confirm.setEnable(False)
-      for c in self.cards:
-        c['card'].setEnable(False)
+      for i in range(10):
+        if mode == GAME_MODE_PAUSED:
+          self.clearCard(i)
+        else:
+          self.cards[i]['card'].setEnable(False)
+
+      if mode == GAME_MODE_PAUSED:
+        self.black_card.setEnable(False)
+        self.black_card.setCard(None)
     else:
       self.button_confirm.setEnable(True)
 
@@ -268,7 +273,6 @@ class GameView(View):
 
   def clearCard(self, i):
     self.cards[i]['card'].setCard(None)
-    self.cards[i]['card'].addText("no card")
     self.cards[i]['card'].setLabel("selectable card %d"%(i+1))
     if self.cards[i]['card'].chosen:
       self.cards[i]['card'].toggleChosen()
