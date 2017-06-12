@@ -4,7 +4,8 @@ from .constants import *
 from .view import View
 from .tools import Button
 from .scrolled_text_panel import ScrolledTextPanel
-from card_surface import CardSurface
+from .card_surface import CardSurface
+from .player_indicators import PlayerIndicators
 
 import copy
 import pygame
@@ -31,9 +32,11 @@ class GameView(View):
     self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.2))
     self.button_confirm.setCallback(self.onConfirmChoice)
     
-    self.surface_gamelog = pygame.Surface((300, self.display_size[1]))
+    self.player_indicators = PlayerIndicators(self.display, 5, 5)
+    
+    self.surface_gamelog = pygame.Surface((300, self.display_size[1] - 65))
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
-    self.gamelog_text = ScrolledTextPanel(self.display, TEXT_PADDING, TEXT_PADDING, self.surface_gamelog.get_width() - 2*TEXT_PADDING, self.surface_gamelog.get_height() - 2*TEXT_PADDING, True)
+    self.gamelog_text = ScrolledTextPanel(self.display, TEXT_PADDING, 65 + TEXT_PADDING, self.surface_gamelog.get_width() - 2*TEXT_PADDING, self.surface_gamelog.get_height() - 2*TEXT_PADDING, True)
     self.gamelog_text.setFont(self.display.getFont(16))
     self.writeLog('you joined the game')
     self.gamelog_text.setLabel('game log')
@@ -118,6 +121,8 @@ class GameView(View):
     self.button_start_leave.handleEvent(event)
     self.button_confirm.handleEvent(event)
 
+    self.player_indicators.handleEvent(event)
+
     for i in range(10):
       self.cards[i]['card'].handleEvent(event)
       if event.type == pygame.KEYDOWN:
@@ -145,6 +150,7 @@ class GameView(View):
   
   def update(self):
     View.update(self)
+    self.player_indicators.update()
   
   
   def render(self):
@@ -154,8 +160,8 @@ class GameView(View):
     
     pygame.draw.rect(self.surface_gamelog, (0, 0, 0), self.gamelog_border, 5)
     self.gamelog_text.render()
-    self.display.screen.blit(self.surface_gamelog, (0, 0))
-    self.display.screen.blit(self.gamelog_text, (TEXT_PADDING, TEXT_PADDING))
+    self.display.screen.blit(self.surface_gamelog, (0, 65))
+    self.display.screen.blit(self.gamelog_text, (TEXT_PADDING, 65 + TEXT_PADDING))
     
     #self.black_card_text.render()
     #self.display.screen.blit(self.surface_black_card, (self.hmiddle - self.surface_black_card.get_width()/2, 50))
@@ -187,7 +193,9 @@ class GameView(View):
     self.button_start_leave.render()
     self.button_confirm.render()
 
-
+    self.player_indicators.render()
+    
+  
   def setMode(self, mode):
     self.mode = mode
 
