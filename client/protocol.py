@@ -26,6 +26,7 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_FREE_TO_JOIN, MSG_DELETED_GAME, self.deletedGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
+    self.addCallback(MODE_IN_GAME, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_IN_GAME, MSG_DRAW_CARDS, self.drawCards)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_CHANGE, self.czarChange)
     self.addCallback(MODE_IN_GAME, MSG_JOINED_GAME, self.joinedGame)
@@ -99,9 +100,11 @@ class ClientProtocol(JSONReceiver):
     else:
       self.sendMessage(MSG_CREATE_GAME, game_name='test')
 
-  def createGame(self, success, game_id = '', message = ''):
+  def createGame(self, success=True, game_id = '', message = '', name = '', user_id = ''):
     if success:
-      self.sendMessage(MSG_JOIN_GAME, game_id=game_id)
+      self.factory.addGame(game_id, name)
+      if self.getMode() == MODE_FREE_TO_JOIN and user_id == self.user_id:
+        self.sendMessage(MSG_JOIN_GAME, game_id=game_id)
     else:
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)

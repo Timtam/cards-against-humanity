@@ -75,5 +75,5 @@ class ClientFactory(Factory):
   def getGamePoints(self, id):
     game = self.findGame(id)
     if game is None:
-      return []
+      return {}
     return game['points']
