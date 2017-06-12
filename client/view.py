@@ -68,8 +68,9 @@ class View(object):
         try:
           if self.tab_order[self.tab_position].getEnable():
             self.tab_order[self.tab_position].getCallback()()
-            self.display.button_up_sound.stop()
-            self.display.button_up_sound.play()
+            sound = self.tab_order[self.tab_position].getClickSound()
+            sound.stop()
+            sound.play()
         except (AttributeError, TypeError):
           print traceback.format_exc()  
   

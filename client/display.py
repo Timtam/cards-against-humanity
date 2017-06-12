@@ -111,6 +111,7 @@ class Display(object):
 
     self.button_down_sound = sound('button_down')
     self.button_up_sound = sound('button_up')
+    self.card_sounds = soundlist("card",7)
     self.connect_sound = sound('connect')
     self.cursor_sound = sound('cursor')
     self.draw_sounds = soundlist('draw', 4)

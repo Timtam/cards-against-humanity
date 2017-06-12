@@ -113,8 +113,8 @@ class Button:
     
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == \
             MOUSE_BUTTON_LEFT and self.button_rect.collidepoint(event.pos):
-      self.display.button_up_sound.stop()
-      self.display.button_up_sound.play()
+      self.getClickSound().stop()
+      self.getClickSound().play()
       self.color = BUTTON_COLOR_HOVER
       self.clicked = True
     
@@ -166,6 +166,8 @@ class Button:
   def setEnable(self, value):
     self.enable = value
 
+  def getClickSound(self):
+    return self.display.button_up_sound
 
 
 # own TextInput class, which we added a rectangle
