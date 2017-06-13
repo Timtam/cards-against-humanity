@@ -198,7 +198,9 @@ class GameView(View):
   
   def setMode(self, mode):
     self.mode = mode
-    self.player_indicators.setUnchosen()
+
+    if mode != GAME_MODE_CZAR_DECIDING:
+      self.player_indicators.setUnchosen()
 
     if mode == GAME_MODE_CZAR_WAITING or mode == GAME_MODE_PAUSED:
       self.button_confirm.setEnable(False)
