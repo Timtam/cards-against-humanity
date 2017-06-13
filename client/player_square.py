@@ -26,6 +26,9 @@ class PlayerSquare(pygame.Surface):
     self.text_background = pygame.Surface((self.text_surface.get_width() + 8, self.text_surface.get_height() + 6))
     self.text_bckgrnd_border = self.text_background.get_rect()
     self.text_x = self.x + self.width/2 - self.text_surface.get_width()/2
+    # preventing x position of text of username will we outside of our screen
+    if self.text_x < 0:
+      self.text_x = 4
     self.border = pygame.Rect(0, 0, self.width, self.height)
     self.border_color = COLOR_BLACK
   
