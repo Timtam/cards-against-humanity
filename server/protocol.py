@@ -141,10 +141,8 @@ class ServerProtocol(JSONReceiver):
       self.sendMessage(MSG_CHOOSE_CARDS, **result)
       return
 
-    self.sendMessage(MSG_CHOOSE_CARDS, success = True)
-
     for user in game.getAllUsers():
-      user.protocol.sendMessage(MSG_CHOICES_REMAINING, remaining = game.choices_remaining, out_of = len(game.getAllUsers())-1)
+      user.protocol.sendMessage(MSG_CHOOSE_CARDS, user_id = self.user.id)
 
     # maybe we already got all choices and can send them to the players
     if game.choices_remaining == 0:

@@ -38,7 +38,6 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_DISCONNECTED_FROM_GAME, self.disconnectedFromGame)
     self.addCallback(MODE_IN_GAME, MSG_DELETED_GAME, self.deletedGame)
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
-    self.addCallback(MODE_IN_GAME, MSG_CHOICES_REMAINING, self.choicesRemaining)
     self.addCallback(MODE_IN_GAME, MSG_CHOICES, self.choices)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_DECISION, self.czarDecision)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
@@ -168,6 +167,7 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PLAYER)
     card = self.factory.card_database.getCard(card)
     self.factory.display.callFunction('self.view.setBlackCard', card)
+    self.factory.display.callFunction('self.view.player_indicators.setCzar', user_id)
     
   def currentUsers(self, users):
     for u in users:
@@ -201,12 +201,12 @@ class ClientProtocol(JSONReceiver):
   def sendStartGame(self):
     self.sendMessage(MSG_START_GAME)
 
-  def chooseCards(self, success, message = ""):
+  def chooseCards(self, success = True, message = '', user_id = 0):
     if not success:
       self.factory.display.callFunction('self.view.writeLogError', message)
+      return
 
-  def choicesRemaining(self, remaining, out_of):
-    self.factory.display.callFunction('self.view.writeLog', 'A selection was submitted. %d out of %d remaining'%(remaining, out_of))
+    self.factory.display.callFunction('self.view.player_indicators.setChosen', user_id)
 
   def choices(self, choices):
 
