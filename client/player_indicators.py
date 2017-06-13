@@ -19,7 +19,10 @@ class PlayerIndicators:
   
   
   def addPlayer(self, id):
-    self.player_squares.append(PlayerSquare(self.display, self.pos_x_new_square, self.y, SQUARE_SIZE[0], SQUARE_SIZE[1], id))
+    own = False
+    if len(self.player_squares) == 0:
+      own = True
+    self.player_squares.append(PlayerSquare(self.display, self.pos_x_new_square, self.y, SQUARE_SIZE[0], SQUARE_SIZE[1], id, own))
     self.pos_x_new_square += SQUARE_SIZE[0] + SPACE
   
   
@@ -44,7 +47,7 @@ class PlayerIndicators:
     self.pos_x_new_square = self.x
   
   
-  def setZar(self, id):
+  def setCzar(self, id):
     czar = self.getPlayer(id)
     czar.setCzar()
   

@@ -1,6 +1,7 @@
 import pygame
 
 COLOR_BLACK = (0, 0, 0)
+COLOR_GOLD = (212,175,55)
 COLOR_RED = (255, 0, 0)
 COLOR_GREEN = (0, 255, 0)
 COLOR_WHITE = (255, 255, 255)
@@ -8,7 +9,7 @@ COLOR_WHITE = (255, 255, 255)
 
 
 class PlayerSquare(pygame.Surface):
-  def __init__(self, display, x, y, width, height, id):
+  def __init__(self, display, x, y, width, height, id, own=False):
     pygame.Surface.__init__(self, (width, height))
     
     self.display = display
@@ -17,6 +18,7 @@ class PlayerSquare(pygame.Surface):
     self.width = width
     self.height = height
     self.id = id
+    self.own = own
     self.color = COLOR_WHITE
     self.czar = False
     self.chosen = False
@@ -31,6 +33,8 @@ class PlayerSquare(pygame.Surface):
       self.text_x = 4
     self.border = pygame.Rect(0, 0, self.width, self.height)
     self.border_color = COLOR_BLACK
+    if self.own:
+      self.border_color = COLOR_GOLD
   
   
   def getName(self):
@@ -84,10 +88,11 @@ class PlayerSquare(pygame.Surface):
   
   def render(self):
     self.fill(self.color)
-    pygame.draw.rect(self, COLOR_BLACK, self.border, 5)
+    pygame.draw.rect(self, self.border_color, self.border, 5)
     if self.show_name:
       self.showName()
-
+  
+  
   def getPoints(self):
     points = self.display.factory.getGamePoints(self.display.factory.client.game_id)
 
