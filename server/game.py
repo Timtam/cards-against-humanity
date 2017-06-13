@@ -201,6 +201,8 @@ class Game(object):
       white_cards += user['white_cards']
       user['white_cards'] = []
 
+    white_cards += self.white_cards
+
     self.white_cards = white_cards
       
     self.log.info('game {game} paused', game = self.id)
