@@ -87,3 +87,12 @@ class PlayerSquare(pygame.Surface):
     pygame.draw.rect(self, COLOR_BLACK, self.border, 5)
     if self.show_name:
       self.showName()
+
+  def getPoints(self):
+    points = self.display.factory.getGamePoints(self.display.factory.client.game_id)
+
+    for id in points.keys():
+      if id == self.id:
+        return points[id]
+
+    return 0
