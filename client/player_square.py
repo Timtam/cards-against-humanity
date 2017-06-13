@@ -24,13 +24,6 @@ class PlayerSquare(pygame.Surface):
     self.chosen = False
     self.unchosen = False
     self.show_name = False
-    self.text_surface = self.display.getFont().render(self.getName(), 1, COLOR_BLACK)
-    self.text_background = pygame.Surface((self.text_surface.get_width() + 8, self.text_surface.get_height() + 6))
-    self.text_bckgrnd_border = self.text_background.get_rect()
-    self.text_x = self.x + self.width/2 - self.text_surface.get_width()/2
-    # preventing x position of text of username will we outside of our screen
-    if self.text_x < 0:
-      self.text_x = 4
     self.border = pygame.Rect(0, 0, self.width, self.height)
     self.border_color = COLOR_BLACK
     if self.own:
@@ -42,6 +35,14 @@ class PlayerSquare(pygame.Surface):
   
   
   def showName(self):
+    self.text_surface = self.display.getFont().render(self.getName() + ": " + str(self.getPoints()), 1, COLOR_BLACK)
+    self.text_background = pygame.Surface((self.text_surface.get_width() + 8, self.text_surface.get_height() + 6))
+    self.text_bckgrnd_border = self.text_background.get_rect()
+    self.text_x = self.x + self.width/2 - self.text_surface.get_width()/2
+    # preventing x position of text of username will we outside of our screen
+    if self.text_x < 0:
+      self.text_x = 4
+      
     self.text_background.fill((255, 255, 255))
     pygame.draw.rect(self.text_background, COLOR_BLACK, self.text_bckgrnd_border, 1)
     self.display.screen.blit(self.text_background, (self.text_x - 4, self.y + self.width + 10 - 3))
