@@ -111,11 +111,14 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
 
-  def joinGame(self, success, message = '', game_id = 0):
+  def joinGame(self, success, message = '', game_id = 0, users = []):
     if success:
       self.game_id = game_id
       self.setMode(MODE_IN_GAME)
       self.factory.display.setView('GameView')
+      self.factory.display.callFunction('self.view.player_indicators.addPlayer', self.user_id)
+      for user in users:
+        self.factory.display.callFunction('self.view.player_indicators.addPlayer', user)
       self.factory.display.join_game_sound.stop()
       self.factory.display.join_game_sound.play()
     else:
@@ -129,6 +132,7 @@ class ClientProtocol(JSONReceiver):
   def joinedGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       self.factory.display.callFunction('self.view.writeLog', '%s joined the game'%self.factory.findUsername(user_id))
+      self.factory.display.callFunction('self.view.player_indicators.addPlayer', user_id)
       self.factory.display.join_game_sound.stop()
       self.factory.display.join_game_sound.play()
 
@@ -148,8 +152,6 @@ class ClientProtocol(JSONReceiver):
     self.factory.display.callFunction('self.view.writeLog', '%s started the game'%user)
 
     self.factory.updateGamePoints(self.game_id, points)
-
-    self.updateGameStatistics()
 
   def drawCards(self, cards):
     cards = [self.factory.card_database.getCard(c) for c in cards]
@@ -179,6 +181,7 @@ class ClientProtocol(JSONReceiver):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       if user_id != self.user_id:
         self.factory.display.callFunction('self.view.writeLog', '%s left the game'%self.factory.findUsername(user_id))
+        self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
       else:
         # TODO: going back to overview screen
         self.setMode(MODE_FREE_TO_JOIN)
@@ -189,6 +192,8 @@ class ClientProtocol(JSONReceiver):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       if user_id != self.user_id:
         self.factory.display.callFunction('self.view.writeLog', '%s disconnected, thus this game paused.'%self.factory.findUsername(user_id))
+        self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
+        self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
 
   def deletedGame(self, game_id):
     self.factory.removeGame(game_id)

@@ -3,13 +3,12 @@ import pygame
 COLOR_BLACK = (0, 0, 0)
 COLOR_RED = (255, 0, 0)
 COLOR_GREEN = (0, 255, 0)
-COLOR_GREY = (128, 128, 128)
 COLOR_WHITE = (255, 255, 255)
 
 
 
 class PlayerSquare(pygame.Surface):
-  def __init__(self, display, x, y, width, height, name):
+  def __init__(self, display, x, y, width, height, id):
     pygame.Surface.__init__(self, (width, height))
     
     self.display = display
@@ -17,15 +16,13 @@ class PlayerSquare(pygame.Surface):
     self.y = y
     self.width = width
     self.height = height
-    self.name = name
-    self.score = 0
+    self.id = id
     self.color = COLOR_WHITE
     self.czar = False
     self.chosen = False
     self.unchosen = False
-    self.disconnected = False
     self.show_name = False
-    self.text_surface = self.display.getFont().render(name, 1, COLOR_BLACK)
+    self.text_surface = self.display.getFont().render(self.getName(), 1, COLOR_BLACK)
     self.text_background = pygame.Surface((self.text_surface.get_width() + 8, self.text_surface.get_height() + 6))
     self.text_bckgrnd_border = self.text_background.get_rect()
     self.text_x = self.x + self.width/2 - self.text_surface.get_width()/2
@@ -34,7 +31,7 @@ class PlayerSquare(pygame.Surface):
   
   
   def getName(self):
-    return self.name
+    return self.display.factory.findUsername(self.id)
   
   
   def showName(self):
@@ -48,28 +45,18 @@ class PlayerSquare(pygame.Surface):
     self.czar = True
     self.unchosen = False
     self.chosen = False
-    self.disconnected = False
   
   
   def setChosen(self):
     self.chosen = True
     self.unchosen = False
     self.czar = False
-    self.disconnected = False
   
   
   def setUnchosen(self):
     self.unchosen = True
     self.chosen = False
     self.czar = False
-    self.disconnected = False
-  
-  
-  def setDisconnected(self):
-    self.disconnected = True
-    self.czar = False
-    self.chosen = False
-    self.unchosen = False
   
   
   def handleEvent(self, event):
@@ -88,8 +75,6 @@ class PlayerSquare(pygame.Surface):
       self.color = COLOR_RED
     elif self.chosen:
       self.color = COLOR_GREEN
-    elif self.disconnected:
-      self.color = COLOR_GREY
     else:
       self.color = COLOR_WHITE
   

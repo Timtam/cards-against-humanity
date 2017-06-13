@@ -30,6 +30,9 @@ class ClientFactory(Factory):
     })
 
   def findUsername(self, id):
+    if id == self.client.user_id:
+      return self.display.login_name
+
     user = [u for u in self.users if u['id'] == id]
     if len(user)==0:
       return ''

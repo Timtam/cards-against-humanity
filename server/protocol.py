@@ -108,7 +108,7 @@ class ServerProtocol(JSONReceiver):
       for user in game.getAllUsers():
         if user is not self.user:
           user.protocol.sendMessage(MSG_JOINED_GAME, user_id = self.user.id, game_id = game.id)
-    self.sendMessage(MSG_JOIN_GAME, **result)
+    self.sendMessage(MSG_JOIN_GAME, users = [u.id for u in game.getAllUsers() if u != self.user], **result)
 
   def startGame(self):
     game = self.user.getGame()

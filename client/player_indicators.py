@@ -18,34 +18,34 @@ class PlayerIndicators:
     self.player_squares = []
   
   
-  def addPlayer(self, name):
-    self.player_squares.append(PlayerSquare(self.display, self.pos_x_new_square, self.y, SQUARE_SIZE[0], SQUARE_SIZE[1], name))
+  def addPlayer(self, id):
+    self.player_squares.append(PlayerSquare(self.display, self.pos_x_new_square, self.y, SQUARE_SIZE[0], SQUARE_SIZE[1], id))
     self.pos_x_new_square += SQUARE_SIZE[0] + SPACE
   
   
-  def getPlayer(self, name):
+  def getPlayer(self, id):
     for player in self.player_squares:
-      if player.getName() == name:
+      if player.id == id:
         return player
 
 
-  def delPlayer(self, name):
+  def delPlayer(self, id):
     for player in self.player_squares:
-      if player.getName() == name:
+      if player.id == id:
         self.player_squares.remove(player)
     tmp_players = self.player_squares
     self.clearPlayers()
     for player in tmp_players:
-      self.addPlayer(player.getName())
+      self.addPlayer(player.id)
 
 
   def clearPlayers(self):
-    del self.player_squares
+    self.player_squares = []
     self.pos_x_new_square = self.x
   
   
-  def setZar(self, name):
-    czar = self.getPlayer(name)
+  def setZar(self, id):
+    czar = self.getPlayer(id)
     czar.setCzar()
   
   
@@ -54,14 +54,9 @@ class PlayerIndicators:
       player.setUnchosen()
   
   
-  def setChosen(self, name):
-    player = self.getPlayer(name)
+  def setChosen(self, id):
+    player = self.getPlayer(id)
     player.setChosen()
-  
-  
-  def setDisconnected(self, name):
-    player = self.getPlayer(name)
-    player.setDisconnected()
   
   
   def handleEvent(self, event):
