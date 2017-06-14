@@ -10,7 +10,7 @@ VSPACE = 20
 
 
 class ScrolledPanel(pygame.Surface):
-  def __init__(self, display, x, y, width, height, background_color=(255, 255, 255)):
+  def __init__(self, display, x, y, width, height, vspace=VSPACE, background_color=(255, 255, 255)):
     pygame.Surface.__init__(self, (width, height))
 
     self.focus = False
@@ -21,6 +21,7 @@ class ScrolledPanel(pygame.Surface):
     self.y = y
     self.width = width
     self.height = height
+    self.vspace = vspace
     self.background_color = background_color
     
     self.available_width = self.width - SCROLLBAR_THICKNESS
@@ -61,7 +62,7 @@ class ScrolledPanel(pygame.Surface):
     for i, surface in enumerate(self.surfaces):
       height += surface.get_height()
       if i is not last:
-        height += VSPACE
+        height += self.vspace
       
     return height
     
@@ -95,6 +96,10 @@ class ScrolledPanel(pygame.Surface):
     return self.label
   
   
+  def getVSpace(self):
+    return self.vspace
+  
+  
   def handleEvent(self, event):
     for surface in self.surfaces:
       surface.handleEvent(event)
@@ -103,9 +108,12 @@ class ScrolledPanel(pygame.Surface):
       if event.rel[1] != 0:
         move = max(event.rel[1], self.track.top - self.knob.top)
         move = min(move, self.track.bottom - self.knob.bottom)
-      
+        
         if move != 0:
           self.knob.move_ip(0, move)
+          new_y = self.knob.top / self.ratio
+          for surface in self.surfaces:
+            surface.setNewYPos(surface.getYPos() - new_y)
   
     elif event.type == pygame.MOUSEBUTTONDOWN and self.knob.collidepoint(
                     event.pos[0] - self.x, event.pos[1] - self.y):
@@ -131,10 +139,14 @@ class ScrolledPanel(pygame.Surface):
         # print("scolled down")  # debug
         move = max(SCROLL_SPEED * self.ratio, self.track.top - self.knob.top)
       move = min(move, self.track.bottom - self.knob.bottom)
+      
       if move != 0:
         self.knob.move_ip(0, move)
-
-
+        new_y = self.knob.top / self.ratio
+        for surface in self.surfaces:
+          surface.setNewYPos(surface.getYPos() - new_y)
+  
+  
   def update(self):
     pass
   
@@ -147,7 +159,7 @@ class ScrolledPanel(pygame.Surface):
     for surface in self.surfaces:
       surface.render()
       self.content_surface.blit(surface, (0, surface_pos_y))
-      surface_pos_y += surface.get_height() + VSPACE
+      surface_pos_y += surface.get_height() + self.vspace
 
     self.blit(self.content_surface, (0, (self.knob.top / self.ratio) * -1))
     if self.ratio != 1.0:
