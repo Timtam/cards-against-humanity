@@ -232,8 +232,6 @@ class ClientProtocol(JSONReceiver):
 
     self.factory.updateGamePoints(self.game_id, [[winner, 1]])
 
-    self.updateGameStatistics()
-
     if end == True:
       self.factory.display.callFunction('self.view.writeLog', 'this ends the game. Yay!')
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
@@ -243,14 +241,3 @@ class ClientProtocol(JSONReceiver):
 
   def sendCzarDecision(self, cards):
     self.sendMessage(MSG_CZAR_DECISION, cards = [c.id for c in cards])
-
-  def updateGameStatistics(self):
-
-    text = ''
-    points = self.factory.getGamePoints(self.game_id)
-
-    for p in points.keys():
-      user = 'you' if p == self.user_id else self.factory.findUsername(p)
-      text += user + ": %d\n"%(points[p])
-
-    self.factory.display.callFunction('self.view.writeLog', text)

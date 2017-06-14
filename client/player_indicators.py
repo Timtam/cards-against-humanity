@@ -1,4 +1,5 @@
-from player_square import PlayerSquare
+from .constants import *
+from .player_square import PlayerSquare
 
 SQUARE_SIZE = (50, 50)
 SPACE = 5
@@ -78,3 +79,22 @@ class PlayerIndicators:
       player.render()
       self.display.screen.blit(player, (self.x + pos_x, self.y))
       pos_x += player.get_width() + SPACE
+
+
+  def getEnable(self):
+    return False
+
+
+  def getLabel(self):
+    text = ''
+    for player in self.player_squares:
+      text += "%s: %d points"%(player.getName(), player.getPoints())
+      if self.display.view.mode != GAME_MODE_PAUSED:
+        if player.unchosen:
+          text += " (no cards chosen yet)"
+        elif player.chosen:
+          text += " (cards already chosen)"
+        elif player.czar:
+          text += " (currently the czar)"
+      text += "\n"
+    return text[:-1]
