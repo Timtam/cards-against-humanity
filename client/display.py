@@ -117,6 +117,8 @@ class Display(object):
     self.draw_sounds = soundlist('draw', 4)
     self.error_sound = sound('error')
     self.game_error_sound = sound('game_error')
+    self.game_score_sound = sound('game_score')
+    self.game_start_sound = sound('game_start')
     self.join_game_sound = sound('join_game')
     self.leave_game_sound = sound('leave_game')
     self.login_sound = sound('login')

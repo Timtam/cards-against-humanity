@@ -151,6 +151,8 @@ class ClientProtocol(JSONReceiver):
     self.factory.display.callFunction('self.view.writeLog', '%s started the game'%user)
 
     self.factory.updateGamePoints(self.game_id, points)
+    self.factory.display.game_start_sound.stop()
+    self.factory.display.game_start_sound.play()
 
   def drawCards(self, cards):
     cards = [self.factory.card_database.getCard(c) for c in cards]
@@ -231,6 +233,10 @@ class ClientProtocol(JSONReceiver):
     self.factory.display.callFunction('self.view.writeLog', ('you' if winner == self.user_id else self.factory.findUsername(winner)) + " " + ('win' if self.user_id == winner else 'wins') + ' this round and ' + ('gain' if winner == self.user_id else 'gains' ) + ' a point.')
 
     self.factory.updateGamePoints(self.game_id, [[winner, 1]])
+
+    if winner == self.user_id:
+      self.factory.display.game_score_sound.stop()
+      self.factory.display.game_score_sound.play()
 
     if end == True:
       self.factory.display.callFunction('self.view.writeLog', 'this ends the game. Yay!')
