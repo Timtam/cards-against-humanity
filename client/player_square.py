@@ -28,6 +28,7 @@ class PlayerSquare(pygame.Surface):
     self.border_color = COLOR_BLACK
     if self.own:
       self.border_color = COLOR_GOLD
+    self.rect = self.get_rect()
   
   
   def getName(self):
@@ -69,7 +70,7 @@ class PlayerSquare(pygame.Surface):
   
   def handleEvent(self, event):
     if event.type == pygame.MOUSEMOTION:
-      if self.get_rect().collidepoint(event.pos[0] - self.x,
+      if self.rect.collidepoint(event.pos[0] - self.x,
                                       event.pos[1] - self.y):
         self.show_name = True
       else:

@@ -40,6 +40,7 @@ class CardSurface(pygame.Surface):
     self.border_color = COLOR_BLACK
     
     self.card_text = ScrolledTextPanel(self.display, self.x + TEXT_PADDING, self.y + TEXT_PADDING, self.width - 2 * TEXT_PADDING, self.height - 2 * TEXT_PADDING, False, self.color)
+    self.rect = self.get_rect()
   
   
   def addText(self, text, color=(0, 0, 0)):
@@ -116,14 +117,14 @@ class CardSurface(pygame.Surface):
     if self.getEnable():
     # hover
       if event.type == pygame.MOUSEMOTION and not self.chosen:
-        if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
+        if self.rect.collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
           self.border_color = BORDER_COLOR_HOVER
         else:
           self.border_color = COLOR_BLACK
       
       # click / chose
       if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-        if self.get_rect().collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
+        if self.rect.collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
           if self.callback:
             self.callback()
           else:
