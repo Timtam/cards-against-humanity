@@ -1,6 +1,5 @@
 import pygame
 import pygame.locals as pl
-import traceback
 
 from twisted.logger import Logger
 
@@ -72,7 +71,7 @@ class View(object):
             sound.stop()
             sound.play()
         except (AttributeError, TypeError):
-          print traceback.format_exc()  
+          pass
   
   def loadImage(self, filename, colorkey=None):
     

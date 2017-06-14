@@ -46,6 +46,7 @@ class GameView(View):
     self.tab_order = [self.button_start_leave, self.button_confirm, self.gamelog_text]
     self.createCardSurfaces()
     self.setMode(GAME_MODE_PAUSED)
+    self.tab_order.append(self.player_indicators)
     
     
   def createCardSurfaces(self):
