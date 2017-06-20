@@ -39,6 +39,7 @@ class ScrolledPanel(pygame.Surface):
     self.knob.height = self.track.height * self.ratio
     self.scrolling = False
     self.mouse_in_me = False
+    self.cursor = -1
     
     
   def buildScrollbar(self):
@@ -72,12 +73,15 @@ class ScrolledPanel(pygame.Surface):
     self.surfaces.append(surface)
     self.virtual_height = self.getVirtualHeight()
     self.content_surface = pygame.Surface((self.available_width, self.virtual_height))
+    if self.cursor == -1:
+      self.cursor = 0
     
     self.buildScrollbar()
     
     
   def clearSurfaces(self):
-    del self.surfaces
+    self.surfaces = []
+    self.cursor = -1
     
     
   def setFocus(self, value):
@@ -93,7 +97,18 @@ class ScrolledPanel(pygame.Surface):
     
     
   def getLabel(self):
-    return self.label
+    label = self.label
+    if label != '':
+      label += ': '
+
+    if self.cursor == -1:
+      label += 'empty'
+    else:
+      try:
+        label += self.surfaces[self.cursor].getLabel()
+      except AttributeError:
+        label += 'unknown'
+    return label
   
   
   def getVSpace(self):
@@ -145,6 +160,21 @@ class ScrolledPanel(pygame.Surface):
         new_y = self.knob.top / self.ratio
         for surface in self.surfaces:
           surface.setNewYPos(surface.getYPos() - new_y)
+
+    if self.focus and event.type == pygame.KEYDOWN:
+      speak = False
+      if event.key == pygame.K_DOWN:
+        self.cursor = min(self.cursor + 1, len(self.surfaces)-1)
+        speak = True
+      elif event.key == pygame.K_UP:
+        self.cursor = max(self.cursor - 1, 0)
+        speak = True
+
+      if speak:
+        try:
+          self.display.view.speak(self.surfaces[self.cursor].getLabel())
+        except AttributeError:
+          self.display.view.speak('unknown')
   
   
   def update(self):
