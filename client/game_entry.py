@@ -8,7 +8,7 @@ COLOR_GREEN = (0, 255, 0)
 
 
 class GameEntry(pygame.Surface):
-  def __init__(self, display, x, y, width, height, text):
+  def __init__(self, display, x, y, width, height, id):
     pygame.Surface.__init__(self, (width, height))
     
     self.display = display
@@ -18,13 +18,14 @@ class GameEntry(pygame.Surface):
     self.height = height
     self.new_y = self.y
     
+    self.id = id
+    
     self.clicked = False
     
     self.border = pygame.Rect(0, 0, self.width, self.height)
     self.border_color = COLOR_BLACK
     
-    self.text = text
-    self.rendered_text = self.display.getFont().render(text, 1, (0, 0, 0))
+    self.rendered_text = self.display.getFont().render(str(id), 1, (0, 0, 0))
     
     self.rect = self.get_rect()
   
@@ -35,6 +36,10 @@ class GameEntry(pygame.Surface):
   
   def getYPos(self):
     return self.y
+  
+  
+  def getID(self):
+    return self.id
   
   
   def handleEvent(self, event):
@@ -68,4 +73,4 @@ class GameEntry(pygame.Surface):
 
 
   def getLabel(self):
-    return self.text
+    return str(self.id)

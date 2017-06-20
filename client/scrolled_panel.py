@@ -82,7 +82,28 @@ class ScrolledPanel(pygame.Surface):
   def clearSurfaces(self):
     self.surfaces = []
     self.cursor = -1
-    
+    self.ratio = 1.0
+  
+  
+  def deleteSurface(self, id):
+    for surface in self.surfaces:
+      if surface.id == id:
+        self.surfaces.remove(surface)
+    tmp_surfaces = self.surfaces
+    self.clearSurfaces()
+    for surface in tmp_surfaces:
+      self.surfaces.append(surface)
+  
+  
+  def getSurface(self, surface_id):
+    for surface in self.surfaces:
+      if surface.id == surface_id:
+        return surface
+  
+  
+  def getSurfaces(self):
+    return self.surfaces
+  
     
   def setFocus(self, value):
     self.focus = value
