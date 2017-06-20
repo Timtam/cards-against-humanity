@@ -27,17 +27,15 @@ class OverviewView(View):
       self.game_overview.addSurface(dummy)
     
     self.button_join = Button(self.display, "Join Game", self.display.getFont(), (self.screen_size[0] / 2, self.screen_size[1] * 0.8))
+    self.tab_order = [self.game_overview, self.button_join]
     
     
   def handleEvent(self, event):
+    View.handleEvent(self, event)
     self.game_overview.handleEvent(event)
     self.button_join.handleEvent(event)
     
     
-  def update(self):
-    pass
-  
-  
   def render(self):
     self.surface_overview.fill((255, 255, 255))
     pygame.draw.rect(self.surface_overview, (0, 0, 0), self.overview_border, 5)
