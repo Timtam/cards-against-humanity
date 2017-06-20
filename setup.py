@@ -42,6 +42,10 @@ include_files = [(os.path.join(getScriptDirectory(), 'assets', x), os.path.relpa
 
 include_files += [(os.path.join(getScriptDirectory(), "accessible_output", "lib", x), os.path.join("lib", x)) for x in os.listdir(os.path.join(getScriptDirectory(), "accessible_output", "lib"))]
 
+if os.path.exists(os.path.join(getScriptDirectory(), 'cards.db')):
+  print 'Card database found, zipping it too'
+  include_files += [(os.path.join(getScriptDirectory(), 'cards.db'), 'cards.db')]
+
 build_exe_options = {
                      "includes": [
                                   "zope.interface"
