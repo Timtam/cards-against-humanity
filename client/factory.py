@@ -80,3 +80,9 @@ class ClientFactory(Factory):
     if game is None:
       return {}
     return game['points']
+
+  def resetGamePoints(self, id):
+    game = self.findGame(id)
+    if game is None:
+      return
+    game['points'] = {}

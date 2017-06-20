@@ -196,6 +196,7 @@ class ClientProtocol(JSONReceiver):
         self.factory.display.callFunction('self.view.writeLog', '%s disconnected, thus this game paused.'%self.factory.findUsername(user_id))
         self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
         self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
+        self.factory.resetGamePoints(self.game_id)
 
   def deletedGame(self, game_id):
     self.factory.removeGame(game_id)
@@ -241,6 +242,7 @@ class ClientProtocol(JSONReceiver):
     if end == True:
       self.factory.display.callFunction('self.view.writeLog', 'this ends the game. Yay!')
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
+      self.factory.resetGamePoints(self.game_id)
 
   def sendChooseCards(self, cards):
     self.sendMessage(MSG_CHOOSE_CARDS, cards = [c.id for c in cards])
