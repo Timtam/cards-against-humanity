@@ -8,7 +8,7 @@ COLOR_GREEN = (0, 255, 0)
 
 
 class GameEntry(pygame.Surface):
-  def __init__(self, display, x, y, width, height):
+  def __init__(self, display, x, y, width, height, id):
     pygame.Surface.__init__(self, (width, height))
     
     self.display = display
@@ -17,6 +17,8 @@ class GameEntry(pygame.Surface):
     self.width = width
     self.height = height
     self.new_y = self.y
+    
+    self.id = id
     
     self.clicked = False
     
@@ -34,6 +36,10 @@ class GameEntry(pygame.Surface):
   
   def getYPos(self):
     return self.y
+  
+  
+  def getID(self):
+    return self.id
   
   
   def handleEvent(self, event):
