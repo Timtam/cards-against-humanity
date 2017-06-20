@@ -41,6 +41,7 @@ class Card(object):
     # will run through the isValid check
     if self.isValid(text):
       self.__text = text
+      self.unlinkAll()
 
   def getInternalText(self):
     return self.__text
