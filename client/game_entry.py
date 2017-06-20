@@ -8,7 +8,7 @@ COLOR_GREEN = (0, 255, 0)
 
 
 class GameEntry(pygame.Surface):
-  def __init__(self, display, x, y, width, height):
+  def __init__(self, display, x, y, width, height, text):
     pygame.Surface.__init__(self, (width, height))
     
     self.display = display
@@ -23,7 +23,8 @@ class GameEntry(pygame.Surface):
     self.border = pygame.Rect(0, 0, self.width, self.height)
     self.border_color = COLOR_BLACK
     
-    self.text = self.display.getFont().render("This is a looooooooooooooooooooooooooooooooooooooooooooooooooooooong dummy entry", 1, (0, 0, 0))
+    self.text = text
+    self.rendered_text = self.display.getFont().render(text, 1, (0, 0, 0))
     
     self.rect = self.get_rect()
   
@@ -63,4 +64,8 @@ class GameEntry(pygame.Surface):
   def render(self):
     self.fill((255, 255, 255))
     pygame.draw.rect(self, self.border_color, self.border, BORDER)
-    self.blit(self.text, (10, 10))
+    self.blit(self.rendered_text, (10, 10))
+
+
+  def getLabel(self):
+    return self.text

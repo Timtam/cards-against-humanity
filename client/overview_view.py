@@ -23,7 +23,7 @@ class OverviewView(View):
     
     surface_pos_y = PADDING
     for i in range(10):
-      dummy = GameEntry(self.display, PADDING, surface_pos_y, self.game_overview.getAvailableWidth() - 20, 50)
+      dummy = GameEntry(self.display, PADDING, surface_pos_y, self.game_overview.getAvailableWidth() - 20, 50, 'some random game')
       surface_pos_y += dummy.get_height() + self.game_overview.getVSpace()
       self.game_overview.addSurface(dummy)
     
