@@ -100,6 +100,8 @@ class ClientProtocol(JSONReceiver):
   def createGame(self, success=True, game_id = '', message = '', name = '', user_id = ''):
     if success:
       self.factory.addGame(game_id, name)
+      if self.getMode() == MODE_FREE_TO_JOIN:
+        self.factory.display.callFunction('self.view.addGame', game_id)
       if self.getMode() == MODE_FREE_TO_JOIN and user_id == self.user_id:
         self.sendMessage(MSG_JOIN_GAME, game_id=game_id)
     else:
@@ -196,6 +198,8 @@ class ClientProtocol(JSONReceiver):
 
   def deletedGame(self, game_id):
     self.factory.removeGame(game_id)
+    if self.getMode() == MODE_FREE_TO_JOIN:
+      self.factory.display.callFunction('self.view.deleteGame', game_id)
 
   def sendStartGame(self):
     self.sendMessage(MSG_START_GAME)
