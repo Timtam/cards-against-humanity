@@ -102,8 +102,6 @@ class ClientProtocol(JSONReceiver):
       self.factory.addGame(game_id, name)
       if self.getMode() == MODE_FREE_TO_JOIN:
         self.factory.display.callFunction('self.view.addGame', game_id)
-      if self.getMode() == MODE_FREE_TO_JOIN and user_id == self.user_id:
-        self.sendMessage(MSG_JOIN_GAME, game_id=game_id)
     else:
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
