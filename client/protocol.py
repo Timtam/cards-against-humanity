@@ -94,7 +94,6 @@ class ClientProtocol(JSONReceiver):
     self.sendMessage(MSG_DATABASE_KNOWN)
 
   def syncFinished(self):
-    self.factory.display.view.loggedInMessage()
     self.setMode(MODE_FREE_TO_JOIN)
     if len(self.factory.games)>0:
       self.sendMessage(MSG_JOIN_GAME, game_id = self.factory.games[0]['id'])
