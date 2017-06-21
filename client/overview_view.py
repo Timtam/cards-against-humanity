@@ -26,7 +26,8 @@ class OverviewView(View):
     
     self.button_join = Button(self.display, "Join Game", self.font, (50, self.screen_size[1] * 0.8))
     self.button_create = Button(self.display, "Create Game", self.font, (250, self.screen_size[1] * 0.8))
-    self.button_close = Button(self.display, "Close Game Client", self.font, (450, self.screen_size[1] * 0.8))
+    self.button_close = Button(self.display, "Close", self.font, (450, self.screen_size[1] * 0.8))
+    self.button_close.setCallback(self.onClose)
     self.tab_order = [self.game_overview, self.button_join, self.button_create, self.button_close]
 
     for game in self.display.factory.getAllGames():
@@ -69,3 +70,7 @@ class OverviewView(View):
     self.button_join.render()
     self.button_create.render()
     self.button_close.render()
+
+
+  def onClose(self):
+    pygame.event.post(pygame.event.Event(pygame.QUIT))
