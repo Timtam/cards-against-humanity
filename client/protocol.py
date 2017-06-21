@@ -129,25 +129,24 @@ class ClientProtocol(JSONReceiver):
 
   def joinedGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
-      self.factory.display.callFunction('self.view.writeLog', '%s joined the game'%self.factory.findUsername(user_id))
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} joined the game').format(player = self.factory.findUsername(user_id)))
       self.factory.display.callFunction('self.view.player_indicators.addPlayer', user_id)
       self.factory.display.join_game_sound.stop()
       self.factory.display.join_game_sound.play()
 
   def loggedIn(self, user_id, user_name):
     self.factory.addUser(user_id, user_name)
-    print user_name+ ' logged in'
 
   def loggedOff(self, user_id):
     self.factory.removeUser(user_id)
 
   def startedGame(self, user_id, points):
     if user_id == self.user_id:
-      user = 'you'
+      user = 'You'
     else:
       user = self.factory.findUsername(user_id)
 
-    self.factory.display.callFunction('self.view.writeLog', '%s started the game'%user)
+    self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} started the game').format(player = user))
 
     self.factory.updateGamePoints(self.game_id, points)
     self.factory.display.game_start_sound.stop()
@@ -161,10 +160,10 @@ class ClientProtocol(JSONReceiver):
 
   def czarChange(self, user_id, card):
     if user_id == self.user_id:
-      self.factory.display.callFunction('self.view.writeLog', 'you were chosen the new czar and therefore flip a black card open. You won\'t be able to play any white card until the next player will be chosen to be the czar.')
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("You were chosen the new czar and therefore flip a black card open. You won't be able to play any white card until the next player will be chosen to be the czar."))
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_CZAR_WAITING)
     else:
-      self.factory.display.callFunction('self.view.writeLog', '%s was chosen the new czar and therefore flips a new black card open'%self.factory.findUsername(user_id))
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("{player} was chosen the new czar and therefore flips a new black card open.").format(player = self.factory.findUsername(user_id)))
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PLAYER)
     card = self.factory.card_database.getCard(card)
     self.factory.display.callFunction('self.view.setBlackCard', card)
@@ -181,7 +180,7 @@ class ClientProtocol(JSONReceiver):
   def leftGame(self, game_id, user_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       if user_id != self.user_id:
-        self.factory.display.callFunction('self.view.writeLog', '%s left the game'%self.factory.findUsername(user_id))
+        self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} left the game.').format(player = self.factory.findUsername(user_id)))
         self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
       else:
         # TODO: going back to overview screen
@@ -192,7 +191,7 @@ class ClientProtocol(JSONReceiver):
   def disconnectedFromGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       if user_id != self.user_id:
-        self.factory.display.callFunction('self.view.writeLog', '%s disconnected, thus this game paused.'%self.factory.findUsername(user_id))
+        self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} disconnected, thus this game paused.').format(player = self.factory.findUsername(user_id)))
         self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
         self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
         self.factory.resetGamePoints(self.game_id)
@@ -215,10 +214,10 @@ class ClientProtocol(JSONReceiver):
     choices = [[self.factory.card_database.getCard(c) for c in o] for o in choices]
 
     if self.factory.display.view.mode == GAME_MODE_CZAR_WAITING:
-      self.factory.display.callFunction('self.view.writeLog', 'All players confirmed their choices. You now have to select the choice which you think is the best.')
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('All players confirmed their choices. You now have to select the choice which you think is the best.'))
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_CZAR_DECIDING)
     else:
-      self.factory.display.callFunction('self.view.writeLog', 'All players confirmed their choices and the czar now has to select the best one out of them.')
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('All players confirmed their choices and the czar now has to select the best one out of them.'))
 
     self.factory.display.callFunction('self.view.setChoices', choices)
 
@@ -228,9 +227,11 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.callFunction('self.view.writeLogError', message)
       return
 
-    user = 'you' if winner == self.user_id else self.factory.findUsername(winner)
-
-    self.factory.display.callFunction('self.view.writeLog', ('you' if winner == self.user_id else self.factory.findUsername(winner)) + " " + ('win' if self.user_id == winner else 'wins') + ' this round and ' + ('gain' if winner == self.user_id else 'gains' ) + ' a point.')
+    if winner == self.user_id:
+      text = self.factory.display.translator.translate("You win this round and therefore gain a point.")
+    else:
+      text = self.factory.display.translator.translate("{player} wins this round and therefore gains a point.").format(player = self.factory.findUsername(winner))
+    self.factory.display.callFunction('self.view.writeLog', text)
 
     self.factory.updateGamePoints(self.game_id, [[winner, 1]])
 
@@ -239,7 +240,10 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.game_score_sound.play()
 
     if end == True:
-      self.factory.display.callFunction('self.view.writeLog', 'this ends the game. Yay!')
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("This ends the game."))
+
+      # TODO: displaying win or lose messages
+
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
       self.factory.resetGamePoints(self.game_id)
 

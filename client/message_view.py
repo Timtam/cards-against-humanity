@@ -98,7 +98,6 @@ class MessageView(View):
     self.message_box = pygame.Surface((self.width, self.height))
     self.message_border = pygame.Rect(0, 0, self.width, self.height)
     self.box_y = self.vmiddle - self.height / 2
-    #self.scrolled_text.setNewScreen(self.message_box)
     self.scrolled_text = ScrolledTextPanel(self.display, self.box_x + PADDING_LEFT_RIGHT, self.box_y + PADDING_TOP_BOTTOM,
                                               self.width - 2 *
                                               PADDING_LEFT_RIGHT,

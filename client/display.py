@@ -144,7 +144,7 @@ class Display(object):
       self.view.errorMessage(failure.getErrorMessage())
     def dnsLookupErrback(failure):
       failure.trap(DNSLookupError)
-      self.view.errorMessage('unable to lookup ip adress for servername: %s'%failure.getErrorMessage())
+      self.view.errorMessage(self.translator.translate('Unable to lookup ip adress for servername: {failure}').format(failure = failure.getErrorMessage()))
     self.login_name = username
     self.login_password = password
     self.server_name = host

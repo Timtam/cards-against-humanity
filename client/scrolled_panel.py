@@ -153,11 +153,9 @@ class ScrolledPanel(pygame.Surface):
     if self.mouse_in_me and event.type == pygame.MOUSEBUTTONDOWN:
       move = 0
       if event.button == BUTTON_SCROLL_WHEEL_UP:
-        # print("scrolled up")  # debug
         move = max(-1 * SCROLL_SPEED * self.ratio,
                    self.track.top - self.knob.top)
       elif event.button == BUTTON_SCROLL_WHEEL_DOWN:
-        # print("scolled down")  # debug
         move = max(SCROLL_SPEED * self.ratio, self.track.top - self.knob.top)
       move = min(move, self.track.bottom - self.knob.bottom)
       

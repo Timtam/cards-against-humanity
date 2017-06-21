@@ -95,11 +95,11 @@ class CardSurface(pygame.Surface):
         self.card_text.setBackgroundColor(COLOR_WHITE)
     else:
       if self.card_type is CARD_BLACK:
-        self.card_text.addText(self.display.translator.translate('no card'), COLOR_WHITE)
+        self.card_text.addText(self.display.translator.translate('No card'), COLOR_WHITE)
         self.color = COLOR_BLACK
         self.card_text.setBackgroundColor(COLOR_BLACK)
       else:
-        self.card_text.addText(self.display.translator.translate('no card'))
+        self.card_text.addText(self.display.translator.translate('No card'))
         self.color = COLOR_WHITE
         self.card_text.setBackgroundColor(COLOR_WHITE)
 
