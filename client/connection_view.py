@@ -4,31 +4,25 @@ from .message_view import MessageView
 # including the login and connection progress, but also all errors
 class ConnectionView(MessageView):
   def connectingMessage(self, address):
-    self.setText('connecting to %s...'%address)
+    self.setText(self.display.translator.translate('Connecting to {address}').format(address = address))
     self.setButton('', None)
     self.display.connect_sound.stop()
     self.display.connect_sound.play()
 
   def clientRefusedMessage(self, reason):
-    self.errorMessage('connection refused by the server:\n%s'%reason)
+    self.errorMessage(self.display.translator.translate('Connection refused by the server')+':\n%s'%reason)
 
   def loginMessage(self):
-    self.setText('logging in...')
+    self.setText(self.display.translator.translate('Logging in...'))
     self.setButton('', None)
 
   def syncMessage(self):
-    self.setText('syncing data...')
+    self.setText(self.display.translator.translate('Syncing data...'))
     self.setButton('', None)
-
-  def loggedInMessage(self):
-    self.setText('logged in successfully')
-    self.setButton('OK', self.onOK)
-    self.display.login_sound.stop()
-    self.display.login_sound.play()
 
   def errorMessage(self, message):
     self.setText(message)
-    self.setButton('OK', self.onOK)
+    self.setButton(self.display.translator.translate('OK'), self.onOK)
     self.display.error_sound.stop()
     self.display.error_sound.play()
 

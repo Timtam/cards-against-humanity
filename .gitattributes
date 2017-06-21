@@ -2,6 +2,7 @@
 
 *.py text
 *.md text
+*.txt text
 *.dll binary
 *.ttf binary
 *.ogg binary

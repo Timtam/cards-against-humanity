@@ -88,13 +88,13 @@ class PlayerIndicators:
   def getLabel(self):
     text = ''
     for player in self.player_squares:
-      text += "%s: %d points"%(player.getName(), player.getPoints())
+      text += self.display.translator.translate("{player}: {points} points").format(player = player.getName(), points = str(player.getPoints()))
       if self.display.view.mode != GAME_MODE_PAUSED:
         if player.unchosen:
-          text += " (no cards chosen yet)"
+          text += " ("+self.display.translator.translate("no cards chosen yet")+")"
         elif player.chosen:
-          text += " (cards already chosen)"
+          text += " ("+self.display.translator.translate("cards already chosen")+")"
         elif player.czar:
-          text += " (currently the czar)"
+          text += " ("+self.display.translator.translate("currently the czar")+")"
       text += "\n"
     return text[:-1]

@@ -145,9 +145,9 @@ class Button:
   
   
   def getLabel(self):
-    label = self.label + " button"
+    label = self.label + " "+self.display.translator.translate("button")
     if not self.getEnable():
-      label += " (disabled)"
+      label += " ("+self.display.translator.translate("disabled")+")"
     return label
   
   
@@ -199,12 +199,7 @@ class TextInput:
   def setFocus(self, flag):
     self.focus = flag
     self.input.setFocus(flag)
-    #if flag:
-    #  pygame.mouse.set_cursor(self.cursor_size, self.cursor_hotspot,
-    #                          *self.cursor)
-    #else:
-    #  pygame.mouse.set_cursor(*pygame.cursors.arrow)
-  
+
   
   def handleEvent(self, event):
     self.input.handleEvent(event)
@@ -231,7 +226,6 @@ class TextInput:
       if self.clicked:
         self.setFocus(True)
       self.clicked = False
-      # self.rect_color = (255, 0, 0) # debug
     
     # if left mouse button clicked anywhere else, focus is gone ("dirty"
     # solution)
@@ -239,7 +233,6 @@ class TextInput:
             MOUSE_BUTTON_LEFT and not self.input_rect.collidepoint(event.pos):
       self.setFocus(False)
       self.clicked = False
-      # self.rect_color = (0, 0, 0)  # debug
     else:
       self.clicked = False
   
@@ -258,9 +251,9 @@ class TextInput:
   
   
   def getLabel(self):
-    label = self.label + " input: "
+    label = self.label + " "+self.display.translator.translate("input")+": "
     if self.input.get_text() == '':
-      label += "empty"
+      label += self.display.translator.translate("empty")
     else:
       label += self.input.getPrintText()
     return label
