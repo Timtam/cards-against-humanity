@@ -35,7 +35,7 @@ class Translator(object):
   def translate(self, string):
 
     if self.xml is not None:
-      translations = self.xml.xpath('./string/origin[text() = "'+string+"']/../translation")
+      translations = self.xml.xpath('string/origin[text() = "'+string+'"]/../translation')
       if len(translations)>0:
         return translations[0].text
       else:
@@ -54,7 +54,7 @@ class Translator(object):
     if self.untranslated_xml is not None and len(self.untranslated_xml.getroot().xpath(self.node)[0])>0:
       # we got some untranslated strings
       # we will store them inside a file
-      self.untranslated_xml.write(os.path.join(getScriptDirectory(), 'untranslated', self.language+'.xml'), pretty_print = True, encoding = 'utf-8')
+      self.untranslated_xml.write(os.path.join(getScriptDirectory(), 'untranslated', self.language+'.xml'), pretty_print = True, encoding = 'utf-8', xml_declaration=True)
     self.init()
 
   def init(self):
@@ -66,7 +66,6 @@ class Translator(object):
     if not os.path.exists(path):
       element = ET.Element('translations')
       xml = ET.ElementTree(element)
-      xml.docinfo.xml_version = 1.0
       ET.SubElement(element, self.node)
     else:
       xml = ET.parse(path)

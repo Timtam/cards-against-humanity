@@ -61,7 +61,7 @@ class CardSurface(pygame.Surface):
       label += self.label + " "
 
     if self.chosen:
-      label += "(selected)"
+      label += "("+self.display.translator.translate('selected')+")"
 
     label += ": " + self.card_text.getLabel()
 
@@ -95,11 +95,11 @@ class CardSurface(pygame.Surface):
         self.card_text.setBackgroundColor(COLOR_WHITE)
     else:
       if self.card_type is CARD_BLACK:
-        self.card_text.addText('no card', COLOR_WHITE)
+        self.card_text.addText(self.display.translator.translate('no card'), COLOR_WHITE)
         self.color = COLOR_BLACK
         self.card_text.setBackgroundColor(COLOR_BLACK)
       else:
-        self.card_text.addText('no card')
+        self.card_text.addText(self.display.translator.translate('no card'))
         self.color = COLOR_WHITE
         self.card_text.setBackgroundColor(COLOR_WHITE)
 
@@ -149,9 +149,6 @@ class CardSurface(pygame.Surface):
     self.blit(self.card_text, (TEXT_PADDING, TEXT_PADDING))
     pygame.draw.rect(self, self.border_color, self.border, BORDER)
 
-  # a bit dirty here
-  # getCallback() doesn't return the value of setCallback(),
-  # but self.toggleChosen() instead, which then calls the actual callback
   def setCallback(self, cb):
     self.callback = cb
 
