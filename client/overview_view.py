@@ -22,11 +22,11 @@ class OverviewView(View):
     self.surface_overview = pygame.Surface((self.screen_size[0], self.screen_size[1] * 0.5))
     self.overview_border = pygame.Rect(0, 0, self.surface_overview.get_width(), self.surface_overview.get_height())
     self.game_overview = ScrolledPanel(self.display, PADDING, PADDING, self.surface_overview.get_width() - 2 * PADDING, self.surface_overview.get_height() - 2 * PADDING)
-    self.game_overview.setLabel('games to join')
+    self.game_overview.setLabel(display.translator.translate('Games to join'))
     
-    self.button_join = Button(self.display, "Join Game", self.font, (50, self.screen_size[1] * 0.8))
-    self.button_create = Button(self.display, "Create Game", self.font, (250, self.screen_size[1] * 0.8))
-    self.button_close = Button(self.display, "Close", self.font, (450, self.screen_size[1] * 0.8))
+    self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (50, self.screen_size[1] * 0.8))
+    self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (250, self.screen_size[1] * 0.8))
+    self.button_close = Button(self.display, display.translator.translate("Close"), self.font, (450, self.screen_size[1] * 0.8))
     self.button_close.setCallback(self.onClose)
     self.tab_order = [self.game_overview, self.button_join, self.button_create, self.button_close]
 
