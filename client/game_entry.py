@@ -19,13 +19,14 @@ class GameEntry(pygame.Surface):
     self.new_y = self.y
     
     self.id = id
+    self.text = self.display.factory.findGamename(id)
     
     self.clicked = False
     
     self.border = pygame.Rect(0, 0, self.width, self.height)
     self.border_color = COLOR_BLACK
     
-    self.rendered_text = self.display.getFont().render(str(id), 1, (0, 0, 0))
+    self.rendered_text = self.display.getFont().render(self.text, 1, (0, 0, 0))
     
     self.rect = self.get_rect()
   
@@ -38,7 +39,7 @@ class GameEntry(pygame.Surface):
     return self.y
   
   
-  def getID(self):
+  def getId(self):
     return self.id
   
   
@@ -73,4 +74,4 @@ class GameEntry(pygame.Surface):
 
 
   def getLabel(self):
-    return str(self.id)
+    return self.text

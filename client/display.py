@@ -14,6 +14,7 @@ from .connection_view import ConnectionView
 from .message_view import MessageView
 from .game_view import GameView
 from .overview_view import OverviewView
+from shared.translator import Translator
 from shared.path import getScriptDirectory
 
 
@@ -24,6 +25,7 @@ class Display(object):
     self.accessibility = accessibility
     self.endpoint = None
     self.factory = ClientFactory(self)
+    self.translator = Translator('client')
     # initializing the loop caller
     self.loop = LoopingCall(self.process)
     self.reactor = None
@@ -86,6 +88,7 @@ class Display(object):
   def stop(self):
     pygame.quit()
     self.reactor.stop()
+    self.translator.close()
     self.running = False
   
   
@@ -111,16 +114,18 @@ class Display(object):
 
     self.button_down_sound = sound('button_down')
     self.button_up_sound = sound('button_up')
-    self.card_sounds = soundlist("card",7)
     self.connect_sound = sound('connect')
     self.cursor_sound = sound('cursor')
-    self.draw_sounds = soundlist('draw', 4)
     self.error_sound = sound('error')
+    self.game_card_sounds = soundlist("game_card",7)
+    self.game_created_sound = sound('game_created')
+    self.game_deleted_sound = sound('game_deleted')
+    self.game_draw_sounds = soundlist('game_draw', 4)
     self.game_error_sound = sound('game_error')
+    self.game_join_sound = sound('game_join')
+    self.game_leave_sound = sound('game_leave')
     self.game_score_sound = sound('game_score')
     self.game_start_sound = sound('game_start')
-    self.join_game_sound = sound('join_game')
-    self.leave_game_sound = sound('leave_game')
     self.login_sound = sound('login')
     self.start_sound = sound('start')
     self.tap_sound = sound('tap')
@@ -141,7 +146,7 @@ class Display(object):
       self.view.errorMessage(failure.getErrorMessage())
     def dnsLookupErrback(failure):
       failure.trap(DNSLookupError)
-      self.view.errorMessage('unable to lookup ip adress for servername: %s'%failure.getErrorMessage())
+      self.view.errorMessage(self.translator.translate('Unable to lookup ip adress for servername: {failure}').format(failure = failure.getErrorMessage()))
     self.login_name = username
     self.login_password = password
     self.server_name = host

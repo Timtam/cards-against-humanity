@@ -33,9 +33,12 @@ class OverviewView(View):
     self.game_overview.setLabel(display.translator.translate('Games to join'))
 
     self.next_surface_pos_y = self.game_overview.getPos()[1]
-
+    
     self.tab_order = [self.game_overview, self.button_join, self.button_create, self.button_close]
-  
+
+    for game in self.display.factory.getAllGames():
+      self.addGame(game['id'])
+
   
   def addGame(self, game_id):
     game_entry = GameEntry(self.display, self.game_overview.getPos()[0], self.next_surface_pos_y, self.game_overview.getAvailableWidth() - 20, 50, game_id)

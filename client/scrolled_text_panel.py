@@ -6,7 +6,6 @@ BUTTON_SCROLL_WHEEL_UP = 4
 BUTTON_SCROLL_WHEEL_DOWN = 5
 
 SCROLLBAR_THICKNESS = 20
-#TEXT_SCROLLBAR_SPACE = 10
 SCROLL_SPEED = 20
 
 
@@ -54,7 +53,6 @@ class ScrolledTextPanel(pygame.Surface):
     cut = 0
     a = 0
     done = True
-    # old = None
     while l > maxwidth:
       a = a + 1
       n = text.rsplit(None, a)[0]
@@ -95,14 +93,6 @@ class ScrolledTextPanel(pygame.Surface):
     return text_width
     
     
-  # def getTextHeight(self):
-  #
-  #   text_height = 0
-  #   for text_line_surface in self.text_surfaces:
-  #     text_height += text_line_surface.get_height()
-  #   return text_height
-
-
   def getTextHeight(self):
     font_height = self.font.get_height()
     return len(self.text_lines) * font_height
@@ -176,13 +166,13 @@ class ScrolledTextPanel(pygame.Surface):
   def getLabel(self):
     label = ""
     if len(self.label)>0:
-      label += self.label + " text: "
+      label += self.label + " "+self.display.translator.translate('text')+": "
     if len(self.text_lines):
       label += self.text_lines[self.line_cursor]
       if self.speak_lines:
-        label += ' (line %d of %d'%(self.line_cursor+1, len(self.text_lines))
+        label += ' ('+self.display.translator.translate("line {current} out of {maximum}").format(current = str(self.line_cursor+1), maximum = str(len(self.text_lines)))
     else:
-      label += "empty"
+      label += self.display.translator.translate("empty")
     return label
 
 
@@ -237,10 +227,8 @@ class ScrolledTextPanel(pygame.Surface):
     if self.mouse_in_me and event.type == pygame.MOUSEBUTTONDOWN:
       move = 0
       if event.button == BUTTON_SCROLL_WHEEL_UP:
-        #print("scrolled up")  # debug
         move = max(-1 * SCROLL_SPEED * self.ratio, self.track.top - self.knob.top)
       elif event.button == BUTTON_SCROLL_WHEEL_DOWN:
-        #print("scolled down")  # debug
         move = max(SCROLL_SPEED * self.ratio, self.track.top - self.knob.top)
       move = min(move, self.track.bottom - self.knob.bottom)
       if move != 0:

@@ -97,3 +97,10 @@ class ServerFactory(Factory):
 
   def getAllGames(self):
     return self.games
+
+  def gameExists(self, name):
+    for game in self.games:
+      if game.name == name:
+        return True
+    return False
+

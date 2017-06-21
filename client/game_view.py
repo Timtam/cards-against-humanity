@@ -27,9 +27,9 @@ class GameView(View):
     self.font = self.display.getFont()
     self.mode = GAME_MODE_PAUSED
     
-    self.button_start_leave = Button(self.display, "Start Game", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.1))
+    self.button_start_leave = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.1))
     self.button_start_leave.setCallback(self.onStartLeave)
-    self.button_confirm = Button(self.display, "Confirm Choice", self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.2))
+    self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.2))
     self.button_confirm.setCallback(self.onConfirmChoice)
     
     self.player_indicators = PlayerIndicators(self.display, 5, 5)
@@ -38,8 +38,8 @@ class GameView(View):
     self.gamelog_border = pygame.Rect(0, 0, self.surface_gamelog.get_width(), self.surface_gamelog.get_height())
     self.gamelog_text = ScrolledTextPanel(self.display, TEXT_PADDING, 65 + TEXT_PADDING, self.surface_gamelog.get_width() - 2*TEXT_PADDING, self.surface_gamelog.get_height() - 2*TEXT_PADDING, True)
     self.gamelog_text.setFont(self.display.getFont(16))
-    self.writeLog('you joined the game')
-    self.gamelog_text.setLabel('game log')
+    self.writeLog(self.display.translator.translate('You joined the game'))
+    self.gamelog_text.setLabel(self.display.translator.translate('Game log'))
 
     self.cards = []
 
@@ -57,7 +57,7 @@ class GameView(View):
     self.black_card_y = 45
     self.black_card = CardSurface(self.display, self.black_card_x, self.black_card_y, CARD_SIZE[0], CARD_SIZE[1], CARD_BLACK)
     self.black_card.setFont(self.display.getFont(18))
-    self.black_card.setLabel('your selection')
+    self.black_card.setLabel(self.display.translator.translate('Your selection'))
     self.black_card.setEnable(False)
 
     self.tab_order.append(self.black_card)
@@ -70,7 +70,7 @@ class GameView(View):
         'position': card_position,
       })
       self.cards[i]['card'].setFont(self.display.getFont(18))
-      self.cards[i]['card'].setLabel('selectable card %d' % (i + 1))
+      self.cards[i]['card'].setLabel(self.display.translator.translate('Selectable card {number}').format(number = i + 1))
       self.cards[i]['card'].setSpeakLines(False)
       self.cards[i]['card'].setCallback(self.generateCardLambda(i))
       self.tab_order.append(self.cards[i]['card'])
@@ -108,7 +108,7 @@ class GameView(View):
   
   
   def writeLogError(self, text):
-    self.writeLog('An error occured: '+text)
+    self.writeLog(self.display.translator.translate('An error occured')+': '+text)
     self.display.game_error_sound.stop()
     self.display.game_error_sound.play()
   
@@ -155,8 +155,6 @@ class GameView(View):
   
   
   def render(self):
-    #self.surface_cards.fill((255, 255, 255))
-    #self.surface_black_card.fill((0, 0, 0))
     self.surface_gamelog.fill((255, 255, 255))
     
     pygame.draw.rect(self.surface_gamelog, (0, 0, 0), self.gamelog_border, 5)
@@ -164,33 +162,13 @@ class GameView(View):
     self.display.screen.blit(self.surface_gamelog, (0, 65))
     self.display.screen.blit(self.gamelog_text, (TEXT_PADDING, 65 + TEXT_PADDING))
     
-    #self.black_card_text.render()
-    #self.display.screen.blit(self.surface_black_card, (self.hmiddle - self.surface_black_card.get_width()/2, 50))
-    #self.display.screen.blit(self.black_card_text, (self.hmiddle - self.card_surface.get_width()/2 + TEXT_PADDING, 50 + TEXT_PADDING))
-    
     self.black_card.render()
     self.display.screen.blit(self.black_card, (self.black_card_x, self.black_card_y))
-    
-    
-    #for i in range(10):
-    #  self.cards[i]['surface'].fill((255, 255, 255))
-    #  pygame.draw.rect(self.cards[i]['surface'], (0, 0, 0), self.card_border, 5)
-    #  self.cards[i]['text'].render()
-    #  self.surface_cards.blit(self.cards[i]['surface'], self.cards[i]['position'])
     
     for i in range(10):
       self.cards[i]['card'].render()
       self.display.screen.blit(self.cards[i]['card'], self.cards[i]['position'])
     
-    #self.display.screen.blit(self.surface_cards, (self.hmiddle - self.surface_cards.get_width()/2, self.display_size[1] - self.surface_cards.get_height() - 50))
-
-    #for i in range(10):
-    #  self.display.screen.blit(self.cards[i]['text'], (
-    #  self.hmiddle - self.surface_cards.get_width() / 2 +
-    #  self.cards[i]['position'][0] + TEXT_PADDING,
-    #  self.display_size[1] - self.surface_cards.get_height() - 50 +
-    #  self.cards[i]['position'][1] + TEXT_PADDING))
-
     self.button_start_leave.render()
     self.button_confirm.render()
 
@@ -250,7 +228,7 @@ class GameView(View):
         try:
           self.black_card.getCard().link(self.cards[i]['card'].getCard())
         except CardLinkError:
-          self.writeLog("you've already chosen enough cards. If you want to switch cards, you'll have to deselect another card first.")
+          self.writeLog(self.display.translator.translate("You've already chosen enough cards. If you want to switch cards, you'll have to deselect another card first."))
           return
       self.black_card.setCard(self.black_card.getCard())
       self.cards[i]['card'].toggleChosen()
@@ -262,7 +240,7 @@ class GameView(View):
     if self.mode == GAME_MODE_CZAR_DECIDING:
 
       if len(cards) != 1:
-        self.writeLog("You didn't select your favorite yet.")
+        self.writeLog(self.display.translator.translate("You didn't select your favorite yet."))
         return
 
       self.display.factory.client.sendCzarDecision(cards[0]['card'].getCard().links)
@@ -270,7 +248,7 @@ class GameView(View):
     else:
 
       if len(cards) != self.black_card.getCard().placeholders:
-        self.writeLog("You didn't select enough white cards yet.")
+        self.writeLog(self.display.translator.translate("You didn't select enough white cards yet."))
         return
 
       self.display.factory.client.sendChooseCards(self.black_card.getCard().links)
@@ -285,6 +263,6 @@ class GameView(View):
 
   def clearCard(self, i):
     self.cards[i]['card'].setCard(None)
-    self.cards[i]['card'].setLabel("selectable card %d"%(i+1))
+    self.cards[i]['card'].setLabel(self.display.translator.translate("Selectable card {number}").format(number = i+1))
     if self.cards[i]['card'].chosen:
       self.cards[i]['card'].toggleChosen()

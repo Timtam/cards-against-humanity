@@ -86,3 +86,6 @@ class ClientFactory(Factory):
     if game is None:
       return
     game['points'] = {}
+
+  def getAllGames(self):
+    return self.games

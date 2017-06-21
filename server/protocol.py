@@ -87,11 +87,18 @@ class ServerProtocol(JSONReceiver):
       self.sendMessage(MSG_CREATE_GAME, success=False, message='not enough cards available to create a game')
       self.log.warn("{log_source.identification!r} tried to create a game, but not enough cards available")
       return
+    if self.factory.gameExists(game_name):
+      self.sendMessage(MSG_CREATE_GAME, success = False, message = 'a game with this name already exists')
+      self.log.info("{log_source.identification!r} tried to create a game with name {name}, but a game with this name already exists", name = game_name)
+      return
+
     game = self.factory.createGame(game_name, game_password)
     self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=game_name, id = game.id)
 
     for user in self.factory.getAllUsers():
       user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, user_id = self.user.id, name = game_name)
+
+    self.joinGame(game.id, game_password)
 
   def joinGame(self, game_id, game_password = None):
     game = self.factory.findGame(game_id)
