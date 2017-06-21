@@ -48,6 +48,10 @@ class ClientFactory(Factory):
       'points': {}
     })
 
+    if self.getMode() == MODE_FREE_TO_JOIN:
+      self.display.callFunction('self.view.addGame', id)
+
+
   def findGame(self, id):
     game = [g for g in self.games if g['id'] == id]
     if len(game) != 1:
@@ -63,6 +67,8 @@ class ClientFactory(Factory):
 
   def removeGame(self, id):
     self.games = [g for g in self.games if g['id'] != id]
+    if self.getMode() == MODE_FREE_TO_JOIN:
+      self.display.callFunction('self.view.deleteGame', id)
 
   def updateGamePoints(self, id, points):
     game = self.findGame(id)
@@ -86,3 +92,6 @@ class ClientFactory(Factory):
     if game is None:
       return
     game['points'] = {}
+
+  def getAllGames(self):
+    return self.games

@@ -172,7 +172,7 @@ class ScrolledPanel(pygame.Surface):
         for surface in self.surfaces:
           surface.setNewYPos(surface.getYPos() - new_y)
 
-    if self.focus and event.type == pygame.KEYDOWN:
+    if self.focus and self.cursor >= 0 and event.type == pygame.KEYDOWN:
       speak = False
       if event.key == pygame.K_DOWN:
         self.cursor = min(self.cursor + 1, len(self.surfaces)-1)

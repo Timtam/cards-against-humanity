@@ -29,21 +29,9 @@ class OverviewView(View):
     self.button_close = Button(self.display, "Close Game Client", self.font, (450, self.screen_size[1] * 0.8))
     self.tab_order = [self.game_overview, self.button_join, self.button_create, self.button_close]
 
-    self.addGame(1)
-    self.addGame(2)
-    self.addGame(3)
-    self.addGame(4)
-    self.addGame(5)
-    self.addGame(6)
-    self.addGame(7)
-    self.addGame(8)
-    self.deleteGame(8)
-    self.deleteGame(3)
-    self.deleteGame(5)
-    self.deleteGame(6)
-    self.deleteGame(1)
-    self.deleteGame(2)
-  
+    for game in self.display.factory.getAllGames():
+      self.addGame(game['id'])
+
   
   def addGame(self, game_id):
     game_entry = GameEntry(self.display, PADDING, self.next_surface_pos_y, self.game_overview.getAvailableWidth() - 20, 50, game_id)
@@ -60,8 +48,8 @@ class OverviewView(View):
     tmp_surfaces = self.game_overview.getSurfaces()
     self.clearGames()
     for surface in tmp_surfaces:
-      if surface.getID() != game_id:
-        self.addGame(surface.getID())
+      if surface.getId() != game_id:
+        self.addGame(surface.getId())
   
   
   def handleEvent(self, event):
