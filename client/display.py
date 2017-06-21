@@ -14,6 +14,7 @@ from .connection_view import ConnectionView
 from .message_view import MessageView
 from .game_view import GameView
 from .overview_view import OverviewView
+from shared.translator import Translator
 from shared.path import getScriptDirectory
 
 
@@ -24,6 +25,7 @@ class Display(object):
     self.accessibility = accessibility
     self.endpoint = None
     self.factory = ClientFactory(self)
+    self.translator = Translator('client')
     # initializing the loop caller
     self.loop = LoopingCall(self.process)
     self.reactor = None
@@ -86,6 +88,7 @@ class Display(object):
   def stop(self):
     pygame.quit()
     self.reactor.stop()
+    self.translator.close()
     self.running = False
   
   
