@@ -102,6 +102,8 @@ class ClientProtocol(JSONReceiver):
       self.factory.addGame(game_id, name)
       if self.getMode() == MODE_FREE_TO_JOIN:
         self.factory.display.callFunction('self.view.addGame', game_id)
+        self.factory.display.game_created_sound.stop()
+        self.factory.display.game_created_sound.play()
     else:
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
@@ -114,8 +116,8 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.callFunction('self.view.player_indicators.addPlayer', self.user_id)
       for user in users:
         self.factory.display.callFunction('self.view.player_indicators.addPlayer', user)
-      self.factory.display.join_game_sound.stop()
-      self.factory.display.join_game_sound.play()
+      self.factory.display.game_join_sound.stop()
+      self.factory.display.game_join_sound.play()
     else:
       self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
@@ -128,8 +130,8 @@ class ClientProtocol(JSONReceiver):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       self.factory.display.callFunction('self.view.writeLog', '%s joined the game'%self.factory.findUsername(user_id))
       self.factory.display.callFunction('self.view.player_indicators.addPlayer', user_id)
-      self.factory.display.join_game_sound.stop()
-      self.factory.display.join_game_sound.play()
+      self.factory.display.game_join_sound.stop()
+      self.factory.display.game_join_sound.play()
 
   def loggedIn(self, user_id, user_name):
     self.factory.addUser(user_id, user_name)
@@ -154,7 +156,7 @@ class ClientProtocol(JSONReceiver):
     cards = [self.factory.card_database.getCard(c) for c in cards]
     self.factory.display.callFunction('self.view.setCards', *cards)
 
-    self.factory.display.draw_sounds[random.randint(0, len(self.factory.display.draw_sounds)-1)].play()
+    self.factory.display.game_draw_sounds[random.randint(0, len(self.factory.display.game_draw_sounds)-1)].play()
 
   def czarChange(self, user_id, card):
     if user_id == self.user_id:
@@ -183,8 +185,8 @@ class ClientProtocol(JSONReceiver):
       else:
         # TODO: going back to overview screen
         self.setMode(MODE_FREE_TO_JOIN)
-      self.factory.display.leave_game_sound.stop()
-      self.factory.display.leave_game_sound.play()
+      self.factory.display.game_leave_sound.stop()
+      self.factory.display.game_leave_sound.play()
 
   def disconnectedFromGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
@@ -198,6 +200,9 @@ class ClientProtocol(JSONReceiver):
     self.factory.removeGame(game_id)
     if self.getMode() == MODE_FREE_TO_JOIN:
       self.factory.display.callFunction('self.view.deleteGame', game_id)
+      self.factory.display.game_deleted_sound.stop()
+      self.factory.display.game_deleted_sound.play()
+
 
   def sendStartGame(self):
     self.sendMessage(MSG_START_GAME)
