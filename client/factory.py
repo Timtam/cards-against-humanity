@@ -3,6 +3,7 @@ from twisted.logger import Logger
 
 from .protocol import ClientProtocol
 from shared.card_database_manager import CardDatabaseManager
+from shared.messages import MODE_FREE_TO_JOIN
 
 class ClientFactory(Factory):
   log = Logger()
@@ -48,7 +49,7 @@ class ClientFactory(Factory):
       'points': {}
     })
 
-    if self.getMode() == MODE_FREE_TO_JOIN:
+    if self.client.getMode() == MODE_FREE_TO_JOIN:
       self.display.callFunction('self.view.addGame', id)
 
 
@@ -67,7 +68,7 @@ class ClientFactory(Factory):
 
   def removeGame(self, id):
     self.games = [g for g in self.games if g['id'] != id]
-    if self.getMode() == MODE_FREE_TO_JOIN:
+    if self.client.getMode() == MODE_FREE_TO_JOIN:
       self.display.callFunction('self.view.deleteGame', id)
 
   def updateGamePoints(self, id, points):
