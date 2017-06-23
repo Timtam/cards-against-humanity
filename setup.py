@@ -48,10 +48,13 @@ if os.path.exists(os.path.join(getScriptDirectory(), 'cards.db')):
 
 build_exe_options = {
                      "includes": [
+                                  "lxml.etree",
+                                  "lxml._elementpath",
                                   "zope.interface"
                                  ],
                      "excludes": [
                                   "bz2",
+                                  "numpy",
                                   "tar",
                                   "Tkinter"
                                  ],
