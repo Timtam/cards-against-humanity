@@ -26,6 +26,7 @@ class OverviewView(MessageView):
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
     self.button_create.setCallback(self.onCreate)
     self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (20, 250))
+    self.button_join.setCallback(self.onJoin)
     self.button_disconnect = Button(self.display, display.translator.translate("Disconnect"), self.font, (20, 350))
     self.button_disconnect.setCallback(self.onDisconnect)
     
@@ -143,3 +144,19 @@ class OverviewView(MessageView):
     self.display.factory.client.sendCreateGame(self.input_game_name.input.get_text(), password)
     self.default_mode = False
     self.setText(self.display.translator.translate('Creating game...'))
+
+  def onJoin(self):
+    game = self.game_overview.getClickedSurface()
+    if game is None:
+      self.errorMessage(self.display.translator.translate('No game selected'))
+      return
+
+    if len(self.input_game_password.input.get_text()) == 0:
+      password = None
+    else:
+      password = hashlib.sha512(self.input_game_password.input.get_text()).hexdigest()
+
+    self.display.factory.client.sendJoinGame(game.id, password)
+    self.default_mode = False
+    self.setText(self.display.translator.translate('Joining game...'))
+

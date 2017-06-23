@@ -264,3 +264,14 @@ class ClientProtocol(JSONReceiver):
       cmd['game_password'] = password
 
     self.sendMessage(MSG_CREATE_GAME, **cmd)
+
+  def sendJoinGame(self, id, password):
+
+    cmd = {
+           'game_id': id
+          }
+
+    if password is not None:
+      cmd['game_password'] = password
+
+    self.sendMessage(MSG_JOIN_GAME, **cmd)

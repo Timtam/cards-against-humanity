@@ -106,3 +106,7 @@ class GameEntry(pygame.Surface):
   def setClicked(self):
     self.clicked = True
     self.border_color = COLOR_GREEN
+
+
+  def getClicked(self):
+    return self.clicked

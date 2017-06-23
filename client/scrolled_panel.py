@@ -95,6 +95,13 @@ class ScrolledPanel(pygame.Surface):
     return self.surfaces
   
     
+  def getClickedSurface(self):
+    for surf in self.surfaces:
+      if surf.getClicked():
+        return surf
+    return None
+
+
   def setFocus(self, value):
     self.focus = value
     
