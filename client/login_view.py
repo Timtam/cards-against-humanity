@@ -170,10 +170,7 @@ class LoginView(MessageView):
 
 
   def errorMessage(self, message):
-    self.setText(message)
-    self.setButton(self.display.translator.translate('OK'), self.onOK)
-    self.display.error_sound.stop()
-    self.display.error_sound.play()
+    MessageView.errorMessage(self, message, self.onOK)
 
 
   def onOK(self):

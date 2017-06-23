@@ -1,4 +1,4 @@
-from .view import View
+from .message_view import MessageView
 from .tools import Button, TextInput
 from .scrolled_panel import ScrolledPanel
 from .game_entry import GameEntry
@@ -9,11 +9,10 @@ PADDING = 20
 
 
 
-class OverviewView(View):
+class OverviewView(MessageView):
   def __init__(self, display):
-    View.__init__(self, display)
+    MessageView.__init__(self, display)
     
-    self.display = display
     self.screen_size = self.display.getSize()
     self.font = self.display.getFont()
     
@@ -73,8 +72,8 @@ class OverviewView(View):
       self.button_join.setEnable(False) 
 
   
-  def handleEvent(self, event):
-    View.handleEvent(self, event)
+  def handleEventDefault(self, event):
+    MessageView.handleEventDefault(self, event)
     
     self.game_selected = False
     self.input_game_name.handleEvent(event)
@@ -87,8 +86,7 @@ class OverviewView(View):
     self.game_overview.handleEvent(event)
 
     
-    
-  def render(self):
+  def renderDefault(self):
     self.display.screen.blit(self.label_game_name, (20, 20))
     self.input_game_name.render()
     self.display.screen.blit(self.label_game_password, (20, 100))
@@ -122,3 +120,13 @@ class OverviewView(View):
       self.input_game_name.setText('')
       self.input_game_password.setText('')
       self.button_join.setEnable(False)
+
+
+  def errorMessage(self, message):
+    self.default_mode = False
+    MessageView.errorMessage(message, self.onOK)
+
+
+  def onOK(self):
+    self.default_mode = True
+

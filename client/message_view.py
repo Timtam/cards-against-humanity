@@ -188,3 +188,10 @@ class MessageView(View):
 
   def updateDefault(self):
     View.update(self)
+
+
+  def errorMessage(self, message, callback):
+    self.setText(message)
+    self.setButton(self.display.translator.translate('OK'), callback)
+    self.display.error_sound.stop()
+    self.display.error_sound.play()

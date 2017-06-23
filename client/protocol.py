@@ -105,7 +105,6 @@ class ClientProtocol(JSONReceiver):
         self.factory.display.game_created_sound.stop()
         self.factory.display.game_created_sound.play()
     else:
-      self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
 
   def joinGame(self, success, message = '', game_id = 0, users = []):
@@ -119,7 +118,6 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.game_join_sound.stop()
       self.factory.display.game_join_sound.play()
     else:
-      self.factory.display.setView('ConnectionView')
       self.factory.display.callFunction('self.view.errorMessage', message = message)
 
   def startGame(self, success, message=''):
