@@ -1,3 +1,5 @@
+import hashlib
+
 from .message_view import MessageView
 from .tools import Button, TextInput
 from .scrolled_panel import ScrolledPanel
@@ -22,6 +24,7 @@ class OverviewView(MessageView):
     self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, self.display.translator.translate("Game password"))
     
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
+    self.button_create.setCallback(self.onCreate)
     self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (20, 250))
     self.button_close = Button(self.display, display.translator.translate("Close"), self.font, (20, 350))
     self.button_close.setCallback(self.onClose)
@@ -130,3 +133,12 @@ class OverviewView(MessageView):
   def onOK(self):
     self.default_mode = True
 
+
+  def onCreate(self):
+    if self.input_game_password.input.get_text() == '':
+      password = None
+    else:
+      password = hashlib.sha512(self.input_game_password.get_text()).hexdigest()
+    self.display.factory.client.sendCreateGame(self.input_game_name.input.get_text(), password)
+    self.default_mode = False
+    self.setText(self.display.translator.translate('Creating game...'))

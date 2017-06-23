@@ -254,3 +254,13 @@ class ClientProtocol(JSONReceiver):
 
   def sendCzarDecision(self, cards):
     self.sendMessage(MSG_CZAR_DECISION, cards = [c.id for c in cards])
+
+  def sendCreateGame(self, name, password):
+    cmd = {
+           'game_name': name
+          }
+
+    if password is not None:
+      cmd['game_password'] = password
+
+    self.sendMessage(MSG_CREATE_GAME, **cmd)
