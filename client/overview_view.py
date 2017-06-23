@@ -26,8 +26,8 @@ class OverviewView(MessageView):
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
     self.button_create.setCallback(self.onCreate)
     self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (20, 250))
-    self.button_close = Button(self.display, display.translator.translate("Close"), self.font, (20, 350))
-    self.button_close.setCallback(self.onClose)
+    self.button_disconnect = Button(self.display, display.translator.translate("Disconnect"), self.font, (20, 350))
+    self.button_disconnect.setCallback(self.onDisconnect)
     
     self.surface_overview = pygame.Surface((self.screen_size[0] - 340, self.screen_size[1]))
     self.overview_border = pygame.Rect(0, 0, self.surface_overview.get_width(), self.surface_overview.get_height())
@@ -36,7 +36,7 @@ class OverviewView(MessageView):
 
     self.next_surface_pos_y = self.game_overview.getPos()[1]
     
-    self.tab_order = [self.game_overview, self.input_game_name, self.input_game_password, self.button_join, self.button_create, self.button_close]
+    self.tab_order = [self.game_overview, self.input_game_name, self.input_game_password, self.button_join, self.button_create, self.button_disconnect]
     self.game_selected = False
 
     for game in self.display.factory.getAllGames():
@@ -84,7 +84,7 @@ class OverviewView(MessageView):
     
     self.button_create.handleEvent(event)
     self.button_join.handleEvent(event)
-    self.button_close.handleEvent(event)
+    self.button_disconnect.handleEvent(event)
     
     self.game_overview.handleEvent(event)
 
@@ -97,7 +97,7 @@ class OverviewView(MessageView):
     
     self.button_create.render()
     self.button_join.render()
-    self.button_close.render()
+    self.button_disconnect.render()
     
     self.surface_overview.fill((255, 255, 255))
     pygame.draw.rect(self.surface_overview, (0, 0, 0), self.overview_border, 5)
@@ -105,8 +105,9 @@ class OverviewView(MessageView):
     self.game_overview.render()
     self.display.screen.blit(self.game_overview, self.game_overview.getPos())
 
-  def onClose(self):
-    pygame.event.post(pygame.event.Event(pygame.QUIT))
+  def onDisconnect(self):
+    self.display.callFunction('self.factory.closeClient')
+    self.display.setView('LoginView')
 
 
   def onGameSelect(self, game):
