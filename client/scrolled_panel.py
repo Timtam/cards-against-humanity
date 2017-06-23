@@ -175,6 +175,7 @@ class ScrolledPanel(pygame.Surface):
           surface.setNewYPos(surface.getYPos() - new_y)
 
     if self.focus and self.cursor >= 0 and event.type == pygame.KEYDOWN:
+      old_cursor = self.cursor
       speak = False
       if event.key == pygame.K_DOWN:
         self.cursor = min(self.cursor + 1, len(self.surfaces)-1)
@@ -183,12 +184,20 @@ class ScrolledPanel(pygame.Surface):
         self.cursor = max(self.cursor - 1, 0)
         speak = True
 
+      if old_cursor != self.cursor:
+        try:
+          self.surfaces[old_cursor].getDeselectCallback()(self.surfaces[old_cursor])
+          self.surfaces[self.cursor].getSelectCallback()(self.surfaces[self.cursor])
+        except (AttributeError, TypeError):
+          pass
+
+
       if speak:
         try:
           self.display.view.speak(self.surfaces[self.cursor].getLabel())
         except AttributeError:
           self.display.view.speak('unknown')
-  
+
   
   def update(self):
     pass

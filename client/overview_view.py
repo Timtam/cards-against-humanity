@@ -17,10 +17,10 @@ class OverviewView(View):
     self.screen_size = self.display.getSize()
     self.font = self.display.getFont()
     
-    self.label_game_name = self.font.render(display.translator.translate("Game name:"), 1, (0, 0, 0))
-    self.input_game_name = TextInput(self.display, self.font, (20, 50), 300, "Game name")
-    self.label_game_password = self.font.render(display.translator.translate("Game password (optional):"), 1, (0, 0, 0))
-    self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, "Game password")
+    self.label_game_name = self.font.render(display.translator.translate("Game name")+':', 1, (0, 0, 0))
+    self.input_game_name = TextInput(self.display, self.font, (20, 50), 300, self.display.translator.translate("Game name"))
+    self.label_game_password = self.font.render(display.translator.translate("Game password (optional)")+':', 1, (0, 0, 0))
+    self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, self.display.translator.translate("Game password"))
     
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
     self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (20, 250))
@@ -35,16 +35,26 @@ class OverviewView(View):
     self.next_surface_pos_y = self.game_overview.getPos()[1]
     
     self.tab_order = [self.game_overview, self.button_join, self.button_create, self.button_close]
+    self.game_selected = False
 
     for game in self.display.factory.getAllGames():
       self.addGame(game['id'])
 
+    if len(self.game_overview.getSurfaces()) == 0:
+      self.button_join.setEnable(False)
+
   
   def addGame(self, game_id):
+    old_len = len(self.game_overview.getSurfaces())
+
     game_entry = GameEntry(self.display, self.game_overview.getPos()[0], self.next_surface_pos_y, self.game_overview.getAvailableWidth() - 20, 50, game_id)
     self.game_overview.addSurface(game_entry)
     self.next_surface_pos_y += game_entry.get_height() + self.game_overview.getVSpace()
-  
+
+    if old_len == 0:
+      game_entry.setClicked()
+      self.button_join.setEnable(True)
+
   
   def clearGames(self):
     self.game_overview.clearSurfaces()
@@ -57,11 +67,15 @@ class OverviewView(View):
     for surface in tmp_surfaces:
       if surface.getId() != game_id:
         self.addGame(surface.getId())
-  
+
+    if len(self.game_overview.getSurfaces()) == 0:
+      self.button_join.setEnable(False) 
+
   
   def handleEvent(self, event):
     View.handleEvent(self, event)
     
+    self.game_selected = False
     self.input_game_name.handleEvent(event)
     self.input_game_password.handleEvent(event)
     
@@ -70,6 +84,7 @@ class OverviewView(View):
     self.button_close.handleEvent(event)
     
     self.game_overview.handleEvent(event)
+
     
     
   def render(self):
@@ -88,6 +103,21 @@ class OverviewView(View):
     self.game_overview.render()
     self.display.screen.blit(self.game_overview, self.game_overview.getPos())
 
-
   def onClose(self):
     pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+
+  def onGameSelect(self, game):
+    self.input_game_name.setText(game.text)
+    self.input_game_password.setText('')
+    self.button_join.setEnable(True)
+    self.game_selected = True
+    
+  def onGameDeselect(self, game):
+    # if self.game_selected == True, this loop another game was already selected
+    # if we deselect now, we will end up with a cleared screen, but a
+    # selected panel
+    if not self.game_selected:
+      self.input_game_name.setText('')
+      self.input_game_password.setText('')
+      self.button_join.setEnable(False)

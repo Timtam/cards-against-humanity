@@ -29,6 +29,8 @@ class GameEntry(pygame.Surface):
     self.rendered_text = self.display.getFont().render(self.text, 1, (0, 0, 0))
     
     self.rect = self.get_rect()
+    self.select_callback = None
+    self.deselect_callback = None
   
   
   def setNewYPos(self, y):
@@ -58,9 +60,17 @@ class GameEntry(pygame.Surface):
                                 event.pos[1] - self.new_y):
         self.clicked = True
         self.border_color = COLOR_GREEN
+        try:
+          self.select_callback(self)
+        except TypeError:
+          pass
       else:
         self.clicked = False
         self.border_color = COLOR_BLACK
+        try:
+          self.deselect_callback(self)
+        except TypeError:
+          pass
   
   
   def update(self):
@@ -75,3 +85,24 @@ class GameEntry(pygame.Surface):
 
   def getLabel(self):
     return self.text
+
+
+  def getSelectCallback(self):
+    return self.select_callback
+
+
+  def setSelectCallback(self, cb):
+    self.select_callback = cb
+
+
+  def getDeselectCallback(self):
+    return self.deselect_callback
+
+
+  def setDeselectCallback(self, cb):
+    self.deselect_callback = cb
+
+
+  def setClicked(self):
+    self.clicked = True
+    self.border_color = COLOR_GREEN

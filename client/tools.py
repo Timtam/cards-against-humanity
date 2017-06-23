@@ -257,3 +257,8 @@ class TextInput:
     else:
       label += self.input.getPrintText()
     return label
+
+
+  def setText(self, text):
+    self.input.input_string = text
+    self.input.cursor_position = len(text)
