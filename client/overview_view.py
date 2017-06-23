@@ -127,7 +127,7 @@ class OverviewView(MessageView):
 
   def errorMessage(self, message):
     self.default_mode = False
-    MessageView.errorMessage(message, self.onOK)
+    MessageView.errorMessage(self, message, self.onOK)
 
 
   def onOK(self):
@@ -138,7 +138,7 @@ class OverviewView(MessageView):
     if self.input_game_password.input.get_text() == '':
       password = None
     else:
-      password = hashlib.sha512(self.input_game_password.get_text()).hexdigest()
+      password = hashlib.sha512(self.input_game_password.input.get_text()).hexdigest()
     self.display.factory.client.sendCreateGame(self.input_game_name.input.get_text(), password)
     self.default_mode = False
     self.setText(self.display.translator.translate('Creating game...'))
