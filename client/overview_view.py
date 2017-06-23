@@ -34,7 +34,7 @@ class OverviewView(View):
 
     self.next_surface_pos_y = self.game_overview.getPos()[1]
     
-    self.tab_order = [self.game_overview, self.button_join, self.button_create, self.button_close]
+    self.tab_order = [self.game_overview, self.input_game_name, self.input_game_password, self.button_join, self.button_create, self.button_close]
     self.game_selected = False
 
     for game in self.display.factory.getAllGames():
