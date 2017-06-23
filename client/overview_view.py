@@ -54,6 +54,7 @@ class OverviewView(View):
     if old_len == 0:
       game_entry.setClicked()
       self.button_join.setEnable(True)
+      self.input_game_name.setText(game_entry.text)
 
   
   def clearGames(self):
