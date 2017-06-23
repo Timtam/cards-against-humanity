@@ -27,10 +27,11 @@ class GameView(View):
     self.font = self.display.getFont()
     self.mode = GAME_MODE_PAUSED
     
-    self.button_start_leave = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.1))
-    self.button_start_leave.setCallback(self.onStartLeave)
-    self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, self.display_size[1] * 0.2))
+    self.button_start_pause = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.85, 50))
+    self.button_start_pause.setCallback(self.onStartLeave)
+    self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, 100))
     self.button_confirm.setCallback(self.onConfirmChoice)
+    self.button_leave = Button(self.display, self.display.translator.translate("Leave and close"), self.font, (self.display_size[0] * 0.85, 200))
     
     self.player_indicators = PlayerIndicators(self.display, 5, 5)
     
@@ -43,7 +44,7 @@ class GameView(View):
 
     self.cards = []
 
-    self.tab_order = [self.button_start_leave, self.button_confirm, self.gamelog_text]
+    self.tab_order = [self.button_start_pause, self.button_confirm, self.gamelog_text]
     self.createCardSurfaces()
     self.setMode(GAME_MODE_PAUSED)
     self.tab_order.append(self.player_indicators)
@@ -119,8 +120,9 @@ class GameView(View):
   
   def handleEvent(self, event):
     View.handleEvent(self, event)
-    self.button_start_leave.handleEvent(event)
+    self.button_start_pause.handleEvent(event)
     self.button_confirm.handleEvent(event)
+    self.button_leave.handleEvent(event)
 
     self.player_indicators.handleEvent(event)
 
@@ -169,8 +171,9 @@ class GameView(View):
       self.cards[i]['card'].render()
       self.display.screen.blit(self.cards[i]['card'], self.cards[i]['position'])
     
-    self.button_start_leave.render()
+    self.button_start_pause.render()
     self.button_confirm.render()
+    self.button_leave.render()
 
     self.player_indicators.render()
     
