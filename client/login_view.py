@@ -1,14 +1,14 @@
 from tools import *
-from .view import View
+from .message_view import MessageView
 
 SPACE_BETWEEN_LABEL_AND_INPUT = 20
 TEXT_INPUT_WIDTH = 300
 
 
 
-class LoginView(View):
+class LoginView(MessageView):
   def __init__(self, display):
-    View.__init__(self, display)
+    MessageView.__init__(self, display)
     
     font = display.getFont()
     font_welcome = display.getFont(30)
@@ -82,8 +82,8 @@ class LoginView(View):
                       self.button_connect, self.button_close]
   
   
-  def handleEvent(self, event):
-    View.handleEvent(self, event)
+  def handleEventDefault(self, event):
+    MessageView.handleEventDefault(self, event)
     self.server_input.handleEvent(event)
     self.uname_input.handleEvent(event)
     self.pword_input.handleEvent(event)
@@ -92,7 +92,7 @@ class LoginView(View):
     self.button_close.handleEvent(event)
   
   
-  def render(self):
+  def renderDefault(self):
     # blit texts and labels on screen
     self.display.screen.blit(self.welcome_text, self.welcome_text_pos)
     self.display.screen.blit(self.server_label,
@@ -116,8 +116,8 @@ class LoginView(View):
     self.button_close.render()
   
   
-  def update(self):
-    View.update(self)
+  def updateDefault(self):
+    MessageView.updateDefault(self)
     self.server_input.update()
     self.uname_input.update()
     self.pword_input.update()
@@ -133,7 +133,7 @@ class LoginView(View):
   
   def firstUpdate(self):
     self.speak(self.display.translator.translate("Welcome to Cards Against Humanity Online"))
-    View.firstUpdate(self)
+    MessageView.firstUpdate(self)
   
   
   def onClose(self):
@@ -141,8 +141,41 @@ class LoginView(View):
   
   
   def onConnect(self):
-    self.display.setView('ConnectionView')
-    self.display.callFunction('self.view.connectingMessage', self.server_input.input.get_text())
+    self.default_mode = False
+    self.connectingMessage(self.server_input.input.get_text())
     self.display.callFunction('self.connect', self.server_input.input.get_text(),
                          self.uname_input.input.get_text(),
                          self.pword_input.input.get_text())
+
+
+  def connectingMessage(self, address):
+    self.setText(self.display.translator.translate('Connecting to {address}').format(address = address))
+    self.setButton('', None)
+    self.display.connect_sound.stop()
+    self.display.connect_sound.play()
+
+
+  def clientRefusedMessage(self, reason):
+    self.errorMessage(self.display.translator.translate('Connection refused by the server')+':\n%s'%reason)
+
+
+  def loginMessage(self):
+    self.setText(self.display.translator.translate('Logging in...'))
+    self.setButton('', None)
+
+
+  def syncMessage(self):
+    self.setText(self.display.translator.translate('Syncing data...'))
+    self.setButton('', None)
+
+
+  def errorMessage(self, message):
+    self.setText(message)
+    self.setButton(self.display.translator.translate('OK'), self.onOK)
+    self.display.error_sound.stop()
+    self.display.error_sound.play()
+
+
+  def onOK(self):
+    self.display.callFunction('self.factory.closeClient')
+    self.default_mode = True

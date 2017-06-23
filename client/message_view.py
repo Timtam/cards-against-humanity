@@ -11,18 +11,18 @@ class MessageView(View):
   def __init__(self, display, width=480, height=480, maxheight=480):
     View.__init__(self, display)
     
-    self.display = display
     self.width = width
     self.height = height
     self.maxheight = maxheight
     self.setHeight(height)
-    self.old_screen = display.screen.copy()
-    self.old_screen.set_alpha(86)
-    self.old_screen = self.blurSurface(self.old_screen)
+    self.old_screen = None
+    self.old_tab_order = None
+    self.old_tab_position = -1
     self.display_size = display.getSize()
     self.hmiddle = self.display_size[0] / 2
     self.vmiddle = self.display_size[1] / 2
     self.button = None
+    self.default_mode = True
     
     self.message_box = pygame.Surface((width, self.height))
     self.message_border = pygame.Rect(0, 0, width, self.height)
@@ -30,56 +30,7 @@ class MessageView(View):
     self.box_x = self.hmiddle - width / 2
     self.box_y = self.vmiddle - height / 2
     
-    # # long text for checking scrolled text panel
-    # dummy_text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
-    #              "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
-    #              "magna aliquyam erat, sed diam voluptua. At vero eos et " \
-    #              "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
-    #              "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
-    #              "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
-    #              "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
-    #              "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
-    #              "et accusam et justo duo dolores et ea rebum. Stet clita " \
-    #              "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
-    #              "dolor sit amet. \n" \
-    #              "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
-    #              "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
-    #              "magna aliquyam erat, sed diam voluptua. At vero eos et " \
-    #              "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
-    #              "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
-    #              "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
-    #              "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
-    #              "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
-    #              "et accusam et justo duo dolores et ea rebum. Stet clita " \
-    #              "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
-    #              "dolor sit amet. \n" \
-    #              "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
-    #              "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
-    #              "magna aliquyam erat, sed diam voluptua. At vero eos et " \
-    #              "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
-    #              "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
-    #              "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
-    #              "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
-    #              "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
-    #              "et accusam et justo duo dolores et ea rebum. Stet clita " \
-    #              "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
-    #              "dolor sit amet. \n" \
-    #              "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, " \
-    #              "sed diam nonumy eirmod tempor invidunt ut labore et dolore " \
-    #              "magna aliquyam erat, sed diam voluptua. At vero eos et " \
-    #              "accusam et justo duo dolores et ea rebum. Stet clita kasd " \
-    #              "gubergren, no sea takimata sanctus est Lorem ipsum dolor " \
-    #              "sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing " \
-    #              "elitr, sed diam nonumy eirmod tempor invidunt ut labore et " \
-    #              "dolore magna aliquyam erat, sed diam voluptua. At vero eos " \
-    #              "et accusam et justo duo dolores et ea rebum. Stet clita " \
-    #              "kasd gubergren, no sea takimata sanctus est Lorem ipsum " \
-    #              "dolor sit amet."
-    
-    dummy_text = "No text"
-    self.setText(dummy_text)
-  
-  
+
   # setting some automatically formatted and rendered text onto the screen
   def setText(self, text):
     
@@ -105,11 +56,6 @@ class MessageView(View):
                                               PADDING_TOP_BOTTOM - button_height)
     self.scrolled_text.setLabel('information')
     self.scrolled_text.addText(text)
-    self.tab_position = 0
-    self.tab_order = [self.scrolled_text]
-    if self.display.accessibility:
-      self.scrolled_text.setFocus(True)
-      self.speak(text, False)
   
   
   # may display a button (not needed)
@@ -134,13 +80,8 @@ class MessageView(View):
          PADDING_LEFT_RIGHT,
          self.vmiddle + self.height / 2 - self.button.getHeight() -
          PADDING_TOP_BOTTOM))
-      self.tab_order.append(self.button)
     else:
       self.button = None
-      if len(self.tab_order)>1:
-        del self.tab_order[1]
-        if self.tab_position >0:
-          self.tab_position = 0
   
   # handy mehtod to check maxheight befor setting height
   def setHeight(self, new_height):
@@ -151,6 +92,13 @@ class MessageView(View):
   
   
   def render(self):
+    if self.default_mode:
+      self.renderDefault()
+    else:
+      self.renderMessage()
+
+
+  def renderMessage(self):
     self.display.screen.blit(self.old_screen, (0, 0))
     self.message_box.fill((255, 255, 255))
     pygame.draw.rect(self.message_box, (0, 0, 0), self.message_border, 3)
@@ -160,15 +108,27 @@ class MessageView(View):
     if self.button is not None:
       self.button.render()
   
-  
+
+  def renderDefault(self):
+    pass
+
   def handleEvent(self, event):
+    if self.default_mode:
+      self.handleEventDefault(event)
+    else:
+      self.handleEventMessage(event)
+
+  
+  def handleEventMessage(self, event):
     View.handleEvent(self, event)
     self.scrolled_text.handleEvent(event)
     if self.button is not None:
       self.button.handleEvent(event)
 
-  def firstUpdate(self):
-    pass
+
+  def handleEventDefault(self, event):
+    View.handleEvent(self, event)
+
 
   # function for blurring a surface through smoothscaling to lower resolution
   # and back to original
@@ -188,3 +148,43 @@ class MessageView(View):
     surf = pygame.transform.smoothscale(surf, surf_size)
     return surf
 
+
+  def update(self):
+    if self.default_mode:
+      if self.old_screen is not None:
+        self.old_screen = None
+        self.tab_order = self.old_tab_order
+        self.tab_position = self.old_tab_position
+        self.old_tab_order = None
+        self.old_tab_position = -1
+        try:
+          self.speak(self.tab_order[self.tab_position].getLabel())
+        except AttributeError:
+          pass
+      self.updateDefault()
+    else:
+      if self.old_screen is None:
+        self.old_screen = self.display.screen.copy()
+        self.old_screen.set_alpha(86)
+        self.old_screen = self.blurSurface(self.old_screen)
+        self.old_tab_order = self.tab_order
+        self.old_tab_position = self.tab_position
+        self.tab_order = [None]
+
+      if self.tab_order[0] != self.scrolled_text:
+        self.tab_order = [self.scrolled_text]
+        self.tab_position = 0
+        if self.button is not None:
+          self.tab_order.append(self.button)
+        self.scrolled_text.setFocus(True)
+        self.speak(self.scrolled_text.getText())
+
+      self.updateMessage()
+
+
+  def updateMessage(self):
+    View.update(self)
+
+
+  def updateDefault(self):
+    View.update(self)
