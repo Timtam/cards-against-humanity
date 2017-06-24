@@ -21,7 +21,7 @@ class OverviewView(MessageView):
     self.label_game_name = self.font.render(display.translator.translate("Game name")+':', 1, (0, 0, 0))
     self.input_game_name = TextInput(self.display, self.font, (20, 50), 300, self.display.translator.translate("Game name"))
     self.label_game_password = self.font.render(display.translator.translate("Game password (optional)")+':', 1, (0, 0, 0))
-    self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, self.display.translator.translate("Game password"))
+    self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, self.display.translator.translate("Game password"), True)
     
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
     self.button_create.setCallback(self.onCreate)
@@ -88,8 +88,13 @@ class OverviewView(MessageView):
     self.button_disconnect.handleEvent(event)
     
     self.game_overview.handleEvent(event)
-
-    
+  
+  
+  def update(self):
+    self.input_game_name.update()
+    self.input_game_password.update()
+  
+  
   def renderDefault(self):
     self.display.screen.blit(self.label_game_name, (20, 20))
     self.input_game_name.render()
