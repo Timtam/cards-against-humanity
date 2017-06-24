@@ -173,4 +173,4 @@ class CardSurface(pygame.Surface):
 
 
   def getClickSound(self):
-    return self.display.card_sounds[random.randint(0, len(self.display.card_sounds)-1)]
+    return self.display.game_card_sounds[random.randint(0, len(self.display.game_card_sounds)-1)]
