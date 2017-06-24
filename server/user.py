@@ -62,7 +62,7 @@ class User(object):
       if self.game.open:
         self.game.leave(self)
       else:
-        self.game.disconnect(self)
+        self.game.suspend(self)
     del self.protocol.factory.users[self.protocol.factory.users.index(self)]
 
   # this is quite a dirty way

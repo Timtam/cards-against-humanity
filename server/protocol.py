@@ -17,6 +17,7 @@ class ServerProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_DECISION, self.czarDecision)
+    self.addCallback(MODE_IN_GAME, MSG_SUSPEND_GAME, self.suspendGame)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.user = User(self)
 
@@ -180,17 +181,34 @@ class ServerProtocol(JSONReceiver):
     if not result['end']:
       self.sendTurnStarted()
 
+  def suspendGame(self):
+
+    game = self.user.getGame()
+
+    if game is None:
+      return
+
+    if game.open:
+      code = MSG_LEFT_GAME
+      game.leave(self.user)
+    else:
+      code = MSG_SUSPEND_GAME
+      game.suspend(self.user)
+
+    for user in self.factory.getAllUsers():
+      user.protocol.sendMessage(code, user_id = self.user.id, game_id = game.id)
+      if len(game.users) == 0:
+        user.protocol.sendMessage(MSG_DELETED_GAME, game_id = game.id)
+
+    self.setMode(MODE_FREE_TO_JOIN)
+
+
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')
     self.log.debug(reason.getErrorMessage())
-    game = self.user.getGame()
+    self.suspendGame()
     self.user.unlink()
     for user in self.factory.getAllUsers():
-      if game:
-        user.protocol.sendMessage((MSG_LEFT_GAME if game.open else MSG_DISCONNECTED_FROM_GAME), user_id = self.user.id, game_id = game.id)
-        if len(game.users) == 0:
-          # this game is empty and should have been unlinked
-          user.protocol.sendMessage(MSG_DELETED_GAME, game_id = game.id)
       user.protocol.sendMessage(MSG_LOGGED_OFF, user_id = self.user.id)
 
   def sendTurnStarted(self):

@@ -31,7 +31,8 @@ class GameView(View):
     self.button_start_pause.setCallback(self.onStartLeave)
     self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, 100))
     self.button_confirm.setCallback(self.onConfirmChoice)
-    self.button_leave = Button(self.display, self.display.translator.translate("Leave and close"), self.font, (self.display_size[0] * 0.85, 200))
+    self.button_suspend = Button(self.display, self.display.translator.translate("Suspend game"), self.font, (self.display_size[0] * 0.85, 200))
+    self.button_suspend.setCallback(self.onSuspend)
     
     self.player_indicators = PlayerIndicators(self.display, 5, 5)
     
@@ -44,7 +45,7 @@ class GameView(View):
 
     self.cards = []
 
-    self.tab_order = [self.button_start_pause, self.button_confirm, self.gamelog_text]
+    self.tab_order = [self.button_start_pause, self.button_confirm, self.button_suspend, self.gamelog_text]
     self.createCardSurfaces()
     self.setMode(GAME_MODE_PAUSED)
     self.tab_order.append(self.player_indicators)
@@ -122,7 +123,7 @@ class GameView(View):
     View.handleEvent(self, event)
     self.button_start_pause.handleEvent(event)
     self.button_confirm.handleEvent(event)
-    self.button_leave.handleEvent(event)
+    self.button_suspend.handleEvent(event)
 
     self.player_indicators.handleEvent(event)
 
@@ -173,7 +174,7 @@ class GameView(View):
     
     self.button_start_pause.render()
     self.button_confirm.render()
-    self.button_leave.render()
+    self.button_suspend.render()
 
     self.player_indicators.render()
     
@@ -269,3 +270,11 @@ class GameView(View):
     self.cards[i]['card'].setLabel(self.display.translator.translate("Selectable card {number}").format(number = i+1))
     if self.cards[i]['card'].chosen:
       self.cards[i]['card'].toggleChosen()
+
+
+  def onSuspend(self):
+
+    self.display.factory.client.sendSuspendGame()
+    self.button_start_pause.setEnable(False)
+    self.button_confirm.setEnable(False)
+    self.button_suspend.setEnable(False)

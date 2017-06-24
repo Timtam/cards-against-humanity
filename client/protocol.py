@@ -23,9 +23,9 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_OFF, self.loggedOff)
-    self.addCallback(MODE_FREE_TO_JOIN, MSG_DISCONNECTED_FROM_GAME, self.disconnectedFromGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LEFT_GAME, self.leftGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_DELETED_GAME, self.deletedGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_SUSPEND_GAME, self.suspendGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
     self.addCallback(MODE_IN_GAME, MSG_CREATE_GAME, self.createGame)
@@ -35,7 +35,7 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_OFF, self.loggedOff)
     self.addCallback(MODE_IN_GAME, MSG_LEFT_GAME, self.leftGame)
-    self.addCallback(MODE_IN_GAME, MSG_DISCONNECTED_FROM_GAME, self.disconnectedFromGame)
+    self.addCallback(MODE_IN_GAME, MSG_SUSPEND_GAME, self.suspendGame)
     self.addCallback(MODE_IN_GAME, MSG_DELETED_GAME, self.deletedGame)
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
     self.addCallback(MODE_IN_GAME, MSG_CHOICES, self.choices)
@@ -180,18 +180,22 @@ class ClientProtocol(JSONReceiver):
         self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} left the game.').format(player = self.factory.findUsername(user_id)))
         self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
       else:
-        # TODO: going back to overview screen
+        self.factory.display.setView('OverviewView')
         self.setMode(MODE_FREE_TO_JOIN)
       self.factory.display.game_leave_sound.stop()
       self.factory.display.game_leave_sound.play()
 
-  def disconnectedFromGame(self, user_id, game_id):
+  def suspendGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       if user_id != self.user_id:
-        self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} disconnected, thus this game paused.').format(player = self.factory.findUsername(user_id)))
+        self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} suspended the game.').format(player = self.factory.findUsername(user_id)))
         self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
         self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
         self.factory.resetGamePoints(self.game_id)
+      else:
+        self.factory.display.setView('OverviewView')
+        self.setMode(MODE_FREE_TO_JOIN)
+        self.game_id = 0
 
   def deletedGame(self, game_id):
     self.factory.removeGame(game_id)
@@ -275,3 +279,6 @@ class ClientProtocol(JSONReceiver):
       cmd['game_password'] = password
 
     self.sendMessage(MSG_JOIN_GAME, **cmd)
+
+  def sendSuspendGame(self):
+    self.sendMessage(MSG_SUSPEND_GAME)

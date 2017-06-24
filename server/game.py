@@ -143,7 +143,7 @@ class Game(object):
   def getAllWhiteCardsForUsers(self):
     return [(self.factory.findUser(self.users[i]['user']), self.users[i]['white_cards']) for i in range(len(self.users))]
 
-  def disconnect(self, user):
+  def suspend(self, user):
 
     self.pause()
 
@@ -153,11 +153,11 @@ class Game(object):
 
     possible_users = [u for u in self.users if u['user'] == user.id and u['joined']]
     if len(possible_users) != 1:
-      self.log.warn('found {count} users in game {game} while disconnecting user {user}', count = len(possible_users), game = self.id, user = user.id)
+      self.log.warn('found {count} users in game {game} while suspending due to user {user}', count = len(possible_users), game = self.id, user = user.id)
     else:
       possible_users[0]['joined'] = False
       user.setGame(None)
-      self.log.info('user {user} disconnected from game {game}', user = user.id, game = self.id)
+      self.log.info('user {user} suspended game {game}', user = user.id, game = self.id)
 
   def leave(self, user):
     # forces the user to leave
