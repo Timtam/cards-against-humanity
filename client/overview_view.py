@@ -90,7 +90,8 @@ class OverviewView(MessageView):
     self.game_overview.handleEvent(event)
   
   
-  def update(self):
+  def updateDefault(self):
+    MessageView.updateDefault(self)
     self.input_game_name.update()
     self.input_game_password.update()
   
