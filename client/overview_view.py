@@ -51,6 +51,8 @@ class OverviewView(MessageView):
     old_len = len(self.game_overview.getSurfaces())
 
     game_entry = GameEntry(self.display, self.game_overview.getPos()[0], self.next_surface_pos_y, self.game_overview.getAvailableWidth() - 20, 50, game_id)
+    game_entry.addSelectCallback(self.onGameSelect)
+    game_entry.addDeselectCallback(self.onGameDeselect)
     self.game_overview.addSurface(game_entry)
     self.next_surface_pos_y += game_entry.get_height() + self.game_overview.getVSpace()
 
