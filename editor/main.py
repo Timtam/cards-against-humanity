@@ -9,6 +9,7 @@ from const import *
 from current_card import CurrCardWindow
 from shared.card import CARD_BLACK, CARD_WHITE
 from shared.path import getScriptDirectory
+from shared.translator import Translator
 
 MENU_NEW_CARD = 1
 MENU_APPLY_CHANGES = 2
@@ -24,6 +25,7 @@ class MainFrame(wx.Frame):
                       size=(WIDTH, HEIGHT))
     
     self.database = None
+    self.translator = Translator('editor')
     self.unsaved_changes = False
     
     # add menubar
@@ -38,7 +40,6 @@ class MainFrame(wx.Frame):
                                  name="vertical splitter")
     self.left_window = CardListWindow(splitter)
     self.right_window = CurrCardWindow(splitter)
-    # self.left_window.card_grid.buildList()
     
     splitter.SetMinimumPaneSize((WIDTH / 5))  # just to prevent moving sash to
     #   the very right or left and so
@@ -52,7 +53,6 @@ class MainFrame(wx.Frame):
     
     # listen to changing sash
     splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
-    # splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGED, self.onSashChanged)
     
     self.Bind(wx.EVT_SIZE, self.onResizing)
     
@@ -70,21 +70,21 @@ class MainFrame(wx.Frame):
     menubar = wx.MenuBar()
     file_menu = wx.Menu()
     
-    menu_item = wx.MenuItem(file_menu, MENU_NEW_CARD, "&New card\tCtrl+N")
+    menu_item = wx.MenuItem(file_menu, MENU_NEW_CARD, self.translator.translate("&New card\tCtrl+N"))
     file_menu.AppendItem(menu_item)
     
     menu_item = wx.MenuItem(file_menu, MENU_APPLY_CHANGES,
-                            "Apply &changes\tCtrl+C")
+                            self.translator.translate("Apply &changes\tCtrl+C"))
     file_menu.AppendItem(menu_item)
     
-    menu_item = wx.MenuItem(file_menu, MENU_SAVE_ALL, "&Save all\tCtrl+S")
+    menu_item = wx.MenuItem(file_menu, MENU_SAVE_ALL, self.translator.translate("&Save all\tCtrl+S"))
     file_menu.AppendItem(menu_item)
     
-    menu_item = wx.MenuItem(file_menu, MENU_UNDO_ALL, "&Undo all\tCtrl+U")
+    menu_item = wx.MenuItem(file_menu, MENU_UNDO_ALL, self.translator.translate("&Undo all\tCtrl+U"))
     file_menu.AppendItem(menu_item)
     
     menu_item = wx.MenuItem(file_menu, MENU_EXIT,
-                            "&Quit\tCtrl+Q")  # an underlined and linked Q (Ctrl
+                            self.translator.translate("&Quit\tCtrl+Q"))  # an underlined and linked Q (Ctrl
     #   + Q also quits)
     file_menu.AppendItem(menu_item)
     
@@ -95,7 +95,7 @@ class MainFrame(wx.Frame):
     file_menu.Bind(wx.EVT_MENU, self.onQuit, id=MENU_EXIT)
     self.Bind(wx.EVT_CLOSE, self.closeIntervention)
     
-    menubar.Append(file_menu, "&File")
+    menubar.Append(file_menu, self.translator.translate("&File"))
     self.SetMenuBar(menubar)
   
   
@@ -179,7 +179,7 @@ class MainFrame(wx.Frame):
   
   
   def Message(self, caption, text, style):
-    message = wx.MessageDialog(parent=self, caption=caption, message=text,
+    message = wx.MessageDialog(parent=self, caption=self.translator.translate(caption), message=self.translator.translate(text),
                                style=style)
     result = message.ShowModal()
     message.Destroy()
@@ -239,20 +239,9 @@ class MainFrame(wx.Frame):
   
   def onSashChanging(self, e):
     self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
-    #print(e.GetSashPosition()) # debug, please don't delete
-    #print(self.right_window.GetClientSize().width) # also debug
     
   
   def onNewCard(self, e):
-
-    # strange thing
-    # when pressing return on a card panel, instead of calling the
-    # key up event of that panel, the new card menu event is called
-    # luckily the GetEventObject() returns the panel in this case
-    # that means we can prevent this from happening
-    #if not isinstance(e.GetEventObject(), wx.Menu):
-    #  e.Skip()
-    #  return
 
     self.left_window.toolbar.onNewCard(None)
   

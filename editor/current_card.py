@@ -8,9 +8,12 @@ class CurrCardWindow(wx.Panel):
   def __init__(self, parent):
     wx.Panel.__init__(self, parent=parent,
                       name="current card panel")
+
+    frame = self.GetTopLevelParent()
+
     self.related_card = None
     
-    self.SetLabel("no card to be edited")
+    self.SetLabel(frame.translator.translate("No card to be edited"))
     self.SetBackgroundColour("white")
     self.SetMinSize((274, -1))
     
@@ -31,19 +34,19 @@ class CurrCardWindow(wx.Panel):
     self.current_card_panel.SetSizer(text_box)
 
     # radio buttons
-    self.radio_black = wx.RadioButton(self, label="black card", )
+    self.radio_black = wx.RadioButton(self, label=frame.translator.translate("Black card"), )
     self.radio_black.SetValue(True)
     self.Bind(wx.EVT_RADIOBUTTON, self.SetColors)
-    self.radio_white = wx.RadioButton(self, label="white card")
+    self.radio_white = wx.RadioButton(self, label=frame.translator.translate("White card"))
 
     # card edit buttons
-    self.button_del_text = wx.Button(self, label="delete text")
+    self.button_del_text = wx.Button(self, label=frame.translator.translate("Delete text"))
     self.button_del_text.Bind(wx.EVT_BUTTON, self.DeleteCardText)
-    self.button_del_card = wx.Button(self, label="delete card")
+    self.button_del_card = wx.Button(self, label=frame.translator.translate("Delete card"))
     self.button_del_card.Bind(wx.EVT_BUTTON, self.DeleteCard)
-    self.button_save_card = wx.Button(self, label="apply card changes")
+    self.button_save_card = wx.Button(self, label=frame.translator.translate("Apply card changes"))
     self.button_save_card.Bind(wx.EVT_BUTTON, self.SaveCard)
-    self.button_ins_ph = wx.Button(self, label="insert placeholder")
+    self.button_ins_ph = wx.Button(self, label=frame.translator.translate("Insert placeholder"))
     self.button_ins_ph.Bind(wx.EVT_BUTTON, self.InsertPlaceholder)
     
     # sizers:
@@ -139,7 +142,7 @@ class CurrCardWindow(wx.Panel):
     try:
       self.related_card.setCardText(self.current_card_text.GetValue())
     except CardValidityError as e:
-      frame.Message(caption="card text error", text=e.message['text'],
+      frame.Message(caption="Card text error", text=e.message['text'],
                     style=MSG_WARN)
       self.related_card.type = old_type
       return False
@@ -180,7 +183,9 @@ class CurrCardWindow(wx.Panel):
     self.related_card = None
     self.current_card_panel.Hide()
     
-    self.GetTopLevelParent().getMenuItem("&File", "Apply changes").Enable(False)
+    frame = self.GetTopLevelParent()
+
+    frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("Apply changes")).Enable(False)
     
     for b in [self.radio_black, self.radio_white, self.button_del_text,
               self.button_del_card, self.button_save_card, self.button_ins_ph]:

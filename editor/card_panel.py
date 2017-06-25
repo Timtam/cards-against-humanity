@@ -7,8 +7,11 @@ class CardPanel(wx.Panel):
   def __init__(self, parent, card_id=-1, size=(ELEMENT_SIZE, ELEMENT_SIZE),
                text="",
                card_type=CARD_WHITE):
+
     wx.Panel.__init__(self, parent=parent, id=card_id, size=size,
                       name=("card %d" %card_id), style=wx.SIMPLE_BORDER)
+    frame = self.GetTopLevelParent()
+    self.SetName(frame.translator.translate("Card {number}").format(number = card_id))
     self.card = Card(id=card_id, text=text, type=card_type)
     
     # subpanel for more free space between panel-border and text
@@ -63,7 +66,6 @@ class CardPanel(wx.Panel):
   
   
   def setActive(self):
-    # print ("clicked on " + self.GetName())
     self.clicked = True
     # if there already is an other "active" card, we need to "deactivate" (
     # change colors to normal)
@@ -82,7 +84,6 @@ class CardPanel(wx.Panel):
 
 
   def onEnteringPanel(self, event):
-    # print("entered panel " + self.GetName())
     if not self.clicked:
       self.SetBackgroundColour(COLOR_HOVER_CARD)
       self.Refresh()
@@ -90,7 +91,6 @@ class CardPanel(wx.Panel):
   
   
   def onLeavingPanel(self, event):
-    # print("left panel " + self.GetName())
     if not self.clicked:
       if not self.entered_subpanel:
         self.setColors()
@@ -101,7 +101,6 @@ class CardPanel(wx.Panel):
   
   
   def onEnteringSubPanel(self, event):
-    # print("entered subpanel " + self.GetName())
     if not self.clicked:
       self.SetBackgroundColour(COLOR_HOVER_CARD)
       self.Refresh()
@@ -109,7 +108,6 @@ class CardPanel(wx.Panel):
   
   
   def onLeavingSubPanel(self, event):
-    # print("left subpanel " + self.GetName())
     if not self.clicked:
       if not self.entered_text and not self.entered_panel:
         self.setColors()
@@ -120,7 +118,6 @@ class CardPanel(wx.Panel):
   
   
   def onEnteringText(self, event):
-    # print("entered text " + self.GetName())
     if not self.clicked:
       self.SetBackgroundColour(COLOR_HOVER_CARD)
       self.Refresh()
@@ -128,7 +125,6 @@ class CardPanel(wx.Panel):
   
   
   def onLeavingText(self, event):
-    # print("left text " + self.GetName())
     if not self.clicked:
       if not self.entered_subpanel:
         self.setColors()
@@ -164,7 +160,6 @@ class CardPanel(wx.Panel):
 class CardText(wx.StaticText):
   def __init__(self, parent, text):
     wx.StaticText.__init__(self, parent=parent, label=text)
-    # self.SetBackgroundColour("grey") #(debug)
     
     # fix flickering
     self.Bind(wx.EVT_ERASE_BACKGROUND, onEraseBackGround)

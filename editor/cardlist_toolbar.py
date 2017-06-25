@@ -7,7 +7,9 @@ class SearchCtrl(wx.SearchCtrl):
   def __init__(self, *args, **kwargs):
     wx.SearchCtrl.__init__(self, *args, **kwargs)
     
-    self.SetName("card search")
+    frame = self.GetTopLevelParent()
+
+    self.SetName(frame.translator.translate("Card search"))
     self.ShowSearchButton(False)
     self.ShowCancelButton(True)
     
@@ -37,7 +39,7 @@ class SearchCtrl(wx.SearchCtrl):
     frame.loadCards()
     frame.right_window.Disable()
     
-    frame.getMenuItem("&File", "New card").Enable(True)
+    frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(True)
     parent.button_new_card.Enable()
 
 
@@ -45,12 +47,15 @@ class SearchCtrl(wx.SearchCtrl):
 class CardListToolbar(wx.ToolBar):
   def __init__(self, parent):
     wx.ToolBar.__init__(self, parent=parent, style=wx.TB_FLAT, name="car list toolbar")
+
+    frame = self.GetTopLevelParent()
+
     self.SetToolBitmapSize((23, 23))
     
     # checkboxes for black and white
-    self.checkbox_black = wx.CheckBox(self, label="show black cards")
+    self.checkbox_black = wx.CheckBox(self, label=frame.translator.translate("Show black cards"))
     self.checkbox_black.SetValue(True)
-    self.checkbox_white = wx.CheckBox(self, label="show white cards")
+    self.checkbox_white = wx.CheckBox(self, label=frame.translator.translate("Show white cards"))
     self.checkbox_white.SetValue(True)
     self.Bind(wx.EVT_CHECKBOX, self.onSearch)
     
@@ -59,11 +64,11 @@ class CardListToolbar(wx.ToolBar):
     self.checkbox_white.Bind(wx.EVT_ERASE_BACKGROUND, onEraseBackGround)
     
     # buttons
-    self.button_new_card = wx.Button(self, label="new card")
+    self.button_new_card = wx.Button(self, label=frame.translator.translate("New card"))
     self.button_new_card.Bind(wx.EVT_BUTTON, self.onNewCard)
-    self.button_save_all = wx.Button(self, label="save changes")
+    self.button_save_all = wx.Button(self, label=frame.translator.translate("Save changes"))
     self.button_save_all.Bind(wx.EVT_BUTTON, self.onSaveAll)
-    self.button_undo_all = wx.Button(self, label="undo all")
+    self.button_undo_all = wx.Button(self, label=frame.translator.translate("Undo all"))
     self.button_undo_all.Bind(wx.EVT_BUTTON, self.onUndoAll)
     
     # search control
@@ -71,7 +76,6 @@ class CardListToolbar(wx.ToolBar):
     
     # toolbar:
     # some space...
-    # self.AddStretchableSpace()
     self.AddSeparator()
     
     # checkboxes
@@ -113,7 +117,6 @@ class CardListToolbar(wx.ToolBar):
                    """, ('', card_type,))
     panel = frame.left_window.card_grid.addCard(card_id=cursor.lastrowid, text='',
                                                 card_type=card_type)
-    # frame.left_window.card_grid.createGrid()
     frame.left_window.Layout()
     frame.right_window.setCard(panel.card)
     panel.onClick(event)
@@ -168,10 +171,10 @@ class CardListToolbar(wx.ToolBar):
       if self.search_ctrl.GetValue() != '' or not \
               self.checkbox_black.GetValue() or not \
               self.checkbox_white.GetValue():
-        self.GetTopLevelParent().getMenuItem("&File", "New card").Enable(False)
+        self.GetTopLevelParent().getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(False)
         self.button_new_card.Disable()
       else:
-        self.GetTopLevelParent().getMenuItem("&File", "New card").Enable(True)
+        self.GetTopLevelParent().getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(True)
         self.button_new_card.Enable()
     
     else:

@@ -5,8 +5,6 @@ from card_panel import CardPanel
 from cardlist_toolbar import CardListToolbar
 from const import *
 
-# from shared.card import CARD_BLACK
-
 # elements have the border on all sides and are centered only horizontally
 FLAG = wx.ALL | wx.ALIGN_CENTER_HORIZONTAL
 
@@ -39,9 +37,11 @@ class ScrolledGrid(wx.ScrolledWindow):
                                name="card list grid",
                                style=wx.FULL_REPAINT_ON_RESIZE)
     
+    frame = self.GetTopLevelParent()
+
     self.initialized = False
     
-    self.SetLabel("no cards found")
+    self.SetLabel(frame.translator.translate("No cards found"))
     self.SetBackgroundColour("white")
     
     # next 2 just for initialization (don't ask about the numbers)
@@ -112,8 +112,6 @@ class ScrolledGrid(wx.ScrolledWindow):
   
   def addCard(self, card_id, text, card_type):
     card = CardPanel(self, card_id=card_id, text=text, card_type=card_type)
-    # box = wx.BoxSizer()
-    # box.Add(card)
     self.grid.Add(card, 1,  # wx.EXPAND |
                   wx.ALL,
                   BORDER)  # if no wx.EXPAND, you only see the texts in the
@@ -154,21 +152,11 @@ class ScrolledGrid(wx.ScrolledWindow):
     panel = self.getCard(card)
     
     if panel is not None:
-      #index = card.id - 1
       self.grid.Remove(panel)
       panel.Destroy()
       del panel
       self.Layout()
       
-      #prev_card = None
-      #for i in range(index, 0, -1):
-      #  prev_card = self.getCard(i)
-      #  if prev_card is not None:
-      #    break
-      #if prev_card is not None:
-      #  self.active_card = prev_card.card
-      #  prev_card.onClick(None)
-      #else:
       self.GetTopLevelParent().right_window.Disable()
 
 
