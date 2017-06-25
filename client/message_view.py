@@ -170,6 +170,7 @@ class MessageView(View):
         self.old_tab_order = self.tab_order
         self.old_tab_position = self.tab_position
         self.tab_order = [None]
+        pygame.mouse.set_cursor(*pygame.cursors.arrow)
 
       if self.tab_order[0] != self.scrolled_text:
         self.tab_order = [self.scrolled_text]

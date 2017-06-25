@@ -55,6 +55,7 @@ class Display(object):
       self.stop()
     elif event.type == EVENT_VIEWCHANGE:
       if not isinstance(self.view, eval(event.view)):
+        pygame.mouse.set_cursor(*pygame.cursors.arrow)
         self.view = eval(event.view)(self)
     elif event.type == EVENT_FUNCALL:
       eval(event.function)(*event.args, **event.kwargs)
