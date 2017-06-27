@@ -72,7 +72,8 @@ class Translator(object):
       xml = ET.ElementTree(element)
       ET.SubElement(element, self.node)
     else:
-      xml = ET.parse(path)
+      parser = ET.XMLParser(remove_blank_text = True)
+      xml = ET.parse(path, parser)
       element = xml.getroot().xpath(self.node)
       if len(element) == 0:
         element = ET.SubElement(xml.getroot(), self.node)
