@@ -45,7 +45,7 @@ class Configurator(object):
       if not key in self.__save.__dict__:
         self.__save.__dict__[key]={}
       for k in self.options[key].keys():
-        if not key in self.__save.__dict__[key]:
+        if not k in self.__save.__dict__[key]:
           self.__save.__dict__[key][k] = self.options[key][k]
 
   def save(self):

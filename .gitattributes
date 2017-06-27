@@ -6,3 +6,5 @@
 *.dll binary
 *.ttf binary
 *.ogg binary
+*.dat binary
+

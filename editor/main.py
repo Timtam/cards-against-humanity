@@ -28,6 +28,7 @@ class MainFrame(wx.Frame):
     self.config = Configurator('editor')
     self.database = None
     self.translator = Translator('editor')
+    self.translator.setLanguage(self.config.get('language'))
     self.unsaved_changes = False
     
     # add menubar
@@ -71,7 +72,6 @@ class MainFrame(wx.Frame):
   def initUI(self):
     menubar = wx.MenuBar()
     file_menu = wx.Menu()
-    
     menu_item = wx.MenuItem(file_menu, MENU_NEW_CARD, self.translator.translate("&New card\tCtrl+N"))
     file_menu.AppendItem(menu_item)
     
@@ -98,6 +98,22 @@ class MainFrame(wx.Frame):
     self.Bind(wx.EVT_CLOSE, self.closeIntervention)
     
     menubar.Append(file_menu, self.translator.translate("&File"))
+
+    language_menu = wx.Menu()
+
+    languages = self.translator.getAvailableLanguages()
+
+    for i in range(len(languages)):
+      menu_item = wx.MenuItem(language_menu, id=100+i, text=languages[i])
+      menu_item.SetCheckable(True)
+      language_menu.AppendItem(menu_item)
+      language_menu.Bind(wx.EVT_MENU, self.onLanguageChange, id=100+i)
+
+      if languages[i] == self.translator.getLanguage():
+        menu_item.Check(True)
+
+    menubar.Append(language_menu, self.translator.translate("&Language"))
+
     self.SetMenuBar(menubar)
   
   
@@ -260,6 +276,20 @@ class MainFrame(wx.Frame):
   
   def onUndoAll(self, e):
     self.left_window.toolbar.onUndoAll(None)
+
+
+  def onLanguageChange(self, e):
+
+    item = e.GetEventObject().FindItemById(e.Id)
+
+    if item.Label == self.translator.getLanguage():
+      # trying to select the language which is already selected
+      item.Check(True)
+      return
+
+    self.config.set('language', item.Label)
+
+    self.Message(caption="Change language", text="The language will change after restarting the editor.", style=MSG_INFO)
 
 
 
