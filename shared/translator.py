@@ -13,10 +13,12 @@ class Translator(object):
   def getAvailableLanguages(self):
     return [self.getDefaultLanguage()]+[os.path.splitext(lang)[0] for lang in os.listdir(self.getLanguageFolder())]
 
-  def getDefaultLanguage(self):
+  @staticmethod
+  def getDefaultLanguage():
     return 'English'
 
-  def getLanguageFolder(self):
+  @staticmethod
+  def getLanguageFolder():
     return os.path.join(getScriptDirectory(), 'languages')
 
   def setLanguage(self, language):

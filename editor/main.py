@@ -8,6 +8,7 @@ from cardlist import CardListWindow
 from const import *
 from current_card import CurrCardWindow
 from shared.card import CARD_BLACK, CARD_WHITE
+from shared.configurator import Configurator
 from shared.path import getScriptDirectory
 from shared.translator import Translator
 
@@ -24,6 +25,7 @@ class MainFrame(wx.Frame):
     wx.Frame.__init__(self, parent=None, title="Card Editor",
                       size=(WIDTH, HEIGHT))
     
+    self.config = Configurator('editor')
     self.database = None
     self.translator = Translator('editor')
     self.unsaved_changes = False
@@ -233,6 +235,8 @@ class MainFrame(wx.Frame):
         self.left_window.toolbar.onSaveAll(None)
     
     self.Destroy()
+    self.translator.close()
+    self.config.save()
     
     e.Veto(False)
   
