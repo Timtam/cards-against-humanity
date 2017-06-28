@@ -287,3 +287,7 @@ class ClientProtocol(JSONReceiver):
   def sendLeaveGame(self):
     self.sendMessage(MSG_LEAVE_GAME)
 
+  def connectionLost(self, reason):
+
+    self.factory.display.setView('LoginView')
+    self.factory.display.callFunction('self.view.errorMessage', self.factory.display.translator.translate('Lost connection to server')+': '+reason.getErrorMessage())

@@ -170,6 +170,7 @@ class LoginView(MessageView):
 
 
   def errorMessage(self, message):
+    self.default_mode = False
     MessageView.errorMessage(self, message, self.onOK)
 
 
