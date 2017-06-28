@@ -242,7 +242,7 @@ class MainFrame(wx.Frame):
         self.right_window.Disable()
     
     if self.unsaved_changes:
-      result = self.Message(caption="unsaved changes",
+      result = self.Message(caption="Unsaved changes",
                             text="You changed some cards without saving. Do "
                                  "you want us to save for you?",
                             style=MSG_YES_NO)

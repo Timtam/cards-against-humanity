@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<translations>
+  <editor>
+    <string>
+      <origin>&amp;New card	Ctrl+N</origin>
+      <translation>&amp;Neue Karte	Strg+N</translation>
+    </string>
+    <string>
+      <origin>Apply &amp;changes	Ctrl+C</origin>
+      <translation>Änderungen &amp;übernehmen	Strg+U</translation>
+    </string>
+    <string>
+      <origin>&amp;Save all	Ctrl+S</origin>
+      <translation>Änderungen &amp;speichern	Strg+S</translation>
+    </string>
+    <string>
+      <origin>&amp;Undo all	Ctrl+U</origin>
+      <translation>Änderungen &amp;verwerfen	Strg+V</translation>
+    </string>
+    <string>
+      <origin>&amp;Quit	Ctrl+Q</origin>
+      <translation>&amp;Beenden	Strg+B</translation>
+    </string>
+    <string>
+      <origin>&amp;File</origin>
+      <translation>&amp;Datei</translation>
+    </string>
+    <string>
+      <origin>&amp;Language</origin>
+      <translation>&amp;Sprache</translation>
+    </string>
+    <string>
+      <origin>Show black cards</origin>
+      <translation>Schwarze Karten anzeigen</translation>
+    </string>
+    <string>
+      <origin>Show white cards</origin>
+      <translation>Weiße Karten anzeigen</translation>
+    </string>
+    <string>
+      <origin>New card</origin>
+      <translation>Neue Karte</translation>
+    </string>
+    <string>
+      <origin>Save changes</origin>
+      <translation>Änderungen speichern</translation>
+    </string>
+    <string>
+      <origin>Undo all</origin>
+      <translation>Änderungen verwerfen</translation>
+    </string>
+    <string>
+      <origin>Card search</origin>
+      <translation>Kartensuche</translation>
+    </string>
+    <string>
+      <origin>No cards found</origin>
+      <translation>Keine Karten gefunden</translation>
+    </string>
+    <string>
+      <origin>No card to be edited</origin>
+      <translation>Keine Karten zum Bearbeiten</translation>
+    </string>
+    <string>
+      <origin>Black card</origin>
+      <translation>Schwarze Karte</translation>
+    </string>
+    <string>
+      <origin>White card</origin>
+      <translation>Weiße Karte</translation>
+    </string>
+    <string>
+      <origin>Delete text</origin>
+      <translation>Text löschen</translation>
+    </string>
+    <string>
+      <origin>Delete card</origin>
+      <translation>Karte löschen</translation>
+    </string>
+    <string>
+      <origin>Apply card changes</origin>
+      <translation>Kartenänderungen übernehmen</translation>
+    </string>
+    <string>
+      <origin>Insert placeholder</origin>
+      <translation>Platzhalter einfügen</translation>
+    </string>
+    <string>
+      <origin>Apply changes</origin>
+      <translation>Änderungen übernehmen</translation>
+    </string>
+    <string>
+      <origin>Card {number}</origin>
+      <translation>Karte {number}</translation>
+    </string>
+    <string>
+      <origin>Change language</origin>
+      <translation>Sprache ändern</translation>
+    </string>
+    <string>
+      <origin>The language will change after restarting the editor.</origin>
+      <translation>Die Sprache wird nach dem Neustart des Editors geändert.</translation>
+    </string>
+    <string>
+      <origin>Card text error</origin>
+      <translation>Kartentextfehler</translation>
+    </string>
+    <string>
+      <origin>Black cards must contain at least one placeholder</origin>
+      <translation>Schwarze Karten benötigen mindestens einen Platzhalter</translation>
+	</string>
+	<string>
+      <origin>You changed some cards without saving. Do you want us to save for you?</origin>
+      <translation>Die Kartenänderungen wurden nicht gespeichert. Sollen alle Änderungen gespeichert werden?</translation>
+    </string>
+    <string>
+      <origin>White cards may not have any placeholders</origin>
+      <translation>Weiße Karten dürfen keine Platzhalter enthalten</translation>
+    </string>
+    <string>
+      <origin>unapplied changes</origin>
+      <translation>Nicht übernommene Änderungen</translation>
+    </string>
+    <string>
+      <origin>Apply your latest changes first before saving</origin>
+      <translation>Vor dem Speichern müssen die neuesten Änderungen übernommen werden</translation>
+    </string>
+    <string>
+      <origin>Unsaved changes</origin>
+      <translation>Nicht gespeicherte Änderungen</translation>
+    </string>
+    <string>
+      <origin>You didn't save the currently editing card yet. Do you want to discard your changes?</origin>
+      <translation>Die soeben bearbeitete Karte wurde noch nicht gespeichert. Sollen alle Änderungen verworfen werden?</translation>
+    </string>
+  </editor>
+</translations>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<translations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<editor>
+		<string>
+			<origin>&amp;New card	Ctrl+N</origin>
+			<translation>&amp;Новая карта	Ctrl+N</translation>
+		</string>
+		<string>
+			<origin>Apply &amp;changes	Ctrl+C</origin>
+			<translation>Применить &amp;изменения	Ctrl+B</translation>
+		</string>
+		<string>
+			<origin>&amp;Save all	Ctrl+S</origin>
+			<translation>Сохр&amp;анить все	Ctrl+S</translation>
+		</string>
+		<string>
+			<origin>&amp;Undo all	Ctrl+U</origin>
+			<translation>&amp;Отменить все	Ctrl+U</translation>
+		</string>
+		<string>
+			<origin>&amp;Quit	Ctrl+Q</origin>
+			<translation>&amp;Выход	Ctrl+Q</translation>
+		</string>
+		<string>
+			<origin>&amp;File</origin>
+			<translation>&amp;Файл</translation>
+		</string>
+		<string>
+			<origin>&amp;Language</origin>
+			<translation>&amp;Язык</translation>
+		</string>
+		<string>
+			<origin>Show black cards</origin>
+			<translation>Показать черные карты</translation>
+		</string>
+		<string>
+			<origin>Show white cards</origin>
+			<translation>Показать белые карты</translation>
+		</string>
+		<string>
+			<origin>New card</origin>
+			<translation>Новая карта</translation>
+		</string>
+		<string>
+			<origin>Save changes</origin>
+			<translation>Сохранить изменения</translation>
+		</string>
+		<string>
+			<origin>Undo all</origin>
+			<translation>Отменить все</translation>
+		</string>
+		<string>
+			<origin>Card search</origin>
+			<translation>Поиск карта</translation>
+		</string>
+		<string>
+			<origin>No cards found</origin>
+			<translation>Карты не найдено</translation>
+		</string>
+		<string>
+			<origin>No card to be edited</origin>
+			<translation>Ничего карта изменено</translation>
+		</string>
+		<string>
+			<origin>Black card</origin>
+			<translation>Черная карта</translation>
+		</string>
+		<string>
+			<origin>White card</origin>
+			<translation>Белая карта</translation>
+		</string>
+		<string>
+			<origin>Delete text</origin>
+			<translation>Удалить текст</translation>
+		</string>
+		<string>
+			<origin>Delete card</origin>
+			<translation>Удалить карта</translation>
+		</string>
+		<string>
+			<origin>Apply card changes</origin>
+			<translation>Применить карта изменений</translation>
+		</string>
+		<string>
+			<origin>Insert placeholder</origin>
+			<translation>Вставить заполнитель</translation>
+		</string>
+		<string>
+			<origin>Apply changes</origin>
+			<translation>Применить изменения</translation>
+		</string>
+		<string>
+			<origin>Card {number}</origin>
+			<translation>Карта {number}</translation>
+		</string>
+		<string>
+			<origin>Change language</origin>
+			<translation>Изменить язык</translation>
+		</string>
+		<string>
+			<origin>The language will change after restarting the editor.</origin>
+			<translation>Язык будет изменить после переза́пуска редактора.</translation>
+		</string>
+		<string>
+			<origin>Card text error</origin>
+			<translation>Карта текста ошибки</translation>
+		</string>
+		<string>
+			<origin>Black cards must contain at least one placeholder</origin>
+			<translation>Черные карты нужны содержать одно заполнитель</translation>
+		</string>
+		<string>
+			<origin>You changed some cards without saving. Do you want us to save for you?</origin>
+			<translation>Вы измените карты без сохранения. Вы хотите сохранить изменения тепер?</translation>
+		</string>
+		<string>
+			<origin>White cards may not have any placeholders</origin>
+			<translation>У белых карт не может быть заполнитель </translation>
+		</string>
+		<string>
+			<origin>Unapplied changes</origin>
+			<translation>Несохраненные изменения</translation>
+		</string>
+		<string>
+			<origin>Apply your latest changes first before saving</origin>
+			<translation>Примените последние изменении перед сохранением</translation>
+		</string>
+		<string>
+			<origin>Unsaved changes</origin>
+			<translation>Несохраненные изменения</translation>
+		</string>
+		<string>
+			<origin>You didn't save the currently editing card yet. Do you want to discard your changes?</origin>
+			<translation>Вы не сохраните текущий измена карта ещё нет.  Вы хотите отменить свои изменения?</translation>
+		</string>
+	</editor>
+</translations>
