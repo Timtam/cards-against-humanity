@@ -27,8 +27,8 @@ class GameView(View):
     self.font = self.display.getFont()
     self.mode = GAME_MODE_PAUSED
     
-    self.button_start_pause = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.85, 50))
-    self.button_start_pause.setCallback(self.onStartLeave)
+    self.button_start_leave = Button(self.display, self.display.translator.translate("Start or leave game"), self.font, (self.display_size[0] * 0.85, 50))
+    self.button_start_leave.setCallback(self.onStartLeave)
     self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, 100))
     self.button_confirm.setCallback(self.onConfirmChoice)
     self.button_suspend = Button(self.display, self.display.translator.translate("Suspend game"), self.font, (self.display_size[0] * 0.85, 200))
@@ -45,7 +45,7 @@ class GameView(View):
 
     self.cards = []
 
-    self.tab_order = [self.button_start_pause, self.button_confirm, self.button_suspend, self.gamelog_text]
+    self.tab_order = [self.button_start_leave, self.button_confirm, self.button_suspend, self.gamelog_text]
     self.createCardSurfaces()
     self.setMode(GAME_MODE_PAUSED)
     self.tab_order.append(self.player_indicators)
@@ -116,12 +116,15 @@ class GameView(View):
   
   
   def onStartLeave(self):
-    self.display.factory.client.sendStartGame()
+    if self.mode == GAME_MODE_PAUSED:
+      self.display.factory.client.sendStartGame()
+    else:
+      self.display.factory.client.sendLeaveGame()
   
   
   def handleEvent(self, event):
     View.handleEvent(self, event)
-    self.button_start_pause.handleEvent(event)
+    self.button_start_leave.handleEvent(event)
     self.button_confirm.handleEvent(event)
     self.button_suspend.handleEvent(event)
 
@@ -172,7 +175,7 @@ class GameView(View):
       self.cards[i]['card'].render()
       self.display.screen.blit(self.cards[i]['card'], self.cards[i]['position'])
     
-    self.button_start_pause.render()
+    self.button_start_leave.render()
     self.button_confirm.render()
     self.button_suspend.render()
 
@@ -275,6 +278,6 @@ class GameView(View):
   def onSuspend(self):
 
     self.display.factory.client.sendSuspendGame()
-    self.button_start_pause.setEnable(False)
+    self.button_start_leave.setEnable(False)
     self.button_confirm.setEnable(False)
     self.button_suspend.setEnable(False)

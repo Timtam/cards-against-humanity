@@ -18,6 +18,7 @@ class ServerProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_DECISION, self.czarDecision)
     self.addCallback(MODE_IN_GAME, MSG_SUSPEND_GAME, self.suspendGame)
+    self.addCallback(MODE_IN_GAME, MSG_LEAVE_GAME, self.leaveGame)
     self.setMode(MODE_CLIENT_AUTHENTIFICATION)
     self.user = User(self)
 
@@ -189,7 +190,7 @@ class ServerProtocol(JSONReceiver):
       return
 
     if game.open:
-      code = MSG_LEFT_GAME
+      code = MSG_LEAVE_GAME
       game.leave(self.user)
     else:
       code = MSG_SUSPEND_GAME
@@ -202,6 +203,26 @@ class ServerProtocol(JSONReceiver):
 
     self.setMode(MODE_FREE_TO_JOIN)
 
+  def leaveGame(self):
+
+    game = self.user.getGame()
+
+    if game is None:
+      self.log.warn("{log_source.identification!r} tried to leave a game, but isn't in any game")
+      self.sendMessage(MSG_LEAVE_GAME, success = False, message = "you aren't in any game")
+      return
+
+    result = game.leave(self.user)
+
+    if not result['success']:
+      self.sendMessage(MSG_LEAVE_GAME, **result)
+      return
+
+    self.setMode(MODE_FREE_TO_JOIN)
+
+    for user in game.getAllUsers():
+      user.protocol.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
+    self.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')

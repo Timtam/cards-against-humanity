@@ -170,11 +170,6 @@ class Game(object):
       self.log.warn('no users in this game, {user} tried to leave', user = user.id)
       return self.formatted(success = False, message = 'no users found in this game')
 
-    # users which are the current czar in this running game can't leave
-    if users[0] == user and self.running:
-      self.log.info('czar {user} tried to leave the game, but this is not possible', user = user.id)
-      return self.formatted(success = False, message = 'the czar cannot leave the game')
-
     possible_users = [u for u in self.users if u['user'] == user.id and u['joined']]
 
     if len(possible_users) != 1:
@@ -183,7 +178,22 @@ class Game(object):
 
     del self.users[self.users.index(possible_users[0])]
     user.setGame(None)
+
     self.log.info('user {user} left game {game}', user = user.id, game = self.id)
+
+    self.pause()
+
+    if len(self.users)<3:
+      self.open = True
+      for user in self.users:
+        user['white_cards'] = []
+        user['chosen_cards'] = []
+        user['black_cards'] = 0
+      self.white_cards = []
+      self.black_cards = []
+      self.loadCards()
+
+      self.log.info('not enough users left, game opened up all new')
 
     return self.formatted(success = True, unlinked = self.unlink())
 
