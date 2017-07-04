@@ -125,6 +125,8 @@ class CardListToolbar(wx.ToolBar):
                    """, ('', card_type,))
     panel = frame.left_window.card_grid.addCard(card_id=cursor.lastrowid, text='',
                                                 card_type=card_type)
+    frame.card_counter += 1
+    self.updateCardCounter()
     frame.left_window.Layout()
     frame.right_window.setCard(panel.card)
     panel.onClick(event)
@@ -179,10 +181,10 @@ class CardListToolbar(wx.ToolBar):
       if self.search_ctrl.GetValue() != '' or not \
               self.checkbox_black.GetValue() or not \
               self.checkbox_white.GetValue():
-        self.GetTopLevelParent().getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(False)
+        frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(False)
         self.button_new_card.Disable()
       else:
-        self.GetTopLevelParent().getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(True)
+        frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(True)
         self.button_new_card.Enable()
     
     else:
@@ -214,7 +216,13 @@ class CardListToolbar(wx.ToolBar):
     
     return True
 
+  def updateCardCounter(self):
 
+    frame = self.GetTopLevelParent()
+
+    self.card_counter.SetLabel(frame.translator.translate("Card counter")+": "+str(frame.card_counter))
+
+    self.Realize()
 
 def onEraseBackGround(e):
   # do nothing

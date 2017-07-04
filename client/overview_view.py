@@ -27,8 +27,9 @@ class OverviewView(MessageView):
     self.button_create.setCallback(self.onCreate)
     self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (200, 200))
     self.button_join.setCallback(self.onJoin)
-    self.button_delete = Button(self.display, display.translator.translate("Delete Game"), self.font, (20, 270))
+    self.button_delete = Button(self.display, display.translator.translate("Delete game"), self.font, (20, 270))
     self.button_delete.setCallback(self.onDelete)
+    self.button_delete.setEnable(False)
     self.button_disconnect = Button(self.display, display.translator.translate("Disconnect"), self.font, (20, 400))
     self.button_disconnect.setCallback(self.onDisconnect)
     
@@ -62,6 +63,7 @@ class OverviewView(MessageView):
     if old_len == 0:
       game_entry.setClicked()
       self.button_join.setEnable(True)
+      self.button_delete.setEnable(True)
       self.input_game_name.setText(game_entry.text)
 
   
@@ -79,6 +81,7 @@ class OverviewView(MessageView):
 
     if len(self.game_overview.getSurfaces()) == 0:
       self.button_join.setEnable(False) 
+      self.button_delete.setEnable(False)
 
   
   def handleEventDefault(self, event):

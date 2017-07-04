@@ -192,8 +192,7 @@ class MainFrame(wx.Frame):
       self.card_counter += 1
     if self.left_window.card_grid.initialized is False:
       self.left_window.card_grid.createGrid()
-    self.left_window.toolbar.card_counter.SetLabel(self.translator.translate("Card counter") + ": " + str(self.card_counter))
-    self.left_window.toolbar.Realize()
+    self.left_window.toolbar.updateCardCounter()
     self.left_window.card_grid.Show()
     self.left_window.Layout()
     
@@ -244,6 +243,8 @@ class MainFrame(wx.Frame):
         if self.right_window.related_card.getCardText() == '':
           self.database.cursor().execute('DELETE FROM cards WHERE id = ?',
                                          (self.right_window.related_card.id,))
+          self.card_counter -= 1
+          self.left_window.toolbar.updateCardCounter()
         self.right_window.Disable()
     
     if self.unsaved_changes:
