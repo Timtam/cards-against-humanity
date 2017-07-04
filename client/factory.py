@@ -22,6 +22,9 @@ class ClientFactory(Factory):
     if self.client:
       self.client.transport.loseConnection()
       self.client = None
+      self.games = []
+      self.users = []
+      self.card_database = CardDatabaseManager()
 
   def addUser(self, id, name):
     self.users.append({
