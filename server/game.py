@@ -96,7 +96,7 @@ class Game(object):
       return self.formatted(success=False, message='wrong password supplied')
 
     if self.open:
-      self.users.append(self.userdict(user))
+      self.users.append(self.userdict(user, len(self.users) == 0))
       user.setGame(self)
     else:
       possible_users = [u for u in self.users if u['user'] == user.id and not u['joined']]
@@ -217,9 +217,10 @@ class Game(object):
       
     self.log.info('game {game} paused', game = self.id)
 
-  def unlink(self):
+  def unlink(self, force = False):
     # can only unlink if no users are left
-    if len(self.users)>0:
+    # as long as it is not forced (force by using the delete button)
+    if len(self.users)>0 and not force:
       return False
 
     self.factory.unlinkGame(self)
@@ -341,14 +342,24 @@ class Game(object):
     return self.formatted(success = True, winner = self.factory.findUser(user['user']), end = end)
 
 
+  def isCreator(self, user):
+
+    possible_users = [u for u in self.users if u['user'] == user.id]
+
+    if len(possible_users) == 0:
+      return False
+
+    return possible_users[0]['creator']
+
   @staticmethod
-  def userdict(user):
+  def userdict(user, creator):
     return {
             'user': user.id,
             'joined': True,
             'black_cards': 0,
             'white_cards': [],
-            'chosen_cards': []
+            'chosen_cards': [],
+            'creator': creator
            }
 
   @staticmethod

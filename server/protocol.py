@@ -14,6 +14,7 @@ class ServerProtocol(JSONReceiver):
     self.addCallback(MODE_INITIAL_SYNC, MSG_DATABASE_KNOWN, self.databaseKnown)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_DELETE_GAME, self.deleteGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_DECISION, self.czarDecision)
@@ -199,7 +200,7 @@ class ServerProtocol(JSONReceiver):
     for user in self.factory.getAllUsers():
       user.protocol.sendMessage(code, user_id = self.user.id, game_id = game.id)
       if len(game.users) == 0:
-        user.protocol.sendMessage(MSG_DELETED_GAME, game_id = game.id)
+        user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
 
     self.setMode(MODE_FREE_TO_JOIN)
 
@@ -223,6 +224,27 @@ class ServerProtocol(JSONReceiver):
     for user in game.getAllUsers():
       user.protocol.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
     self.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
+
+  def deleteGame(self, game_id):
+
+    game = self.factory.findGame(game_id)
+
+    if game is None:
+      self.sendMessage(MSG_DELETE_GAME, success = False, message = 'game not found')
+      return
+
+    if len(game.getAllUsers()) > 0:
+      self.sendMessage(MSG_DELETE_GAME, success = False, message = 'there are currently users in this game')
+      return
+
+    if not game.isCreator(self.user):
+      self.sendMessage(MSG_DELETE_GAME, success = False, message = 'you are not the creator of this game')
+      return
+
+    game.unlink(True)
+
+    for user in self.factory.getAllUsers():
+      user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
 
   def connectionLost(self, reason):
     self.log.info('{log_source.identification!r} lost connection')

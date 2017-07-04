@@ -24,7 +24,7 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_OFF, self.loggedOff)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LEAVE_GAME, self.leaveGame)
-    self.addCallback(MODE_FREE_TO_JOIN, MSG_DELETED_GAME, self.deletedGame)
+    self.addCallback(MODE_FREE_TO_JOIN, MSG_DELETE_GAME, self.deleteGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_SUSPEND_GAME, self.suspendGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
@@ -36,7 +36,7 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_OFF, self.loggedOff)
     self.addCallback(MODE_IN_GAME, MSG_LEAVE_GAME, self.leaveGame)
     self.addCallback(MODE_IN_GAME, MSG_SUSPEND_GAME, self.suspendGame)
-    self.addCallback(MODE_IN_GAME, MSG_DELETED_GAME, self.deletedGame)
+    self.addCallback(MODE_IN_GAME, MSG_DELETE_GAME, self.deleteGame)
     self.addCallback(MODE_IN_GAME, MSG_CHOOSE_CARDS, self.chooseCards)
     self.addCallback(MODE_IN_GAME, MSG_CHOICES, self.choices)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_DECISION, self.czarDecision)
@@ -198,12 +198,16 @@ class ClientProtocol(JSONReceiver):
         self.setMode(MODE_FREE_TO_JOIN)
         self.game_id = 0
 
-  def deletedGame(self, game_id):
-    self.factory.removeGame(game_id)
-    if self.getMode() == MODE_FREE_TO_JOIN:
-      self.factory.display.callFunction('self.view.deleteGame', game_id)
-      self.factory.display.game_deleted_sound.stop()
-      self.factory.display.game_deleted_sound.play()
+  def deleteGame(self, success = True, game_id = 0, message = ''):
+    if success:
+      self.factory.removeGame(game_id)
+      if self.getMode() == MODE_FREE_TO_JOIN:
+        self.factory.display.callFunction('self.view.deleteGame', game_id)
+        self.factory.display.game_deleted_sound.stop()
+        self.factory.display.game_deleted_sound.play()
+        self.factory.display.view.default_mode = True
+    elif not success and self.getMode() == MODE_FREE_TO_JOIN:
+      self.factory.display.view.errorMessage(message)
 
 
   def sendStartGame(self):
@@ -286,6 +290,9 @@ class ClientProtocol(JSONReceiver):
 
   def sendLeaveGame(self):
     self.sendMessage(MSG_LEAVE_GAME)
+
+  def sendDeleteGame(self, id):
+    self.sendMessage(MSG_DELETE_GAME, game_id = id)
 
   def connectionLost(self, reason):
 
