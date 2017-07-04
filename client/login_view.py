@@ -207,10 +207,10 @@ class LoginView(MessageView):
   
   def addLanguageEntries(self):
     #for language in languages:
-    language_entry = LanguageEntry(self.display, self.languages.getPos()[0], self.next_surface_pos_y, self.button_select_language.getWidth() - 60, self.button_select_language.getHeight())
-    language_entry.setSelectCallback(self.onLanguageSelect)
-    language_entry.setDeselectCallback(self.onLanguageDeselect)
-    self.languages.addSurface(language_entry)
+    #  language_entry = LanguageEntry(self.display, self.languages.getPos()[0], self.next_surface_pos_y, self.button_select_language.getWidth() - 60, self.button_select_language.getHeight())
+    #  language_entry.setSelectCallback(self.onLanguageSelect)
+    #  language_entry.setDeselectCallback(self.onLanguageDeselect)
+    #  self.languages.addSurface(language_entry)
     pass
   
   
