@@ -1,5 +1,7 @@
-from tools import *
+from .tools import *
 from .message_view import MessageView
+from .scrolled_panel import ScrolledPanel
+from .language_entry import LanguageEntry
 
 SPACE_BETWEEN_LABEL_AND_INPUT = 20
 TEXT_INPUT_WIDTH = 300
@@ -13,11 +15,11 @@ class LoginView(MessageView):
     font = display.getFont()
     font_welcome = display.getFont(30)
     font_note = display.getFont(14)
-    size = display.getSize()
+    self.display_size = display.getSize()
     
     # calc middle of screen
-    hmiddle = size[0] / 2
-    vmiddle = size[1] / 2
+    hmiddle = self.display_size[0] / 2
+    vmiddle = self.display_size[1] / 2
     
     # short form of constant
     space = SPACE_BETWEEN_LABEL_AND_INPUT / 2
@@ -78,8 +80,22 @@ class LoginView(MessageView):
     
     self.button_close.setCallback(self.onClose)
     
+    self.button_select_language = Button(self.display, self.display.translator.translate("Select Language"), font, (0, 0))
+    self.button_select_language.setPosition((self.display_size[0] - self.button_select_language.getWidth() - 20, self.display_size[1] - self.button_select_language.getHeight() - 20))
+    self.button_select_language.setCallback(self.onLanguageSelect)
+    self.button_select_language.setEnable(False)
+    
+    self.surface_languages = pygame.Surface((self.button_select_language.getWidth(), self.button_select_language.getHeight() * 2 + 60))
+    self.languages_border = pygame.Rect(0, 0, self.surface_languages.get_width(), self.surface_languages.get_height())
+    self.languages = ScrolledPanel(self.display, self.display_size[0] - self.button_select_language.getWidth(), self.display_size[1] - self.button_select_language.getHeight() - self.surface_languages.get_height() - 20, self.surface_languages.get_width() - 40, self.surface_languages.get_height() - 40)
+    
+    self.next_surface_pos_y = self.languages.getPos()[1]
+
+    self.addLanguageEntries()
+
     self.tab_order = [self.server_input, self.uname_input, self.pword_input,
-                      self.button_connect, self.button_close]
+                      self.button_connect, self.button_close, self.languages, self.button_select_language]
+    self.language_selected = False
   
   
   def handleEventDefault(self, event):
@@ -90,6 +106,9 @@ class LoginView(MessageView):
     
     self.button_connect.handleEvent(event)
     self.button_close.handleEvent(event)
+    
+    self.languages.handleEvent(event)
+    self.button_select_language.handleEvent(event)
   
   
   def renderDefault(self):
@@ -114,7 +133,14 @@ class LoginView(MessageView):
     # draw buttons
     self.button_connect.render()
     self.button_close.render()
-  
+    
+    self.surface_languages.fill((255, 255, 255))
+    pygame.draw.rect(self.surface_languages, (0, 0, 0), self.languages_border, 1)
+    self.display.screen.blit(self.surface_languages, (self.display_size[0] - self.button_select_language.getWidth() - 20, self.display_size[1] - self.button_select_language.getHeight() - self.surface_languages.get_height() - 40))
+    self.languages.render()
+    self.display.screen.blit(self.languages, self.languages.getPos())
+    self.button_select_language.render()
+    
   
   def updateDefault(self):
     MessageView.updateDefault(self)
@@ -177,3 +203,22 @@ class LoginView(MessageView):
   def onOK(self):
     self.display.callFunction('self.factory.closeClient')
     self.default_mode = True
+  
+  
+  def addLanguageEntries(self):
+    #for language in languages:
+    language_entry = LanguageEntry(self.display, self.languages.getPos()[0], self.next_surface_pos_y, self.button_select_language.getWidth() - 60, self.button_select_language.getHeight())
+    language_entry.setSelectCallback(self.onLanguageSelect)
+    language_entry.setDeselectCallback(self.onLanguageDeselect)
+    self.languages.addSurface(language_entry)
+    pass
+  
+  
+  def onLanguageSelect(self):
+    self.button_select_language.setEnable(True)
+    self.language_selected = True
+    
+  
+  def onLanguageDeselect(self):
+    if not self.language_selected:
+      self.button_select_language.setEnable(False)
