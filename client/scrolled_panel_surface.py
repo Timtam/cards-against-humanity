@@ -49,15 +49,13 @@ class ScrolledPanelSurface(pygame.Surface):
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
       if self.rect.collidepoint(event.pos[0] - self.x,
                                 event.pos[1] - self.new_y):
-        self.clicked = True
-        self.border_color = COLOR_GREEN
+        self.setClicked(True)
         try:
           self.select_callback(self)
         except TypeError:
           pass
       else:
-        self.clicked = False
-        self.border_color = COLOR_BLACK
+        self.setClicked(False)
         try:
           self.deselect_callback(self)
         except TypeError:
@@ -89,9 +87,14 @@ class ScrolledPanelSurface(pygame.Surface):
     self.deselect_callback = cb
   
   
-  def setClicked(self):
-    self.clicked = True
-    self.border_color = COLOR_GREEN
+  def setClicked(self, value=True):
+    if value:
+      self.clicked = True
+      self.border_color = COLOR_GREEN
+    else:
+      self.clicked = False
+      self.border_color = COLOR_BLACK
+
   
   
   def getClicked(self):

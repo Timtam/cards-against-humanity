@@ -82,7 +82,7 @@ class LoginView(MessageView):
     
     self.button_select_language = Button(self.display, self.display.translator.translate("Select Language"), font, (0, 0))
     self.button_select_language.setPosition((self.display_size[0] - self.button_select_language.getWidth() - 20, self.display_size[1] - self.button_select_language.getHeight() - 20))
-    self.button_select_language.setCallback(self.onLanguageSelect)
+    self.button_select_language.setCallback(self.onSelectLanguage)
     self.button_select_language.setEnable(False)
     
     self.surface_languages = pygame.Surface((self.button_select_language.getWidth(), self.button_select_language.getHeight() * 2 + 60))
@@ -94,11 +94,12 @@ class LoginView(MessageView):
     self.addLanguageEntries()
 
     self.tab_order = [self.server_input, self.uname_input, self.pword_input,
-                      self.button_connect, self.button_close, self.languages, self.button_select_language]
+                      self.button_connect, self.languages, self.button_select_language, self.button_close]
     self.language_selected = False
   
   
   def handleEventDefault(self, event):
+    self.language_selected = False
     MessageView.handleEventDefault(self, event)
     self.server_input.handleEvent(event)
     self.uname_input.handleEvent(event)
@@ -158,7 +159,7 @@ class LoginView(MessageView):
   
   
   def firstUpdate(self):
-    self.speak(self.display.translator.translate("Welcome to Cards Against Humanity Online"))
+    self.speak(self.display.translator.translate("Welcome to Cards Against Humanity Online!"))
     MessageView.firstUpdate(self)
   
   
@@ -206,19 +207,31 @@ class LoginView(MessageView):
   
   
   def addLanguageEntries(self):
-    #for language in languages:
-    #  language_entry = LanguageEntry(self.display, self.languages.getPos()[0], self.next_surface_pos_y, self.button_select_language.getWidth() - 60, self.button_select_language.getHeight())
-    #  language_entry.setSelectCallback(self.onLanguageSelect)
-    #  language_entry.setDeselectCallback(self.onLanguageDeselect)
-    #  self.languages.addSurface(language_entry)
-    pass
+    for language in self.display.translator.getAvailableLanguages():
+      language_entry = LanguageEntry(self.display, self.languages.getPos()[0], self.next_surface_pos_y, self.button_select_language.getWidth() - 60, self.button_select_language.getHeight(), language)
+      language_entry.setSelectCallback(self.onLanguageSelect)
+      language_entry.setDeselectCallback(self.onLanguageDeselect)
+      self.languages.addSurface(language_entry)
+      if language == self.display.translator.getLanguage():
+        language_entry.setClicked()
+        self.languages.cursor = len(self.languages.surfaces)-1
   
   
-  def onLanguageSelect(self):
-    self.button_select_language.setEnable(True)
-    self.language_selected = True
+  def onLanguageSelect(self, language):
+    if language.text != self.display.translator.getLanguage():
+      self.button_select_language.setEnable(True)
+      self.language_selected = True
     
   
-  def onLanguageDeselect(self):
+  def onLanguageDeselect(self, language):
     if not self.language_selected:
       self.button_select_language.setEnable(False)
+
+
+  def onSelectLanguage(self):
+
+    language = self.languages.getClickedSurface()
+
+    self.display.translator.setLanguage(language.text)
+    self.display.config.set('language', language.text)
+    self.display.setView('LoginView')

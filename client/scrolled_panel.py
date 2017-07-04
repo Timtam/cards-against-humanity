@@ -193,6 +193,8 @@ class ScrolledPanel(pygame.Surface):
         speak = True
 
       if old_cursor != self.cursor:
+        self.surfaces[old_cursor].setClicked(False)
+        self.surfaces[self.cursor].setClicked(True)
         try:
           self.surfaces[old_cursor].getDeselectCallback()(self.surfaces[old_cursor])
           self.surfaces[self.cursor].getSelectCallback()(self.surfaces[self.cursor])

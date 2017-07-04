@@ -13,6 +13,7 @@ from .login_view import LoginView
 from .message_view import MessageView
 from .game_view import GameView
 from .overview_view import OverviewView
+from shared.configurator import Configurator
 from shared.translator import Translator
 from shared.path import getScriptDirectory
 
@@ -24,7 +25,9 @@ class Display(object):
     self.accessibility = accessibility
     self.endpoint = None
     self.factory = ClientFactory(self)
+    self.config = Configurator('client')
     self.translator = Translator('client')
+    self.translator.setLanguage(self.config.get('language'))
     # initializing the loop caller
     self.loop = LoopingCall(self.process)
     self.reactor = None
@@ -54,9 +57,8 @@ class Display(object):
     if event.type == pygame.QUIT:
       self.stop()
     elif event.type == EVENT_VIEWCHANGE:
-      if not isinstance(self.view, eval(event.view)):
-        pygame.mouse.set_cursor(*pygame.cursors.arrow)
-        self.view = eval(event.view)(self)
+      pygame.mouse.set_cursor(*pygame.cursors.arrow)
+      self.view = eval(event.view)(self)
     elif event.type == EVENT_FUNCALL:
       eval(event.function)(*event.args, **event.kwargs)
     else:
@@ -88,6 +90,7 @@ class Display(object):
   def stop(self):
     pygame.quit()
     self.reactor.stop()
+    self.config.save()
     self.translator.close()
     self.running = False
   
