@@ -176,7 +176,7 @@ class LoginView(MessageView):
 
 
   def connectingMessage(self, address):
-    self.setText(self.display.translator.translate('Connecting to {address}').format(address = address))
+    self.setText(self.display.translator.translate('Connecting to {address}...').format(address = address))
     self.setButton('', None)
     self.display.connect_sound.stop()
     self.display.connect_sound.play()
