@@ -19,20 +19,22 @@ class OverviewView(MessageView):
     self.font = self.display.getFont()
     
     self.label_game_name = self.font.render(display.translator.translate("Game name")+':', 1, (0, 0, 0))
-    self.input_game_name = TextInput(self.display, self.font, (20, 50), 300, self.display.translator.translate("Game name"))
+    self.input_game_name = TextInput(self.display, self.font, (20, 50), 500, self.display.translator.translate("Game name"))
     self.label_game_password = self.font.render(display.translator.translate("Game password (optional)")+':', 1, (0, 0, 0))
     self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, self.display.translator.translate("Game password"), True)
     
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
     self.button_create.setCallback(self.onCreate)
-    self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (20, 250))
+    self.button_join = Button(self.display, display.translator.translate("Join game"), self.font, (200, 200))
     self.button_join.setCallback(self.onJoin)
-    self.button_disconnect = Button(self.display, display.translator.translate("Disconnect"), self.font, (20, 350))
+    self.button_delete = Button(self.display, display.translator.translate("Delete Game"), self.font, (20, 270))
+    self.button_delete.setCallback(self.onDelete)
+    self.button_disconnect = Button(self.display, display.translator.translate("Disconnect"), self.font, (20, 400))
     self.button_disconnect.setCallback(self.onDisconnect)
     
-    self.surface_overview = pygame.Surface((self.screen_size[0] - 340, self.screen_size[1]))
+    self.surface_overview = pygame.Surface((self.screen_size[0] - 540, self.screen_size[1]))
     self.overview_border = pygame.Rect(0, 0, self.surface_overview.get_width(), self.surface_overview.get_height())
-    self.game_overview = ScrolledPanel(self.display, 340 + PADDING, PADDING, self.surface_overview.get_width() - 2 * PADDING, self.surface_overview.get_height() - 2 * PADDING)
+    self.game_overview = ScrolledPanel(self.display, 540 + PADDING, PADDING, self.surface_overview.get_width() - 2 * PADDING, self.surface_overview.get_height() - 2 * PADDING)
     self.game_overview.setLabel(display.translator.translate('Games to join'))
 
     self.next_surface_pos_y = self.game_overview.getPos()[1]
@@ -45,6 +47,7 @@ class OverviewView(MessageView):
 
     if len(self.game_overview.getSurfaces()) == 0:
       self.button_join.setEnable(False)
+      self.button_delete.setEnable(False)
 
   
   def addGame(self, game_id):
@@ -87,6 +90,7 @@ class OverviewView(MessageView):
     
     self.button_create.handleEvent(event)
     self.button_join.handleEvent(event)
+    self.button_delete.handleEvent(event)
     self.button_disconnect.handleEvent(event)
     
     self.game_overview.handleEvent(event)
@@ -106,11 +110,12 @@ class OverviewView(MessageView):
     
     self.button_create.render()
     self.button_join.render()
+    self.button_delete.render()
     self.button_disconnect.render()
     
     self.surface_overview.fill((255, 255, 255))
     pygame.draw.rect(self.surface_overview, (0, 0, 0), self.overview_border, 5)
-    self.display.screen.blit(self.surface_overview, (340, 0))
+    self.display.screen.blit(self.surface_overview, (540, 0))
     self.game_overview.render()
     self.display.screen.blit(self.game_overview, self.game_overview.getPos())
 
@@ -168,3 +173,6 @@ class OverviewView(MessageView):
     self.default_mode = False
     self.setText(self.display.translator.translate('Joining game...'))
 
+  
+  def onDelete(self):
+    pass
