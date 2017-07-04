@@ -188,7 +188,7 @@ class CurrCardWindow(wx.Panel):
     
     frame = self.GetTopLevelParent()
 
-    frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("Apply changes")).Enable(False)
+    frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("Apply &changes\tCtrl+C")).Enable(False)
     
     for b in [self.radio_black, self.radio_white, self.button_del_text,
               self.button_del_card, self.button_save_card, self.button_ins_ph]:
@@ -196,11 +196,14 @@ class CurrCardWindow(wx.Panel):
   
   
   def Enable(self):
+
+    frame = self.GetTopLevelParent()
+
     self.current_card_panel.Show()
     self.Layout()
     for b in [self.radio_black, self.radio_white, self.button_del_text,
               self.button_del_card, self.button_save_card, self.button_ins_ph,
-              self.GetTopLevelParent().getMenuItem("&File", "Apply changes")]:
+              frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("Apply &changes\tCtrl+C"))]:
       b.Enable()
   
   

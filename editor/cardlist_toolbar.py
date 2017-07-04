@@ -39,7 +39,7 @@ class SearchCtrl(wx.SearchCtrl):
     frame.loadCards()
     frame.right_window.Disable()
     
-    frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(True)
+    frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("&New card\tCtrl+N")).Enable(True)
     parent.button_new_card.Enable()
 
 
@@ -181,10 +181,10 @@ class CardListToolbar(wx.ToolBar):
       if self.search_ctrl.GetValue() != '' or not \
               self.checkbox_black.GetValue() or not \
               self.checkbox_white.GetValue():
-        frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(False)
+        frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("&New card\tCtrl+N")).Enable(False)
         self.button_new_card.Disable()
       else:
-        frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("New card")).Enable(True)
+        frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("&New card\tCtrl+N")).Enable(True)
         self.button_new_card.Enable()
     
     else:

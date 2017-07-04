@@ -214,7 +214,7 @@ class MainFrame(wx.Frame):
     for m in self.MenuBar.GetMenus():
       if m[1] == menu:
         for i in m[0].GetMenuItems():
-          if i.Label == item:
+          if i.Text == item:
             return i
     
     return None
