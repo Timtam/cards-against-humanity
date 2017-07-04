@@ -215,6 +215,7 @@ class LoginView(MessageView):
       if language == self.display.translator.getLanguage():
         language_entry.setClicked()
         self.languages.cursor = len(self.languages.surfaces)-1
+      self.next_surface_pos_y += language_entry.get_height() + self.languages.getVSpace()
   
   
   def onLanguageSelect(self, language):
