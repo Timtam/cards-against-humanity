@@ -71,6 +71,9 @@ class CardListToolbar(wx.ToolBar):
     self.button_undo_all = wx.Button(self, label=frame.translator.translate("Undo all"))
     self.button_undo_all.Bind(wx.EVT_BUTTON, self.onUndoAll)
     
+    # card counter
+    self.card_counter = wx.StaticText(self, label=frame.translator.translate("Card counter") + ": 0000")
+    
     # search control
     self.search_ctrl = SearchCtrl(parent=self)
     
@@ -90,7 +93,12 @@ class CardListToolbar(wx.ToolBar):
     self.AddControl(self.button_undo_all)
     
     self.AddSeparator()
+    
+    # card counter
+    self.AddControl(self.card_counter)
+    
     self.AddStretchableSpace()
+    self.AddSeparator()
     
     # search control
     self.AddControl(self.search_ctrl)
