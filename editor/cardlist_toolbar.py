@@ -72,7 +72,7 @@ class CardListToolbar(wx.ToolBar):
     self.button_undo_all.Bind(wx.EVT_BUTTON, self.onUndoAll)
     
     # card counter
-    self.card_counter = wx.StaticText(self, label=frame.translator.translate("Card counter") + ": 0000")
+    self.card_counter = wx.StaticText(self, label=frame.translator.translate("Card counter") + ": 0")
     
     # search control
     self.search_ctrl = SearchCtrl(parent=self)
@@ -103,7 +103,7 @@ class CardListToolbar(wx.ToolBar):
     # search control
     self.AddControl(self.search_ctrl)
     
-    self.Realize()
+    #self.Realize()
   
   
   def onNewCard(self, event):
