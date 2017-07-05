@@ -1,5 +1,6 @@
 import pygame
 import pygame.locals as pl
+import string
 
 DEFAULT_LENGTH = 300
 
@@ -140,6 +141,10 @@ class TextInput:
         pass
       
       else:
+        # if the letter isn't printable, prevent typing it
+        if not event.unicode in string.letters and not event.unicode in string.digits and not event.unicode in string.punctuation and not event.unicode == ' ':
+          return
+
         # to avoid to input endless text, check the length of current text +
         # next character
         text_width = self.font_object.size(self.input_string + "W")[0]  # + "W",
