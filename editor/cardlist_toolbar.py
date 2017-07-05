@@ -10,6 +10,7 @@ class SearchCtrl(wx.SearchCtrl):
     frame = self.GetTopLevelParent()
 
     self.SetName(frame.translator.translate("Card search"))
+    self.DescriptiveText = frame.translator.translate("Search")
     self.ShowSearchButton(False)
     self.ShowCancelButton(True)
     
