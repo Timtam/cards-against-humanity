@@ -190,8 +190,13 @@ class MainFrame(wx.Frame):
       if panel is None:
         panel = new_card
       self.card_counter += 1
+
     if self.left_window.card_grid.initialized is False:
       self.left_window.card_grid.createGrid()
+    else:
+      self.left_window.card_grid.calcBestColumns(self.ClientSize.height)
+      self.left_window.card_grid.Layout()
+
     self.left_window.toolbar.updateCardCounter()
     self.left_window.card_grid.Show()
     self.left_window.Layout()

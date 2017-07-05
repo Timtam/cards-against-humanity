@@ -37,7 +37,7 @@ class SearchCtrl(wx.SearchCtrl):
     self.EvtHandlerEnabled = True
     parent.EvtHandlerEnabled = True
     
-    frame.loadCards()
+    frame.loadCards(False)
     frame.right_window.Disable()
     
     frame.getMenuItem(frame.translator.translate("&File"), frame.translator.translate("&New card\tCtrl+N")).Enable(True)
@@ -104,8 +104,6 @@ class CardListToolbar(wx.ToolBar):
     # search control
     self.AddControl(self.search_ctrl)
     
-    #self.Realize()
-  
   
   def onNewCard(self, event):
     frame = self.GetTopLevelParent()

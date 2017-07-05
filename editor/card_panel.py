@@ -8,7 +8,7 @@ class CardPanel(wx.Panel):
                text="",
                card_type=CARD_WHITE):
 
-    wx.Panel.__init__(self, parent=parent, id=card_id, size=size,
+    wx.Panel.__init__(self, parent=parent, size=size,
                       name=("card %d" %card_id), style=wx.SIMPLE_BORDER)
     frame = self.GetTopLevelParent()
     self.SetName(frame.translator.translate("Card {number}").format(number = card_id))

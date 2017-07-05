@@ -129,7 +129,6 @@ class ScrolledGrid(wx.ScrolledWindow):
       self.grid.Remove(child.Window)
       child.Window.Destroy()
       del child
-    self.grid.Layout()
   
   
   # retrieves the panel related to a card object or card id
