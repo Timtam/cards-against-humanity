@@ -55,7 +55,7 @@ class ServerProtocol(JSONReceiver):
     else:
       users = [{'id': u.id, 'name': u.name} for u in self.factory.getAllUsers() if u.id != self.user.id]
       self.sendMessage(MSG_CURRENT_USERS, users = users)
-      games = [{'id': g.id, 'name': g.name} for g in self.factory.getAllGames()]
+      games = [{'id': g.id, 'name': g.name} for g in self.factory.getAllGames() if g.mayJoin(self.user)['join']]
       self.sendMessage(MSG_CURRENT_GAMES, games = games)
 
   def clientAuthentification(self, major, minor, revision):
@@ -99,7 +99,7 @@ class ServerProtocol(JSONReceiver):
     self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=game_name, id = game.id)
 
     for user in self.factory.getAllUsers():
-      user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, user_id = self.user.id, name = game_name)
+      user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game_name)
 
     self.joinGame(game.id, game_password)
 
@@ -109,6 +109,11 @@ class ServerProtocol(JSONReceiver):
       self.sendMessage(MSG_JOIN_GAME, success = False, message='game not found')
       self.log.warn("{log_source.identification!r} tried to join non-existant game")
       return
+
+    joinable = {}
+    for user in self.factory.getAllUsers():
+      joinable[user] = game.mayJoin(user)['join']
+
     result = game.join(self.user, game_password)
     if not result['success']:
       self.log.info("{log_source.identification!r} failed to join game {id}: {message}", id = game.id, message = result['message'])
@@ -118,10 +123,19 @@ class ServerProtocol(JSONReceiver):
       for user in game.getAllUsers():
         if user is not self.user:
           user.protocol.sendMessage(MSG_JOINED_GAME, user_id = self.user.id, game_id = game.id)
-    self.sendMessage(MSG_JOIN_GAME, users = [u.id for u in game.getAllUsers() if u != self.user], **result)
+      self.sendMessage(MSG_JOIN_GAME, users = [u.id for u in game.getAllUsers() if u != self.user], **result)
+
+      for user in self.factory.getAllUsers():
+        if joinable[user] != game.mayJoin(user)['join']:
+          user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
 
   def startGame(self):
     game = self.user.getGame()
+
+    joinable = {}
+    for user in self.factory.getAllUsers():
+      joinable[user] = game.mayJoin(user)['join']
+
     result = game.start()
     if not result['success']:
       self.log.info("{log_source.identification!r} failed to start game {id}: {message}", id = game.id, message=result['message'])
@@ -133,6 +147,10 @@ class ServerProtocol(JSONReceiver):
 
     for user in game.getAllUsers():
       user.protocol.sendMessage(MSG_STARTED_GAME, user_id = self.user.id, points = [[p[0].id, p[1]] for p in game.points])
+
+    for user in self.factory.getAllUsers():
+      if joinable[user] != game.mayJoin(user)['join']:
+        user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
 
     self.sendTurnStarted()
 
@@ -190,6 +208,10 @@ class ServerProtocol(JSONReceiver):
     if game is None:
       return
 
+    joinable = {}
+    for user in self.factory.getAllUsers():
+      joinable[user] = game.mayJoin(user)['join']
+
     if game.open:
       code = MSG_LEAVE_GAME
       game.leave(self.user)
@@ -201,6 +223,9 @@ class ServerProtocol(JSONReceiver):
       user.protocol.sendMessage(code, user_id = self.user.id, game_id = game.id)
       if len(game.users) == 0:
         user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
+      else:
+        if joinable[user] != game.mayJoin(user)['join']:
+          user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name)
 
     self.setMode(MODE_FREE_TO_JOIN)
 
@@ -213,6 +238,10 @@ class ServerProtocol(JSONReceiver):
       self.sendMessage(MSG_LEAVE_GAME, success = False, message = "you aren't in any game")
       return
 
+    joinable = {}
+    for user in self.factory.getAllUsers():
+      joinable[user] = game.mayJoin(user)['join']
+
     result = game.leave(self.user)
 
     if not result['success']:
@@ -224,6 +253,10 @@ class ServerProtocol(JSONReceiver):
     for user in game.getAllUsers():
       user.protocol.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
     self.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
+
+    for user in self.factory.getAllUsers():
+      if joinable[user] != game.mayJoin(user)['join']:
+        user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name)
 
   def deleteGame(self, game_id):
 

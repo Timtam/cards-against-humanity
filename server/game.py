@@ -69,8 +69,6 @@ class Game(object):
       random.shuffle(self.white_cards)
 
   def mayJoin(self, user):
-    if user.getGame() is not None:
-      return self.formatted(join = False, message = 'already in another game')
     if self.running:
       return self.formatted(join = False, message = 'game already running')
     if self.open:
