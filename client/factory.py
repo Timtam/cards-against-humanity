@@ -20,7 +20,7 @@ class ClientFactory(Factory):
 
   def closeClient(self):
     if self.client:
-      self.client.transport.loseConnection()
+      self.client.loseConnection()
       self.client = None
       self.games = []
       self.users = []

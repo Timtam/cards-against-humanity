@@ -47,6 +47,7 @@ class ClientProtocol(JSONReceiver):
     self.factory.client = self
     self.user_id = 0
     self.game_id = 0
+    self.manual_close = False
 
   def connectionMade(self):
     self.sendMessage(MSG_CLIENT_AUTHENTIFICATION, major=version.MAJOR, minor=version.MINOR, revision=version.REVISION)
@@ -296,5 +297,10 @@ class ClientProtocol(JSONReceiver):
 
   def connectionLost(self, reason):
 
-    self.factory.display.setView('LoginView')
-    self.factory.display.callFunction('self.view.errorMessage', self.factory.display.translator.translate('Lost connection to server')+': '+reason.getErrorMessage())
+    if not self.manual_close:
+      self.factory.display.setView('LoginView')
+      self.factory.display.callFunction('self.view.errorMessage', self.factory.display.translator.translate('Lost connection to server')+': '+reason.getErrorMessage())
+
+  def loseConnection(self):
+    self.manual_close = True
+    self.transport.loseConnection()
