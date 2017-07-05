@@ -163,8 +163,7 @@ class Game(object):
     if user.getGame() is not self:
       return self.formatted(success = False, message = 'user is not in this game')
 
-    users = self.getAllUsers()
-    if len(users) == 0:
+    if len(self.getAllUsers()) == 0:
       self.log.warn('no users in this game, {user} tried to leave', user = user.id)
       return self.formatted(success = False, message = 'no users found in this game')
 
@@ -173,6 +172,12 @@ class Game(object):
     if len(possible_users) != 1:
       self.log.warn('{user} tried to leave game {game}, but found {count} possible users', user = user.id, game = self.id, count = len(possible_users))
       return self.formatted(success = False, message = 'unable to find user in this game')
+
+    if possible_users[0]['creator']:
+      for u in self.users:
+        if u != possible_users[0] and not u['creator']:
+          u['creator'] = True
+          break
 
     del self.users[self.users.index(possible_users[0])]
     user.setGame(None)
