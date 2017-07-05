@@ -154,6 +154,7 @@ class ScrolledGrid(wx.ScrolledWindow):
       self.grid.Remove(panel)
       panel.Destroy()
       del panel
+      self.card_count -= 1
       self.Layout()
       
       self.GetTopLevelParent().right_window.Disable()

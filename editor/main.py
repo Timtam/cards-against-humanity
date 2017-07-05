@@ -27,7 +27,6 @@ class MainFrame(wx.Frame):
     
     self.config = Configurator('editor')
     self.database = None
-    self.card_counter = 0
     self.translator = Translator('editor')
     self.translator.setLanguage(self.config.get('language'))
     self.unsaved_changes = False
@@ -184,12 +183,10 @@ class MainFrame(wx.Frame):
     cursor.execute(sql, tuple(filter_prm))
     self.left_window.card_grid.Hide()
     self.left_window.card_grid.clearCards()
-    self.card_counter = 0
     for card in cursor.fetchall():
       new_card = self.left_window.card_grid.addCard(card[0], card[1], card[2])
       if panel is None:
         panel = new_card
-      self.card_counter += 1
 
     if self.left_window.card_grid.initialized is False:
       self.left_window.card_grid.createGrid()
@@ -248,8 +245,9 @@ class MainFrame(wx.Frame):
         if self.right_window.related_card.getCardText() == '':
           self.database.cursor().execute('DELETE FROM cards WHERE id = ?',
                                          (self.right_window.related_card.id,))
-          self.card_counter -= 1
+          self.left_window.card_grid.deleteCard(self.right_window.related_card)
           self.left_window.toolbar.updateCardCounter()
+
         self.right_window.Disable()
     
     if self.unsaved_changes:

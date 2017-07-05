@@ -120,10 +120,9 @@ class CurrCardWindow(wx.Panel):
     cursor = frame.database.cursor()
     cursor.execute('DELETE FROM cards WHERE id = ?', (self.related_card.id,))
     
-    frame.card_counter -= 1
-    frame.left_window.toolbar.updateCardCounter()
-
     frame.left_window.card_grid.deleteCard(self.related_card)
+
+    frame.left_window.toolbar.updateCardCounter()
     
     frame.unsaved_changes = True
   
@@ -258,9 +257,10 @@ class CurrCardWindow(wx.Panel):
           'DELETE FROM cards WHERE id = ? AND text = ? AND type = ?', (
             self.related_card.id, self.related_card.getInternalText(),
             self.related_card.type,))
-        frame.card_counter -= 1
-        frame.left_window.toolbar.updateCardCounter()
         frame.left_window.card_grid.deleteCard(self.related_card)
+
+        frame.left_window.toolbar.updateCardCounter()
+
       return True
     
     else:

@@ -124,7 +124,6 @@ class CardListToolbar(wx.ToolBar):
                    """, ('', card_type,))
     panel = frame.left_window.card_grid.addCard(card_id=cursor.lastrowid, text='',
                                                 card_type=card_type)
-    frame.card_counter += 1
     self.updateCardCounter()
     frame.left_window.Layout()
     frame.right_window.setCard(panel.card)
@@ -219,7 +218,7 @@ class CardListToolbar(wx.ToolBar):
 
     frame = self.GetTopLevelParent()
 
-    self.card_counter.SetLabel(frame.translator.translate("Card counter")+": "+str(frame.card_counter))
+    self.card_counter.SetLabel(frame.translator.translate("Card counter")+": "+str(frame.left_window.card_grid.card_count))
 
     self.Realize()
 
