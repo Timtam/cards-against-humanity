@@ -88,6 +88,7 @@ class LoginView(MessageView):
     self.surface_languages = pygame.Surface((self.button_select_language.getWidth(), self.button_select_language.getHeight() * 2 + 60))
     self.languages_border = pygame.Rect(0, 0, self.surface_languages.get_width(), self.surface_languages.get_height())
     self.languages = ScrolledPanel(self.display, self.display_size[0] - self.button_select_language.getWidth(), self.display_size[1] - self.button_select_language.getHeight() - self.surface_languages.get_height() - 20, self.surface_languages.get_width() - 40, self.surface_languages.get_height() - 40)
+    self.languages.setLabel(self.display.translator.translate("Language selection"))
     
     self.next_surface_pos_y = self.languages.getPos()[1]
 
@@ -222,6 +223,8 @@ class LoginView(MessageView):
     if language.text != self.display.translator.getLanguage():
       self.button_select_language.setEnable(True)
       self.language_selected = True
+    self.display.surface_switch_sound.stop()
+    self.display.surface_switch_sound.play()
     
   
   def onLanguageDeselect(self, language):

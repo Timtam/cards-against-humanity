@@ -132,6 +132,8 @@ class OverviewView(MessageView):
     self.input_game_password.setText('')
     self.button_join.setEnable(True)
     self.game_selected = True
+    self.display.surface_switch_sound.stop()
+    self.display.surface_switch_sound.play()
     
   def onGameDeselect(self, game):
     # if self.game_selected == True, this loop another game was already selected

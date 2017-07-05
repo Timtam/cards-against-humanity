@@ -220,6 +220,15 @@ class ClientProtocol(JSONReceiver):
       return
 
     self.factory.display.callFunction('self.view.player_indicators.setChosen', user_id)
+    self.factory.display.game_choose_sound.stop()
+    self.factory.display.game_choose_sound.play()
+
+    if user_id == self.user_id:
+      text = self.factory.display.translator.translate("You put your chosen cards onto the table.")
+    else:
+      text = self.factory.display.translator.translate("{player} put his chosen cards onto the table.").format(player = self.factory.findUsername(user_id))
+
+    self.factory.display.view.speak(text)
 
   def choices(self, choices):
 
@@ -250,6 +259,9 @@ class ClientProtocol(JSONReceiver):
     if winner == self.user_id:
       self.factory.display.game_score_sound.stop()
       self.factory.display.game_score_sound.play()
+    else:
+      self.factory.display.game_score_other_sound.stop()
+      self.factory.display.game_score_other_sound.play()
 
     if end == True:
       self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("This ends the game."))
