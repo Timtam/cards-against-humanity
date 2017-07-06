@@ -88,11 +88,11 @@ class Display(object):
   
   
   def stop(self):
+    self.running = False
     pygame.quit()
     self.reactor.stop()
     self.config.save()
     self.translator.close()
-    self.running = False
   
   
   def init(self):

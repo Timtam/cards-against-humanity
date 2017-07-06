@@ -310,7 +310,7 @@ class ClientProtocol(JSONReceiver):
 
   def connectionLost(self, reason):
 
-    if not self.manual_close:
+    if not self.manual_close and self.factory.display.running:
       self.factory.display.setView('LoginView')
       self.factory.display.callFunction('self.view.errorMessage', self.factory.display.translator.translate('Lost connection to server')+': '+reason.getErrorMessage())
 
