@@ -44,11 +44,12 @@ class ClientFactory(Factory):
   def removeUser(self, id):
     self.users = [u for u in self.users if u['id'] != id]
 
-  def addGame(self, id, name):
+  def addGame(self, id, name, creator):
     self.games.append({
       'id': id,
       'name': name,
-      'points': {}
+      'points': {},
+      'creator': creator
     })
 
   def findGame(self, id):
@@ -92,3 +93,13 @@ class ClientFactory(Factory):
 
   def getAllGames(self):
     return self.games
+
+
+  def isCreator(self, id):
+
+    game = self.findGame(id)
+
+    if game is None:
+      return False
+
+    return game['creator']

@@ -63,13 +63,16 @@ class OverviewView(MessageView):
     if old_len == 0:
       game_entry.setClicked()
       self.button_join.setEnable(True)
-      self.button_delete.setEnable(True)
+      if self.display.factory.isCreator(game_entry.id):
+        self.button_delete.setEnable(True)
       self.input_game_name.setText(game_entry.text)
 
   
   def clearGames(self):
     self.game_overview.clearSurfaces()
     self.next_surface_pos_y = self.game_overview.getPos()[1]
+    self.button_join.setEnable(False)
+    self.button_delete.setEnable(False)
   
   
   def deleteGame(self, game_id):
@@ -78,10 +81,6 @@ class OverviewView(MessageView):
     for surface in tmp_surfaces:
       if surface.getId() != game_id:
         self.addGame(surface.getId())
-
-    if len(self.game_overview.getSurfaces()) == 0:
-      self.button_join.setEnable(False) 
-      self.button_delete.setEnable(False)
 
   
   def handleEventDefault(self, event):
@@ -131,9 +130,13 @@ class OverviewView(MessageView):
     self.input_game_name.setText(game.text)
     self.input_game_password.setText('')
     self.button_join.setEnable(True)
+    if self.display.factory.isCreator(game.id):
+      self.button_delete.setEnable(True)
     self.game_selected = True
     self.display.surface_switch_sound.stop()
     self.display.surface_switch_sound.play()
+    print self.display.factory.isCreator(game.id)
+    print self.display.factory.getAllGames()
     
   def onGameDeselect(self, game):
     # if self.game_selected == True, this loop another game was already selected
@@ -143,6 +146,7 @@ class OverviewView(MessageView):
       self.input_game_name.setText('')
       self.input_game_password.setText('')
       self.button_join.setEnable(False)
+      self.button_delete.setEnable(False)
 
 
   def errorMessage(self, message):
