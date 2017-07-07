@@ -1,3 +1,5 @@
+from shared.card import CARD_PLACEHOLDER_LENGTH
+
 import pygame
 import pygame.locals as pl
 
@@ -77,7 +79,7 @@ class View(object):
   def speak(self, text, interrupt=False):
     if not self.display.accessibility:
       return
-    self.speaker.output(text, interrupt)
+    self.speaker.output(text.replace('_'*CARD_PLACEHOLDER_LENGTH, "("+self.display.translator.translate("free space")+")"), interrupt)
   
   
   # will only be called once the view receives it's first update
