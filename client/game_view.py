@@ -197,6 +197,7 @@ class GameView(View):
           self.cards[i]['card'].setEnable(False)
 
       if mode == GAME_MODE_PAUSED:
+        self.player_indicators.initAll()
         self.black_card.setEnable(False)
         self.black_card.setCard(None)
         self.button_start_suspend.changeText(self.display.translator.translate("Start game"))

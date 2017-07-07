@@ -46,8 +46,13 @@ class PlayerIndicators:
   def clearPlayers(self):
     self.player_squares = []
     self.pos_x_new_square = self.x
-  
-  
+
+
+  def initAll(self):
+    for player in self.player_squares:
+      player.initialize()
+
+
   def setCzar(self, id):
     czar = self.getPlayer(id)
     czar.setCzar()

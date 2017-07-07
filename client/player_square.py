@@ -50,6 +50,10 @@ class PlayerSquare(pygame.Surface):
     self.display.screen.blit(self.text_surface, (self.text_x, self.y + self.width + 10))
   
   
+  def initialize(self):
+    self.czar = self.chosen = self.unchosen = False
+  
+  
   def setCzar(self):
     self.czar = True
     self.unchosen = False
