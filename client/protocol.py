@@ -280,12 +280,18 @@ class ClientProtocol(JSONReceiver):
 
         if len(winners) == 1: # you are the only winner
           self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('You win this game with {points} points. Congratulations!').format(points = winners[self.user_id]))
+          self.factory.display.game_win_sound.stop()
+          self.factory.display.game_win_sound.play()
 
         else: # tie
           self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('You are one of the proud winners of this game and ended up gaining {points} points. Congratulations! But {players} gained the same amount of points.').format(points = winners[self.user_id], players = fmt_winners(resolved_winners_without_me)))
+          self.factory.display.game_tie_sound.stop()
+          self.factory.display.game_tie_sound.play()
 
       else: # you didn't win anything
         self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("Sad, but true. You didn't win anything. {players} scored {points} points and made the game.").format(points = winners.values()[0], players = fmt_winners(resolved_winners_without_me)))
+        self.factory.display.game_lose_sound.stop()
+        self.factory.display.game_lose_sound.play()
 
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
       self.factory.resetGamePoints(self.game_id)
