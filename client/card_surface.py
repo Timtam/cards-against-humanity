@@ -83,6 +83,8 @@ class CardSurface(pygame.Surface):
   def setCard(self, card):
     
     self.clearText()
+    if self.card is not None and self.card is not card:
+      self.card.unlinkAll()
     self.card = card
     if self.card is not None:
       if card.type is CARD_BLACK:
