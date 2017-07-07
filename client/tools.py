@@ -43,7 +43,6 @@ textmarker = (  # sized 16x24
 class Button:
   def __init__(self, display, text, font, (x, y), width=-1, height=-1):
     # label used for accessibility purposes
-    self.label = text
     # init values
     self.enable = True
     self.display = display
@@ -151,12 +150,8 @@ class Button:
     self.display.screen.blit(text, (self.text_x, self.text_y))
   
   
-  def setLabel(self, text):
-    self.label = text
-  
-  
   def getLabel(self):
-    label = self.label + " "+self.display.translator.translate("button")
+    label = self.text + " "+self.display.translator.translate("button")
     if not self.getEnable():
       label += " ("+self.display.translator.translate("disabled")+")"
     return label
