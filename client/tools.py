@@ -77,25 +77,36 @@ class Button:
   def setPosition(self, (x, y)):
     self.x = x
     self.y = y
+    self.setWidthHeight()
+    
+    
+  def setWidthHeight(self, width = -1, height = -1):
+    self.width = width
+    self.height = height
     
     # if width or height == -1 -> width and height depend on text size
     if self.width == -1:
       self.w = self.font.size(self.text)[0] + 2 * BUTTON_PADDING
-      self.text_x = x + BUTTON_PADDING
+      self.text_x = self.x + BUTTON_PADDING
     else:
       self.w = self.width
-      self.text_x = x + self.width / 2 - self.text.get_width() / 2
+      self.text_x = self.x + self.width / 2 - self.text.get_width() / 2
     
     if self.height == -1:
       self.h = self.font.size(self.text)[1] + 2 * BUTTON_PADDING
-      self.text_y = y + BUTTON_PADDING
+      self.text_y = self.y + BUTTON_PADDING
     else:
       self.h = self.height
-      self.text_y = y + self.height / 2 - self.text.get_height() / 2
+      self.text_y = self.y + self.height / 2 - self.text.get_height() / 2
     
     self.button_rect = pygame.Rect(self.x, self.y, self.w, self.h)
     self.border_rect = pygame.Rect(self.x, self.y, self.w, self.h)
   
+  
+  def changeText(self, text):
+    self.text = text
+    self.setWidthHeight()
+    
   
   def handleEvent(self, event):
     # set colors of button and text depending on whether enabled or not
