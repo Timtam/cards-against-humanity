@@ -255,8 +255,11 @@ class ServerProtocol(JSONReceiver):
     self.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
 
     for user in self.factory.getAllUsers():
-      if joinable[user] != (game.mayJoin(user)['join'] or user.getGame() == game):
-        user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name, creator = game.isCreator(user))
+      if len(game.getAllUsers()) == 0:
+        user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
+      else:
+        if joinable[user] != (game.mayJoin(user)['join'] or user.getGame() == game):
+          user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name, creator = game.isCreator(user))
 
   def deleteGame(self, game_id):
 

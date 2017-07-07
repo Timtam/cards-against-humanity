@@ -69,8 +69,16 @@ class Game(object):
       random.shuffle(self.white_cards)
 
   def mayJoin(self, user):
+
     if self.running:
       return self.formatted(join = False, message = 'game already running')
+
+    if not self.factory.gameExists(self.name):
+      return self.formatted(join = False, message = "game doesn't exist anymore")
+
+    if user.getGame() == self:
+      return self.formatted(join = False, message = 'user already in this game')
+
     if self.open:
       if len(self.users) + 1 > self.factory.card_database.max_players_per_game:
         return self.formatted(join=False, message='no more players allowed')
@@ -80,9 +88,6 @@ class Game(object):
 
       if len(possible_users) != 1:
         return self.formatted(join = False, message = 'you are no member of this paused game')
-
-      if possible_users[0]['joined']:
-        return self.formatted(join = False, message = 'already joined this game')
 
       return self.formatted(join = True)
 
