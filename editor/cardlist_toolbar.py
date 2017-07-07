@@ -74,6 +74,7 @@ class CardListToolbar(wx.ToolBar):
     
     # card counter
     self.card_counter = wx.StaticText(self, label=frame.translator.translate("Card counter") + ": 0")
+    self.card_counter.Bind(wx.EVT_ERASE_BACKGROUND, onEraseBackGround)
     
     # search control
     self.search_ctrl = SearchCtrl(parent=self)
