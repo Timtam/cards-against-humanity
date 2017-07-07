@@ -299,15 +299,17 @@ class Game(object):
 
     user['black_cards'] += 1
 
+    # as next we remove the current black card
+    del self.black_cards[0]
+
+    next_black_card = self.getCurrentBlackCard()
+
     # at next, all chosen cards must be removed from the user's white cards pile
     # and the chosen cards must be resetted
     for user in self.users:
       for card in user['chosen_cards']:
         del user['white_cards'][user['white_cards'].index(card)]
       user['chosen_cards'] = []
-
-    # as next we remove the current black card
-    del self.black_cards[0]
 
     # we distribute new white cards to all users
     # all users need to get the same amount
@@ -326,7 +328,7 @@ class Game(object):
     self.users.append(self.users[0])
     del self.users[0]
 
-    if self.getCurrentBlackCard() is None:
+    if next_black_card is None:
       # the game finished and we can reset it
       end = True
       self.open = True
