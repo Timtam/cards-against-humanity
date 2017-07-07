@@ -178,6 +178,7 @@ class ClientProtocol(JSONReceiver):
 
   def leaveGame(self, game_id, user_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
+      self.factory.resetGamePoints(self.game_id)
       if user_id != self.user_id:
         self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} left the game.').format(player = self.factory.findUsername(user_id)))
         self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
@@ -185,16 +186,17 @@ class ClientProtocol(JSONReceiver):
       else:
         self.factory.display.setView('OverviewView')
         self.setMode(MODE_FREE_TO_JOIN)
+        self.game_id = 0
       self.factory.display.game_leave_sound.stop()
       self.factory.display.game_leave_sound.play()
 
   def suspendGame(self, user_id, game_id):
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
+      self.factory.resetGamePoints(self.game_id)
       if user_id != self.user_id:
         self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} suspended the game.').format(player = self.factory.findUsername(user_id)))
         self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
         self.factory.display.callFunction('self.view.player_indicators.delPlayer', user_id)
-        self.factory.resetGamePoints(self.game_id)
       else:
         self.factory.display.setView('OverviewView')
         self.setMode(MODE_FREE_TO_JOIN)
