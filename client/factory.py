@@ -1,3 +1,4 @@
+from collections import Counter
 from twisted.internet.protocol import Factory
 from twisted.logger import Logger
 
@@ -103,3 +104,24 @@ class ClientFactory(Factory):
       return False
 
     return game['creator']
+
+  def getWinners(self, id):
+
+    game = self.findGame(id)
+
+    if game is None:
+      return {}
+
+    table = Counter(game['points'])
+
+    # we'll have to find out how many people have the highest amount of points
+    # that's why we'll have to revert the counter
+
+    reverted_table = Counter(table.values())
+
+    winners = {}
+
+    for pair in table.most_common(reverted_table.most_common(1)[0][0]):
+      winners[pair[0]] = pair[1]
+
+    return winners

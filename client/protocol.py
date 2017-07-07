@@ -265,9 +265,25 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.game_score_other_sound.play()
 
     if end == True:
+
+      fmt_winners = lambda w: ', '.join(w[:-1])+' '+self.factory.display.translator.translate('and')+' '+w[-1] if len(w)>1 else w[0]
+
       self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("This ends the game."))
 
-      # TODO: displaying win or lose messages
+      winners = self.factory.getWinners(self.game_id)
+
+      resolved_winners_without_me = [self.factory.findUsername(w) for w in winners.keys() if w != self.user_id]
+
+      if self.user_id in winners:
+
+        if len(winners) == 1: # you are the only winner
+          self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('You win this game with {points} points. Congratulations!').format(points = winners[self.user_id]))
+
+        else: # tie
+          self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('You are one of the proud winners of this game and ended up gaining {points} points. Congratulations! But {players} gained the same amount of points.').format(points = winners[self.user_id], players = fmt_winners(resolved_winners_without_me)))
+
+      else: # you didn't win anything
+        self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("Sad, but true. You didn't win anything. {players} scored {points} points and made the game.").format(points = winners.values()[0], players = fmt_winners(resolved_winners_without_me)))
 
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
       self.factory.resetGamePoints(self.game_id)
