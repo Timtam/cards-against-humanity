@@ -186,7 +186,7 @@ class Game(object):
 
     self.pause()
 
-    if len(self.users)<3:
+    if len(self.users)<3 and len(self.users)>0 and not self.open:
       self.open = True
       for user in self.users:
         user['white_cards'] = []
