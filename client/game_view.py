@@ -118,10 +118,8 @@ class GameView(View):
   def onStartSuspend(self):
     if self.mode == GAME_MODE_PAUSED:
       self.display.factory.client.sendStartGame()
-      self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
     else:
       self.display.factory.client.sendSuspendGame()
-      self.button_start_suspend.changeText(self.display.translator.translate("Start game"))
   
   
   def handleEvent(self, event):
@@ -202,8 +200,11 @@ class GameView(View):
         self.black_card.setEnable(False)
         self.black_card.setCard(None)
         self.button_start_suspend.changeText(self.display.translator.translate("Start game"))
+      else:
+        self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
     else:
       self.button_confirm.setEnable(True)
+      self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
 
 
   def generateCardLambda(self, index):
