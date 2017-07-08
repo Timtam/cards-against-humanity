@@ -28,7 +28,7 @@ class Translator(object):
     if language != self.getDefaultLanguage() and language in self.getAvailableLanguages():
       self.language = language
       xml = self.openXml(os.path.join(self.getLanguageFolder(), language+'.xml'))
-      self.xml = xml.getroot().xpath(self.node)[0]
+      self.xml = xml.getroot()
       if not os.path.exists(os.path.join(getScriptDirectory(), 'untranslated')):
         os.makedirs(os.path.join(getScriptDirectory(), 'untranslated'))
       self.untranslated_xml = self.openXml(os.path.join(getScriptDirectory(), 'untranslated', language+'.xml'))
@@ -39,7 +39,7 @@ class Translator(object):
   def translate(self, string):
 
     if self.xml is not None:
-      translations = self.xml.xpath('string/origin[text() = "'+string+'"]/../translation')
+      translations = self.xml.xpath(self.node+'/string/origin[text() = "'+string+'"]/../translation')
       if len(translations)>0:
         return translations[0].text
       else:
@@ -79,3 +79,9 @@ class Translator(object):
         element = ET.SubElement(xml.getroot(), self.node)
 
     return xml
+
+  def getLanguageFont(self):
+    if self.xml is None or self.xml.get('font') is None:
+      return 'helvetica-bold'
+    else:
+      return self.xml.get('font')

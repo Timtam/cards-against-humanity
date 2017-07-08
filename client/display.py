@@ -47,7 +47,7 @@ class Display(object):
   
   
   def getFont(self, size = 20):
-    return pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'helvetica-bold.ttf'), size)
+    return pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'font', self.translator.getLanguageFont()+'.ttf'), size)
   
   
   def getSize(self):
