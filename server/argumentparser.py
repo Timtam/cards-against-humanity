@@ -12,7 +12,7 @@ class ArgumentParser(object):
 
     self.port = args.port
 
-    if args.black_cards<0:
+    if args.black_cards<=0:
       args.black_cards = -1
     elif args.black_cards <10 and args.black_cards >=0:
       print 'wrong amount of black cards supplied'

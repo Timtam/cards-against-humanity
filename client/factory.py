@@ -156,3 +156,13 @@ class ClientFactory(Factory):
       return
 
     game['rounds'] -= 1
+
+
+  def setRounds(self, id, rounds):
+
+    game = self.findGame(id)
+
+    if game is None:
+      return
+
+    game['rounds'] = rounds

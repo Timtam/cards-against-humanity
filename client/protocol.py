@@ -254,7 +254,7 @@ class ClientProtocol(JSONReceiver):
 
     self.factory.display.callFunction('self.view.setChoices', choices)
 
-  def czarDecision(self, success = True, winner = 0, message = '', end = False):
+  def czarDecision(self, success = True, winner = 0, message = '', end = False, rounds = 0):
 
     if not success:
       self.factory.display.callFunction('self.view.writeLogError', message)
@@ -277,6 +277,8 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.game_score_other_sound.play()
 
     if end == True:
+
+      self.factory.setRounds(self.game_id, rounds)
 
       fmt_winners = lambda w: ', '.join(w[:-1])+' '+self.factory.display.translator.translate('and')+' '+w[-1] if len(w)>1 else w[0]
 

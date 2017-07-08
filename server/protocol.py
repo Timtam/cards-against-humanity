@@ -95,6 +95,15 @@ class ServerProtocol(JSONReceiver):
       self.log.info("{log_source.identification!r} tried to create a game with name {name}, but a game with this name already exists", name = game_name)
       return
 
+    if rounds is not None and rounds < 10:
+      self.sendMessage(MSG_CREATE_GAME, success = False, message = 'a game must run at least 10 rounds')
+      return
+
+    if rounds is not None and rounds > self.factory.black_cards:
+      self.sendMessage(MSG_CREATE_GAME, success = False, message = 'this game can have a maximum of %d rounds'%(self.factory.black_cards))
+      return
+
+
     game = self.factory.createGame(game_name, game_password, rounds)
     self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=game_name, id = game.id)
 
@@ -199,7 +208,7 @@ class ServerProtocol(JSONReceiver):
       return
 
     for user in game.getAllUsers():
-      user.protocol.sendMessage(MSG_CZAR_DECISION, winner = result['winner'].id, end = result['end'])
+      user.protocol.sendMessage(MSG_CZAR_DECISION, winner = result['winner'].id, end = result['end'], rounds = len(game.black_cards))
 
     if not result['end']:
       self.sendTurnStarted()

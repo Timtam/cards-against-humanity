@@ -57,6 +57,8 @@ class ServerFactory(Factory):
     if len(self.card_database.getBlackCards())<self.black_cards:
       self.black_cards = len(self.card_database.getBlackCards())
       self.log.info('database contains only {log_source.black_cards!r} black cards, reduced command-line argument to this amount')
+    elif self.black_cards == -1:
+      self.black_cards = len(self.card_database.getBlackCards())
 
     self.log.info("Loaded card database")
 

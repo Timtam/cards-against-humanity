@@ -21,6 +21,7 @@ class Game(object):
     self.uuid = None
     self.users = []
     self.white_cards = []
+    self.rounds = 0
 
   @classmethod
   def create(cls, factory, name, password_hash = None, rounds = None):
@@ -29,10 +30,8 @@ class Game(object):
     game.name = name
     game.password_hash = password_hash
     game.uuid = uuid.uuid4()
+    game.rounds = rounds
     game.loadCards()
-
-    if rounds is not None and rounds < len(game.black_cards):
-      game.black_cards = game.black_cards[:rounds]
 
     return game
 
@@ -53,6 +52,7 @@ class Game(object):
 
     game.white_cards = [factory.card_database.getCard(c) for c in json.loads(data['cards'])['white_cards']]
     game.black_cards = [factory.card_database.getCard(c) for c in json.loads(data['cards'])['black_cards']]
+    game.rounds = json.loads(data['cards'])['rounds']
 
     return game
 
@@ -62,8 +62,8 @@ class Game(object):
       self.black_cards = self.factory.card_database.getBlackCards()
       random.shuffle(self.black_cards)
 
-      if self.factory.black_cards > -1:
-        self.black_cards = self.black_cards[:self.factory.black_cards]
+      self.rounds = min(len(self.black_cards), self.factory.black_cards, self.rounds if self.rounds is not None else len(self.black_cards))
+      self.black_cards = self.black_cards[:self.rounds]
 
     if len(self.white_cards) == 0:
       self.white_cards = self.factory.card_database.getWhiteCards()
@@ -267,7 +267,7 @@ class Game(object):
     black_cards = [c.id for c in self.black_cards]
     white_cards = [c.id for c in self.white_cards]
 
-    args['cards'] = json.dumps({'white_cards': white_cards, 'black_cards': black_cards})
+    args['cards'] = json.dumps({'white_cards': white_cards, 'black_cards': black_cards, 'rounds': self.rounds})
 
     args['password_hash'] = self.password_hash if self.protected else ''
     args['database_hash'] = self.database_hash
