@@ -67,7 +67,7 @@ class OverviewView(MessageView):
       self.button_join.setEnable(True)
       if self.display.factory.isCreator(game_entry.id):
         self.button_delete.setEnable(True)
-      self.input_game_name.setText(game_entry.text)
+      self.input_game_name.setText(self.display.factory.findGamename(game_entry.id))
 
   
   def clearGames(self):
@@ -84,7 +84,15 @@ class OverviewView(MessageView):
       if surface.getId() != game_id:
         self.addGame(surface.getId())
 
+
+  def updateGame(self, game_id):
+
+    for surface in self.game_overview.getSurfaces():
+      if surface.getId() == game_id:
+        surface.updateText()
+        break
   
+
   def handleEventDefault(self, event):
     MessageView.handleEventDefault(self, event)
     
@@ -133,7 +141,7 @@ class OverviewView(MessageView):
 
 
   def onGameSelect(self, game):
-    self.input_game_name.setText(game.text)
+    self.input_game_name.setText(self.display.factory.findGamename(game.id))
     self.input_game_password.setText('')
     self.button_join.setEnable(True)
     if self.display.factory.isCreator(game.id):

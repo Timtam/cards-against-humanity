@@ -92,3 +92,8 @@ class View(object):
       self.tab_order[0].setFocus(True)
     except AttributeError:
       pass
+
+  # can be overwritten
+  # will be called each time the view will be removed
+  def leave(self):
+    pass
