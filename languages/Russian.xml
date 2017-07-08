@@ -133,5 +133,219 @@
       <origin>You didn't save the currently editing card yet. Do you want to discard your changes?</origin>
       <translation>Вы не сохраните текущий измена карта ещё нет.  Вы хотите отменить свои изменения?</translation>
     </string>
+    <string>
+      <origin>Card counter</origin>
+      <translation>Карты счетчика</translation>
+    </string>
+    <string>
+      <origin>Search</origin>
+      <translation>Поиск</translation>
+    </string>
   </editor>
+  <client>
+    <string>
+      <origin>Welcome to Cards Against Humanity Online!</origin>
+      <translation>Добро пожаловать в Карты Против Человечества Онлайн!</translation>
+    </string>
+    <string>
+      <origin>Server</origin>
+      <translation>Сервер</translation>
+    </string>
+    <string>
+      <origin>Username</origin>
+      <translation>Имя пользователя</translation>
+    </string>
+    <string>
+      <origin>Password</origin>
+      <translation>Пароль</translation>
+    </string>
+    <string>
+      <origin>NOTE: If username won't be found a new account will be created with the entered password!</origin>
+      <translation>ПРИМЕЧАНИЕ: Если имя пользователя не будет найдено, новая учетная запись будет создать с введенным паролем!</translation>
+    </string>
+    <string>
+      <origin>Connect</origin>
+      <translation>Подключить</translation>
+    </string>
+    <string>
+      <origin>Close</origin>
+      <translation>Закрыть</translation>
+    </string>
+    <string>
+      <origin>Select Language</origin>
+      <translation>Выбрать язык</translation>
+    </string>
+    <string>
+      <origin>input</origin>
+      <translation>ввод</translation>
+    </string>
+    <string>
+      <origin>empty</origin>
+      <translation>пусто</translation>
+    </string>
+    <string>
+      <origin>button</origin>
+      <translation>кнопка</translation>
+    </string>
+    <string>
+      <origin>Connecting to {address}...</origin>
+      <translation>Подключиться к {address}...</translation>
+    </string>
+    <string>
+      <origin>Logging in...</origin>
+      <translation>Вход в систему...</translation>
+    </string>
+    <string>
+      <origin>Syncing data...</origin>
+      <translation>Синхронизация данных...</translation>
+    </string>
+    <string>
+      <origin>Game name</origin>
+      <translation>Название игры</translation>
+    </string>
+    <string>
+      <origin>Game password (optional)</origin>
+      <translation>Игра пароля (необязательный)</translation>
+    </string>
+    <string>
+      <origin>Create game</origin>
+      <translation>Создать игру</translation>
+    </string>
+    <string>
+      <origin>Join game</origin>
+      <translation>Присоединиться к игре</translation>
+    </string>
+    <string>
+      <origin>Delete game</origin>
+      <translation>Удалить игру</translation>
+    </string>
+    <string>
+      <origin>Disconnect</origin>
+      <translation>Отключить</translation>
+    </string>
+    <string>
+      <origin>Games to join</origin>
+      <translation>Списка игр</translation>
+    </string>
+    <string>
+      <origin>Joining game...</origin>
+      <translation>Присоединение игру...</translation>
+    </string>
+    <string>
+      <origin>Confirm choice</origin>
+      <translation>Подтвердить выбор</translation>
+    </string>
+    <string>
+      <origin>Suspend game</origin>
+      <translation>Приостановить игру</translation>
+    </string>
+    <string>
+      <origin>You joined the game</origin>
+      <translation>Ты присоединил игру</translation>
+    </string>
+    <string>
+      <origin>Game log</origin>
+      <translation>Журнал игр</translation>
+    </string>
+    <string>
+      <origin>Your selection</origin>
+      <translation>Ваш выбор</translation>
+    </string>
+    <string>
+      <origin>Selectable card {number}</origin>
+      <translation>Выделяемая карта {number}</translation>
+    </string>
+    <string>
+      <origin>No card</origin>
+      <translation>Нет карты</translation>
+    </string>
+    <string>
+      <origin>{player}: {points} points</origin>
+      <translation>{player}: {points} счёт</translation>
+    </string>
+    <string>
+      <origin>disabled</origin>
+      <translation>отключенный</translation>
+    </string>
+    <string>
+      <origin>text</origin>
+      <translation>текст</translation>
+    </string>
+    <string>
+      <origin>line {current} out of {maximum}</origin>
+      <translation>строка {current} из {maximum}</translation>
+    </string>
+    <string>
+      <origin>Lost connection to server</origin>
+      <translation>Подключение прервано к севере</translation>
+    </string>
+    <string>
+      <origin>OK</origin>
+      <translation>ОК</translation>
+    </string>
+    <string>
+      <origin>{player} started the game</origin>
+      <translation>{player} начал игру</translation>
+    </string>
+    <string>
+      <origin>{player} was chosen the new czar and therefore flips a new black card open.</origin>
+      <translation>{player} выбрано нового царя и раскрывает новую черную карту.</translation>
+    </string>
+    <string>
+      <origin>Deleting game...</origin>
+      <translation>Удаление игры...</translation>
+    </string>
+    <string>
+      <origin>{player} joined the game</origin>
+      <translation>{player} вступил в игру</translation>
+    </string>
+    <string>
+      <origin>{player} suspended the game.</origin>
+      <translation>{player} приостановил игру</translation>
+    </string>
+    <string>
+      <origin>Creating game...</origin>
+      <translation>Создать игру...</translation>
+    </string>
+    <string>
+      <origin>An error occured</origin>
+      <translation>Произошла ошибка</translation>
+    </string>
+    <string>
+      <origin>You were chosen the new czar and therefore flip a black card open. You won't be able to play any white card until the next player will be chosen to be the czar.</origin>
+      <translation>Ты был выбран нового царя и раскрывает новую черную карту. Вы не сможете сыграть какую-нибудь белую карточку, пока не следующий игрок будет выбран царя.</translation>
+    </string>
+    <string>
+      <origin>currently the czar</origin>
+      <translation>текущий царь</translation>
+    </string>
+    <string>
+      <origin>no cards chosen yet</origin>
+      <translation>еще никто выбрал карты</translation>
+    </string>
+    <string>
+      <origin>cards already chosen</origin>
+      <translation>карты уже выбраны</translation>
+    </string>
+    <string>
+      <origin>All players confirmed their choices. You now have to select the choice which you think is the best.</origin>
+      <translation>Все игроки подтвердиили свой выбор. Теперь тебе нужно выбрать выбор, который, по твоему мнению, является лучшим.</translation>
+    </string>
+    <string>
+      <origin>{player} wins this round and therefore gains a point.</origin>
+      <translation>{player} выиграл ета партия и получил очко.</translation>
+    </string>
+    <string>
+      <origin>All players confirmed their choices and the czar now has to select the best one out of them.</origin>
+      <translation>Все игроки подтвердиили свой выбор и царь нужен выбратьб которая карта лучшиая из них.</translation>
+    </string>
+    <string>
+      <origin>You win this round and therefore gain a point.</origin>
+      <translation>Ты выиграл ета партия и получишь очко.</translation>
+    </string>
+    <string>
+      <origin>{player} left the game.</origin>
+      <translation>{player} покинул игру.</translation>
+    </string>
+  </client>
 </translations>
