@@ -85,3 +85,8 @@ class Translator(object):
       return 'helvetica-bold'
     else:
       return self.xml.get('font')
+
+  def getLanguageEncoding(self):
+    if self.xml is None:
+      return None
+    return self.xml.get('encoding')

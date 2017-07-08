@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<translations font="helvetica-bold">
+<translations font="helvetica-bold" encoding="cp1252">
   <editor>
     <string>
       <origin>&amp;New card	Ctrl+N</origin>

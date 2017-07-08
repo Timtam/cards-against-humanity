@@ -1,6 +1,5 @@
 import hashlib
 import os.path
-
 import pygame
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ClientEndpoint
@@ -9,6 +8,7 @@ from twisted.internet.task import LoopingCall
 
 from .events import *
 from .factory import ClientFactory
+from .font import Font
 from .login_view import LoginView
 from .message_view import MessageView
 from .game_view import GameView
@@ -47,7 +47,7 @@ class Display(object):
   
   
   def getFont(self, size = 20):
-    return pygame.font.Font(os.path.join(getScriptDirectory(), 'assets', 'font', self.translator.getLanguageFont()+'.ttf'), size)
+    return Font(self, size)
   
   
   def getSize(self):
