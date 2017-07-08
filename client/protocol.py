@@ -96,6 +96,8 @@ class ClientProtocol(JSONReceiver):
   def syncFinished(self):
     self.setMode(MODE_FREE_TO_JOIN)
     self.factory.display.setView('OverviewView')
+    self.factory.display.login_sound.stop()
+    self.factory.display.login_sound.play()
 
   def createGame(self, success=True, game_id = '', message = '', name = '', creator = False, users = 0):
     if success:
