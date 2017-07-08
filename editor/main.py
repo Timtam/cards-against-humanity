@@ -12,11 +12,11 @@ from shared.configurator import Configurator
 from shared.path import getScriptDirectory
 from shared.translator import Translator
 
-MENU_NEW_CARD = 1
-MENU_APPLY_CHANGES = 2
-MENU_SAVE_ALL = 3
-MENU_UNDO_ALL = 4
-MENU_EXIT = 5
+MENU_NEW_CARD = wx.NewId()
+MENU_APPLY_CHANGES = wx.NewId()
+MENU_SAVE_ALL = wx.NewId()
+MENU_UNDO_ALL = wx.NewId()
+MENU_EXIT = wx.NewId()
 
 
 
@@ -107,13 +107,14 @@ class MainFrame(wx.Frame):
 
     languages = self.translator.getAvailableLanguages()
 
-    for i in range(len(languages)):
-      menu_item = wx.MenuItem(language_menu, id=100+i, text=languages[i])
+    for language in languages:
+      id = wx.NewId()
+      menu_item = wx.MenuItem(language_menu, id=id, text=language)
       menu_item.SetCheckable(True)
       language_menu.AppendItem(menu_item)
-      language_menu.Bind(wx.EVT_MENU, self.onLanguageChange, id=100+i)
+      language_menu.Bind(wx.EVT_MENU, self.onLanguageChange, id=id)
 
-      if languages[i] == self.translator.getLanguage():
+      if language == self.translator.getLanguage():
         menu_item.Check(True)
 
     menubar.Append(language_menu, self.translator.translate("&Language"))
@@ -304,6 +305,11 @@ class MainFrame(wx.Frame):
 
     self.Message(caption="Change language", text="The language will change after restarting the editor.", style=MSG_INFO)
 
+    for i in e.GetEventObject().GetMenuItems():
+      i.Enable(False)
+      i.Check(False)
+
+    item.Check(True)
 
 
 def onEraseBackGround(e):
