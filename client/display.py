@@ -35,7 +35,7 @@ class Display(object):
     self.login_name = ''
     self.login_password = ''
     self.server_name = ''
-    self.server_port = ''
+    self.server_port = 11337
     
     self.screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Cards Against Humanity Online')
@@ -152,7 +152,7 @@ class Display(object):
     pygame.event.post(pygame.event.Event(EVENT_FUNCALL, function=function, args=args, kwargs=kwargs))
 
   # unhashed password is required here
-  def connect(self, host, username, password):
+  def connect(self, host, port, username, password):
     def connectionRefusedErrback(failure):
       failure.trap(ConnectionRefusedError)
       self.view.errorMessage(failure.getErrorMessage())
@@ -162,7 +162,8 @@ class Display(object):
     self.login_name = username
     self.login_password = password
     self.server_name = host
-    self.endpoint = TCP4ClientEndpoint(self.reactor, host, 11337)
+    self.server_port = port
+    self.endpoint = TCP4ClientEndpoint(self.reactor, host, port)
     deferred = self.endpoint.connect(self.factory)
     deferred.addErrback(connectionRefusedErrback)
     deferred.addErrback(dnsLookupErrback)

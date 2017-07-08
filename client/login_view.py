@@ -55,8 +55,8 @@ class LoginView(MessageView):
     self.server_input.input.input_string = self.display.server_name
     self.port_input = TextInput(display, font, (self.input_x, self.port_y),
                                   TEXT_INPUT_WIDTH,
-                                  display.translator.translate('Port'))
-    self.port_input.input.input_string = self.display.server_port
+                                  display.translator.translate('Port'), only_digits = True)
+    self.port_input.input.input_string = str(self.display.server_port)
     self.uname_input = TextInput(display, font, (self.input_x, self.uname_y),
                                  TEXT_INPUT_WIDTH, display.translator.translate('Username'))
     self.uname_input.input.input_string = self.display.login_name
@@ -101,7 +101,7 @@ class LoginView(MessageView):
 
     self.addLanguageEntries()
 
-    self.tab_order = [self.server_input, self.uname_input, self.pword_input,
+    self.tab_order = [self.server_input, self.port_input, self.uname_input, self.pword_input,
                       self.button_connect, self.languages, self.button_select_language, self.button_close]
     self.language_selected = False
   
@@ -183,6 +183,7 @@ class LoginView(MessageView):
     self.default_mode = False
     self.connectingMessage(self.server_input.input.get_text())
     self.display.callFunction('self.connect', self.server_input.input.get_text(),
+                         int(self.port_input.input.get_text()),
                          self.uname_input.input.get_text(),
                          self.pword_input.input.get_text())
 

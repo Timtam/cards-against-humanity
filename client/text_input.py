@@ -21,7 +21,8 @@ class TextInput:
                text_color=(0, 0, 0),
                cursor_color=(0, 0, 1),
                max_width=DEFAULT_LENGTH,
-               password = False):
+               password = False,
+               only_digits = False):
     """
     Args:
         #font_family: Name or path of the font that should be used. Default is
@@ -38,6 +39,7 @@ class TextInput:
     self.font_size = font.get_linesize()
     self.input_string = ""  # Inputted text
     self.font_object = font
+    self.only_digits = only_digits
     
     # max width of text input
     self.max_width = max_width
@@ -142,7 +144,7 @@ class TextInput:
       
       else:
         # if the letter isn't printable, prevent typing it
-        if not event.unicode in string.letters and not event.unicode in string.digits and not event.unicode in string.punctuation and not event.unicode == ' ':
+        if not event.unicode in self.printable:
           return
 
         # to avoid to input endless text, check the length of current text +
@@ -217,3 +219,12 @@ class TextInput:
       return '*'*len(self.input_string)
     else:
       return self.input_string
+
+
+  @property
+  def printable(self):
+    printable = string.digits
+    if not self.only_digits:
+      printable += string.letters + string.punctuation + ' '
+
+    return printable

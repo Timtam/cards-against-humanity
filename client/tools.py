@@ -178,7 +178,7 @@ class Button:
 
 # own TextInput class, which we added a rectangle
 class TextInput:
-  def __init__(self, display, font, (x, y), width, label='', password=False):
+  def __init__(self, display, font, (x, y), width, label='', password=False, only_digits = False):
     self.label = label
     self.display = display
     self.x = x + INPUT_PADDING
@@ -195,7 +195,7 @@ class TextInput:
     text_height = font.size("Dummy")[1]
     
     self.input = text_input.TextInput(self.display, font,
-                                      max_width=width - 2 * INPUT_PADDING, password = password)
+                                      max_width=width - 2 * INPUT_PADDING, password = password, only_digits = only_digits)
     self.x_end = x + width
     self.y_end = y + text_height + 2 * INPUT_PADDING
     self.input_rect = pygame.Rect(x, y - INPUT_PADDING, width,
