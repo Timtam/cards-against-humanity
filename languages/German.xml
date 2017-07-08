@@ -133,5 +133,219 @@
       <origin>You didn't save the currently editing card yet. Do you want to discard your changes?</origin>
       <translation>Die soeben bearbeitete Karte wurde noch nicht gespeichert. Sollen alle Änderungen verworfen werden?</translation>
     </string>
+    <string>
+      <origin>Card counter</origin>
+      <translation>Kartenzähler</translation>
+    </string>
+    <string>
+      <origin>Search</origin>
+      <translation>Suche</translation>
+    </string>
   </editor>
+  <client>
+    <string>
+      <origin>Welcome to Cards Against Humanity Online!</origin>
+      <translation>Willkommen bei Cards Against Humanity Online!</translation>
+    </string>
+    <string>
+      <origin>Server</origin>
+      <translation>Server</translation>
+    </string>
+    <string>
+      <origin>Username</origin>
+      <translation>Benutzername</translation>
+    </string>
+    <string>
+      <origin>Password</origin>
+      <translation>Passwort</translation>
+    </string>
+    <string>
+      <origin>NOTE: If username won't be found a new account will be created with the entered password!</origin>
+      <translation>HINWEIS: Wenn der Benutzername noch nicht vergeben ist, wird ein neues Konto mit dem eingegebenen Passwort angelegt!</translation>
+    </string>
+    <string>
+      <origin>Connect</origin>
+      <translation>Verbinden</translation>
+    </string>
+    <string>
+      <origin>Close</origin>
+      <translation>Schließen</translation>
+    </string>
+    <string>
+      <origin>Select Language</origin>
+      <translation>Sprache auswählen</translation>
+    </string>
+    <string>
+      <origin>input</origin>
+      <translation>Eingabe</translation>
+    </string>
+    <string>
+      <origin>empty</origin>
+      <translation>Leer</translation>
+    </string>
+    <string>
+      <origin>button</origin>
+      <translation>Taste</translation>
+    </string>
+    <string>
+      <origin>Connecting to {address}...</origin>
+      <translation>Verbinde zu {address}...</translation>
+    </string>
+    <string>
+      <origin>Logging in...</origin>
+      <translation>Anmeldung läuft ...</translation>
+    </string>
+    <string>
+      <origin>Syncing data...</origin>
+      <translation>Synchronisiere Daten ...</translation>
+    </string>
+    <string>
+      <origin>Game name</origin>
+      <translation>Spielname</translation>
+    </string>
+    <string>
+      <origin>Game password (optional)</origin>
+      <translation>Spielpasswort (optional)</translation>
+    </string>
+    <string>
+      <origin>Create game</origin>
+      <translation>Spiel erstellen</translation>
+    </string>
+    <string>
+      <origin>Join game</origin>
+      <translation>Spiel beitreten</translation>
+    </string>
+    <string>
+      <origin>Delete game</origin>
+      <translation>Spiel löschen</translation>
+    </string>
+    <string>
+      <origin>Disconnect</origin>
+      <translation>Verbindung trennen</translation>
+    </string>
+    <string>
+      <origin>Games to join</origin>
+      <translation>Spieleliste</translation>
+    </string>
+    <string>
+      <origin>Joining game...</origin>
+      <translation>Verbinde zu Spiel ...</translation>
+    </string>
+    <string>
+      <origin>Confirm choice</origin>
+      <translation>Auswahl bestätigen</translation>
+    </string>
+    <string>
+      <origin>Suspend game</origin>
+      <translation>Spiel pausieren</translation>
+    </string>
+    <string>
+      <origin>You joined the game</origin>
+      <translation>Spiel beigetreten</translation>
+    </string>
+    <string>
+      <origin>Game log</origin>
+      <translation>Spielverlauf</translation>
+    </string>
+    <string>
+      <origin>Your selection</origin>
+      <translation>Deine Auswahl</translation>
+    </string>
+    <string>
+      <origin>Selectable card {number}</origin>
+      <translation>Auswählbare Karte {number}</translation>
+    </string>
+    <string>
+      <origin>No card</origin>
+      <translation>Keine Karte</translation>
+    </string>
+    <string>
+      <origin>{player}: {points} points</origin>
+      <translation>{player}: {points} Punkte</translation>
+    </string>
+    <string>
+      <origin>disabled</origin>
+      <translation>deaktiviert</translation>
+    </string>
+    <string>
+      <origin>text</origin>
+      <translation>Text</translation>
+    </string>
+    <string>
+      <origin>line {current} out of {maximum}</origin>
+      <translation>Zeile {current} von {maximum}</translation>
+    </string>
+    <string>
+      <origin>Lost connection to server</origin>
+      <translation>Verbindung zu Server unterbrochen</translation>
+    </string>
+    <string>
+      <origin>OK</origin>
+      <translation>OK</translation>
+    </string>
+    <string>
+      <origin>{player} started the game</origin>
+      <translation>{player} hat das Spiel gestartet</translation>
+    </string>
+    <string>
+      <origin>{player} was chosen the new czar and therefore flips a new black card open.</origin>
+      <translation>{player} wurde als neuer Karten-Zar erwählt und deckt daher eine neue schwarze Karte auf.</translation>
+    </string>
+    <string>
+      <origin>Deleting game...</origin>
+      <translation>Lösche Spiel ...</translation>
+    </string>
+    <string>
+      <origin>{player} joined the game</origin>
+      <translation>{player} ist dem Spiel beigetreten</translation>
+    </string>
+    <string>
+      <origin>{player} suspended the game.</origin>
+      <translation>{player} hat das Spiel pausiert</translation>
+    </string>
+    <string>
+      <origin>Creating game...</origin>
+      <translation>Erstelle Spiel ...</translation>
+    </string>
+    <string>
+      <origin>An error occured</origin>
+      <translation>Ein Fehler ist aufgetreten</translation>
+    </string>
+    <string>
+      <origin>You were chosen the new czar and therefore flip a black card open. You won't be able to play any white card until the next player will be chosen to be the czar.</origin>
+      <translation>Du wurdest als neuer Karten-Zar erwähnt und deckst daher eine schwarze Karte auf. Du kannst keine weiße Karte aufdecken, bis der nächste Spieler zum Zaren erwählt wird.</translation>
+    </string>
+    <string>
+      <origin>currently the czar</origin>
+      <translation>momentaner Zar</translation>
+    </string>
+    <string>
+      <origin>no cards chosen yet</origin>
+      <translation>noch keine Karten ausgewählt</translation>
+    </string>
+    <string>
+      <origin>cards already chosen</origin>
+      <translation>Karten bereits ausgewählt</translation>
+    </string>
+    <string>
+      <origin>All players confirmed their choices. You now have to select the choice which you think is the best.</origin>
+      <translation>Alle Spieler haben ihre Wahl bestätigt. Wähle die Karte aus, die deiner Meinung nach am besten passt.</translation>
+    </string>
+    <string>
+      <origin>{player} wins this round and therefore gains a point.</origin>
+      <translation>{player} hat diese Runde und damit einen Punkt gewonnen.</translation>
+    </string>
+    <string>
+      <origin>All players confirmed their choices and the czar now has to select the best one out of them.</origin>
+      <translation>Alle Spieler haben ihre Wahl bestätigt und der Zar muss jetzt die beste Karte auswählen.</translation>
+    </string>
+    <string>
+      <origin>You win this round and therefore gain a point.</origin>
+      <translation>Du hast diese Runde und damit einen Punkt gewonnen.</translation>
+    </string>
+    <string>
+      <origin>{player} left the game.</origin>
+      <translation>{player} hat das Spiel verlassen.</translation>
+    </string>
+  </client>
 </translations>
