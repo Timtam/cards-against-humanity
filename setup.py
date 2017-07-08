@@ -42,9 +42,10 @@ include_files = [(os.path.join(getScriptDirectory(), 'assets', x), os.path.relpa
 
 include_files += [(os.path.join(getScriptDirectory(), "accessible_output", "lib", x), os.path.join("lib", x)) for x in os.listdir(os.path.join(getScriptDirectory(), "accessible_output", "lib"))]
 
-if os.path.exists(os.path.join(getScriptDirectory(), 'cards.db')):
-  print 'Card database found, zipping it too'
-  include_files += [(os.path.join(getScriptDirectory(), 'cards.db'), 'cards.db')]
+include_files += [(os.path.join(getScriptDirectory(), "languages", x), os.path.join("languages", x)) for x in os.listdir(os.path.join(getScriptDirectory(), "languages"))]
+
+include_files += [(os.path.join(getScriptDirectory(), "sample-databases", x), os.path.join("sample-databases", x)) for x in os.listdir(os.path.join(getScriptDirectory(), "sample-databases"))]
+
 
 build_exe_options = {
                      "includes": [
@@ -54,9 +55,12 @@ build_exe_options = {
                                  ],
                      "excludes": [
                                   "bz2",
+                                  "email",
                                   "numpy",
                                   "tar",
-                                  "Tkinter"
+                                  "Tkinter",
+                                  "unittest",
+                                  "xml"
                                  ],
                      "include_files": include_files
                     }
