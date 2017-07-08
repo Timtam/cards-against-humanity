@@ -15,7 +15,7 @@ class CurrCardWindow(wx.Panel):
     
     self.SetLabel(frame.translator.translate("No card to be edited"))
     self.SetBackgroundColour("white")
-    self.SetMinSize((274, -1))
+    self.SetMinSize((300, -1))
     
     # pane and text control for card
     self.current_card_panel = wx.Panel(parent=self, size=(200, 200),
