@@ -7,10 +7,9 @@ class GameEntry(ScrolledPanelSurface):
     ScrolledPanelSurface.__init__(self, display, x, y, width, height)
     
     self.id = game_id
-    self.text = self.display.factory.findGamename(game_id)
-    self.rendered_text = self.display.getFont().render(self.text, 1, (0, 0, 0))
-    
+    self.updateText()
   
+
   def getId(self):
     return self.id
     
@@ -23,3 +22,17 @@ class GameEntry(ScrolledPanelSurface):
     ScrolledPanelSurface.render(self)
     self.blit(self.rendered_text, (10, (self.height - self.rendered_text.get_height()) / 2))
     
+
+  def setText(self, text):
+    self.text = text
+    self.rendered_text = self.display.getFont().render(text, 1, (0, 0, 0))
+
+
+  def updateText(self):
+
+    game = self.display.factory.findGame(self.id)
+
+    if game is None:
+      return
+
+    self.setText(game['name']+', '+self.display.translator.translate('{players} players').format(players = game['users']))

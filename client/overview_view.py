@@ -65,7 +65,7 @@ class OverviewView(MessageView):
       self.button_join.setEnable(True)
       if self.display.factory.isCreator(game_entry.id):
         self.button_delete.setEnable(True)
-      self.input_game_name.setText(game_entry.text)
+      self.input_game_name.setText(self.display.factory.findGamename(game_entry.id))
 
   
   def clearGames(self):
@@ -127,7 +127,7 @@ class OverviewView(MessageView):
 
 
   def onGameSelect(self, game):
-    self.input_game_name.setText(game.text)
+    self.input_game_name.setText(self.display.factory.findGamename(game.id))
     self.input_game_password.setText('')
     self.button_join.setEnable(True)
     if self.display.factory.isCreator(game.id):

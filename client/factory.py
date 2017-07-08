@@ -45,12 +45,13 @@ class ClientFactory(Factory):
   def removeUser(self, id):
     self.users = [u for u in self.users if u['id'] != id]
 
-  def addGame(self, id, name, creator):
+  def addGame(self, id, name, creator, users = 0):
     self.games.append({
       'id': id,
       'name': name,
       'points': {},
-      'creator': creator
+      'creator': creator,
+      'users': users
     })
 
   def findGame(self, id):
@@ -95,7 +96,6 @@ class ClientFactory(Factory):
   def getAllGames(self):
     return self.games
 
-
   def isCreator(self, id):
 
     game = self.findGame(id)
@@ -125,3 +125,23 @@ class ClientFactory(Factory):
       winners[pair[0]] = pair[1]
 
     return winners
+
+
+  def incrementUsers(self, id):
+
+    game = self.findGame(id)
+
+    if game is None:
+      return
+
+    game['users'] += 1
+
+
+  def decrementUsers(self, id):
+
+    game = self.findGame(id)
+
+    if game is None:
+      return
+
+    game['users'] -= 1
