@@ -98,7 +98,7 @@ class Game(object):
     joinable = self.mayJoin(user)
     if not joinable['join']:
       return self.formatted(success=False, message=joinable['message'])
-    if self.protected and password != self.password_hash:
+    if self.protected and password != self.password_hash or not self.protected and password != None:
       return self.formatted(success=False, message='wrong password supplied')
 
     if self.open:
