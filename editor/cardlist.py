@@ -15,6 +15,7 @@ class CardListWindow(wx.Panel):
     wx.Panel.__init__(self, parent=parent,
                       name="card list panel (toolbar + grid)")
     
+    self.SetBackgroundColour("white")
     self.toolbar = CardListToolbar(self)
     self.card_grid = ScrolledGrid(self)
     
@@ -26,10 +27,9 @@ class CardListWindow(wx.Panel):
     self.vbox.Add(self.card_grid, 1, wx.EXPAND)
     
     self.SetSizer(self.vbox)
-    self.SetMinSize((764, -1))
+    self.SetMinSize((430, -1))
     self.SetBackgroundColour("black")
-
-
+  
 
 class ScrolledGrid(wx.ScrolledWindow):
   def __init__(self, parent):
@@ -82,7 +82,7 @@ class ScrolledGrid(wx.ScrolledWindow):
     #   safe side
     if columns != self.grid.GetCols():
       self.grid.SetCols(columns)
-      self.GetParent().Layout()
+    self.GetParent().Layout()
     return columns
   
   
