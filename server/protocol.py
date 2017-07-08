@@ -225,7 +225,7 @@ class ServerProtocol(JSONReceiver):
     for user in self.factory.getAllUsers():
       if joinable[user]:
         user.protocol.sendMessage(code, user_id = self.user.id, game_id = game.id)
-      if len(game.users) == 0:
+      if len(game.users) == 0 and game.open:
         user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
       else:
         if joinable[user] != (game.mayJoin(user)['join'] or user.getGame() == game):
@@ -258,7 +258,7 @@ class ServerProtocol(JSONReceiver):
       if joinable[user]:
         user.protocol.sendMessage(MSG_LEAVE_GAME, game_id = game.id, user_id = self.user.id)
 
-      if len(game.getAllUsers()) == 0:
+      if result['unlinked']:
         user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
       else:
         if joinable[user] != (game.mayJoin(user)['join'] or user.getGame() == game):

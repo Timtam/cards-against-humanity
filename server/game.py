@@ -181,12 +181,6 @@ class Game(object):
       self.log.warn('{user} tried to leave game {game}, but found {count} possible users', user = user.id, game = self.id, count = len(possible_users))
       return self.formatted(success = False, message = 'unable to find user in this game')
 
-    if possible_users[0]['creator']:
-      for u in self.users:
-        if u != possible_users[0] and not u['creator']:
-          u['creator'] = True
-          break
-
     del self.users[self.users.index(possible_users[0])]
     user.setGame(None)
 
@@ -194,17 +188,28 @@ class Game(object):
 
     self.pause()
 
-    if len(self.users)<3 and len(self.users)>0 and not self.open:
-      self.open = True
-      for user in self.users:
-        user['white_cards'] = []
-        user['chosen_cards'] = []
-        user['black_cards'] = 0
-      self.white_cards = []
-      self.black_cards = []
-      self.loadCards()
+    if len(self.users)<3 and not self.open:
+      # this game will be opened up new soon
+      # we will have to filter all users who aren't currently in here
+      self.users = [u for u in self.users if u['joined']]
 
-      self.log.info('not enough users left, game opened up all new')
+      if len(self.users)>0 :
+        self.open = True
+        for user in self.users:
+          user['white_cards'] = []
+          user['chosen_cards'] = []
+          user['black_cards'] = 0
+        self.white_cards = []
+        self.black_cards = []
+        self.loadCards()
+
+        if possible_users[0]['creator']:
+          for u in self.users:
+            if u != possible_users[0] and not u['creator']:
+              u['creator'] = True
+              break
+
+        self.log.info('not enough users left, game opened up all new')
 
     return self.formatted(success = True, unlinked = self.unlink())
 
