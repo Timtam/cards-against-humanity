@@ -10,11 +10,15 @@ from shared.card_database_manager import CardDatabaseManager
 from shared.path import getScriptDirectory
 
 class ServerFactory(Factory):
+  black_cards = -1
   card_database = None
   games = []
   log = Logger()
   serverDatabase = None
   users=[]
+
+  def __init__(self, black_cards):
+    self.black_cards = black_cards
 
   def buildProtocol(self, addr):
     return ServerProtocol(self)
@@ -49,6 +53,11 @@ class ServerFactory(Factory):
     self.card_database = CardDatabaseManager()
     self.card_database.loadPath('cards.db')
     self.card_database.loadCards()
+
+    if len(self.card_database.getBlackCards())<self.black_cards:
+      self.black_cards = len(self.card_database.getBlackCards())
+      self.log.info('database contains only {log_source.black_cards!r} black cards, reduced command-line argument to this amount')
+
     self.log.info("Loaded card database")
 
     self.openServerDatabase()

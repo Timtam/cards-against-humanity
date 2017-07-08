@@ -58,6 +58,9 @@ class Game(object):
       self.black_cards = self.factory.card_database.getBlackCards()
       random.shuffle(self.black_cards)
 
+      if self.factory.black_cards > -1:
+        self.black_cards = self.black_cards[:self.factory.black_cards]
+
     if len(self.white_cards) == 0:
       self.white_cards = self.factory.card_database.getWhiteCards()
 

@@ -23,5 +23,5 @@ def main():
     sys.exit()
 
   endpoint = TCP4ServerEndpoint(reactor, parser.port)
-  endpoint.listen(ServerFactory())
+  endpoint.listen(ServerFactory(parser.black_cards))
   reactor.run()
