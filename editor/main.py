@@ -31,31 +31,35 @@ class MainFrame(wx.Frame):
     self.translator.setLanguage(self.config.get('language'))
     self.unsaved_changes = False
     
+    self.SetBackgroundColour("white")
+    
     # add menubar
     self.initUI()
     self.Center()
     self.SetMinSize((1067, 463))
     
     # create a splitter and the teo sub-windows
-    splitter = wx.SplitterWindow(self,
+    self.splitter = wx.SplitterWindow(self,
                                  style=wx.SP_LIVE_UPDATE | wx.SP_NO_XP_THEME
                                        | wx.SP_3D,
                                  name="vertical splitter")
-    self.left_window = CardListWindow(splitter)
-    self.right_window = CurrCardWindow(splitter)
+    self.splitter.SetBackgroundColour("white")
+    self.left_window = CardListWindow(self.splitter)
+    self.right_window = CurrCardWindow(self.splitter)
     
-    splitter.SetMinimumPaneSize((WIDTH / 5))  # just to prevent moving sash to
+    #self.splitter.SetMinimumPaneSize((WIDTH / 5))  # just to prevent moving sash to
     #   the very right or left and so
     #   you can't move it back
-    splitter.SetSashGravity(0.5)
+    self.splitter.SetSashGravity(0.5)
     # split the frame
-    splitter.SplitVertically(self.left_window, self.right_window,
-                             (0.3 * WIDTH))
+    self.splitter.SplitVertically(self.left_window, self.right_window,
+                             (0.7 * WIDTH)
+                                   )
     
     
     
     # listen to changing sash
-    splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
+    self.splitter.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.onSashChanging)
     
     self.Bind(wx.EVT_SIZE, self.onResizing)
     
@@ -258,7 +262,7 @@ class MainFrame(wx.Frame):
       
       if result == wx.ID_YES:
         self.left_window.toolbar.onSaveAll(None)
-    
+
     self.Destroy()
     self.translator.close()
     self.config.save()
