@@ -347,5 +347,77 @@
       <origin>{player} left the game.</origin>
       <translation>{player} покинул игру.</translation>
     </string>
+    <string>
+      <origin>Language selection</origin>
+      <translation>Выбор языка</translation>
+    </string>
+    <string>
+      <origin>free space</origin>
+      <translation>свободное пространство</translation>
+    </string>
+    <string>
+      <origin>{players} players</origin>
+      <translation>{players} игрокa</translation>
+    </string>
+    <string>
+      <origin>Start game</origin>
+      <translation>Запуск игры</translation>
+    </string>
+    <string>
+      <origin>Leave game</origin>
+      <translation>Выход игры</translation>
+    </string>
+    <string>
+      <origin>{player} put his chosen cards onto the table.</origin>
+      <translation>{player} положил выбранные карты на стол.</translation>
+    </string>
+    <string>
+      <origin>You put your chosen cards onto the table.</origin>
+      <translation>Ты положил выбранные карты на стол.</translation>
+    </string>
+    <string>
+      <origin>This ends the game.</origin>
+      <translation>Это заканчивает игру.</translation>
+    </string>
+    <string>
+      <origin>You win this game with {points} points. Congratulations!</origin>
+      <translation>Ты выиграл ету игру с {points} очком. Поздравление!</translation>
+    </string>
+    <string>
+      <origin>selected</origin>
+      <translation>выбрано</translation>
+    </string>
+    <string>
+      <origin>You are one of the proud winners of this game and ended up gaining {points} points. Congratulations! But {players} gained the same amount of points.</origin>
+      <translation>Ты один из гордых победителей этой игры и в итоге набрал {points} очков. Поздравление! Но {players} набрал ту же самую сумму очков.</translation>
+    </string>
+    <string>
+      <origin>You didn't select your favorite yet.</origin>
+      <translation>Ты еще не выбирал тебя любимая карта.</translation>
+    </string>
+    <string>
+      <origin>Sad, but true. You didn't win anything. {players} scored {points} points and made the game.</origin>
+      <translation>Печально, но верно. Ты ничего не выиграли. {players} набрал {points} и выиграл игру.</translation>
+    </string>
+    <string>
+      <origin>You started the game.</origin>
+      <translation>Ты начал игру.</translation>
+    </string>
+    <string>
+      <origin>You didn't select enough white cards yet.</origin>
+      <translation>Ты не выбирал достаточно белых карт.</translation>
+    </string>
+    <string>
+      <origin>Port</origin>
+      <translation>Порт</translation>
+    </string>
+    <string>
+      <origin>Round limit</origin>
+      <translation>Партия предел</translation>
+    </string>
+    <string>
+      <origin>{rounds} rounds remaining</origin>
+      <translation>{rounds} партии остава́ються</translation>
+    </string>
   </client>
 </translations>
