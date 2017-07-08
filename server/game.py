@@ -23,13 +23,17 @@ class Game(object):
     self.white_cards = []
 
   @classmethod
-  def create(cls, factory, name, password_hash = None):
+  def create(cls, factory, name, password_hash = None, rounds = None):
     game = cls(factory)
     game.database_hash = factory.card_database.hash
     game.name = name
     game.password_hash = password_hash
     game.uuid = uuid.uuid4()
     game.loadCards()
+
+    if rounds is not None and rounds < len(game.black_cards):
+      game.black_cards = game.black_cards[:rounds]
+
     return game
 
   @classmethod

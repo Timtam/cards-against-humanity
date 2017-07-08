@@ -23,7 +23,7 @@ class OverviewView(MessageView):
     self.label_game_password = self.font.render(display.translator.translate("Game password (optional)") + ':', 1, (0, 0, 0))
     self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, self.display.translator.translate("Game password (optional)"), True)
     self.label_round_limit = self.font.render(display.translator.translate("Round limit") + ':', 1, (0, 0, 0))
-    self.input_round_limit = TextInput(self.display, self.font, (400, 130), 100,self.display.translator.translate("Round limit"))
+    self.input_round_limit = TextInput(self.display, self.font, (400, 130), 100,self.display.translator.translate("Round limit"), only_digits = True)
     
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
     self.button_create.setCallback(self.onCreate)
@@ -42,7 +42,7 @@ class OverviewView(MessageView):
 
     self.next_surface_pos_y = self.game_overview.getPos()[1]
     
-    self.tab_order = [self.game_overview, self.input_game_name, self.input_game_password, self.button_create, self.button_delete, self.button_join, self.button_disconnect]
+    self.tab_order = [self.game_overview, self.input_game_name, self.input_round_limit, self.input_game_password, self.button_create, self.button_delete, self.button_join, self.button_disconnect]
     self.game_selected = False
 
     for game in self.display.factory.getAllGames():
@@ -149,8 +149,6 @@ class OverviewView(MessageView):
     self.game_selected = True
     self.display.surface_switch_sound.stop()
     self.display.surface_switch_sound.play()
-    print self.display.factory.isCreator(game.id)
-    print self.display.factory.getAllGames()
     
   def onGameDeselect(self, game):
     # if self.game_selected == True, this loop another game was already selected
@@ -177,7 +175,11 @@ class OverviewView(MessageView):
       password = None
     else:
       password = hashlib.sha512(self.input_game_password.input.get_text()).hexdigest()
-    self.display.factory.client.sendCreateGame(self.input_game_name.input.get_text(), password)
+    if self.input_round_limit.input.get_text() == '':
+      rounds = None
+    else:
+      rounds = int(self.input_round_limit.input.get_text())
+    self.display.factory.client.sendCreateGame(self.input_game_name.input.get_text(), password, rounds)
     self.default_mode = False
     self.setText(self.display.translator.translate('Creating game...'))
 

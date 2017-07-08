@@ -79,8 +79,8 @@ class ServerFactory(Factory):
       self.serverDatabase.commit()
     self.log.info('saved {count} games into database', count = c)
 
-  def createGame(self, name, password = None):
-    game = Game.create(self, name = name, password_hash = password)
+  def createGame(self, name, password = None, rounds = None):
+    game = Game.create(self, name = name, password_hash = password, rounds = rounds)
     self.games.append(game)
     return game
 
