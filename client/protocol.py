@@ -146,11 +146,9 @@ class ClientProtocol(JSONReceiver):
 
   def startedGame(self, user_id, points):
     if user_id == self.user_id:
-      user = 'You'
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("You started the game."))
     else:
-      user = self.factory.findUsername(user_id)
-
-    self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} started the game').format(player = user))
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} started the game').format(player = self.factory.findUsername(user_id)))
 
     self.factory.updateGamePoints(self.game_id, points)
     self.factory.display.game_start_sound.stop()
