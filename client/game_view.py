@@ -27,12 +27,14 @@ class GameView(View):
     self.font = self.display.getFont()
     self.mode = GAME_MODE_PAUSED
     
-    self.button_start_suspend = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.85, 50))
-    self.button_start_suspend.setCallback(self.onStartSuspend)
-    self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, 100))
-    self.button_confirm.setCallback(self.onConfirmChoice)
-    self.button_leave = Button(self.display, self.display.translator.translate("Leave game"), self.font, (self.display_size[0] * 0.85, 200))
+    self.button_start = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.85, 30))
+    self.button_start.setCallback(self.onStart)
+    self.button_suspend = Button(self.display, self.display.translator.translate("Suspend game"), self.font, (self.display_size[0] * 0.85, 80))
+    self.button_suspend.setCallback(self.onSuspend)
+    self.button_leave = Button(self.display, self.display.translator.translate("Leave game"), self.font, (self.display_size[0] * 0.85, 130))
     self.button_leave.setCallback(self.onLeave)
+    self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, 220))
+    self.button_confirm.setCallback(self.onConfirmChoice)
     
     self.player_indicators = PlayerIndicators(self.display, 5, 5)
     
@@ -45,7 +47,7 @@ class GameView(View):
 
     self.cards = []
 
-    self.tab_order = [self.button_start_suspend, self.button_confirm, self.button_leave, self.gamelog_text]
+    self.tab_order = [self.button_start, self.button_suspend, self.button_leave, self.button_confirm, self.gamelog_text]
     self.createCardSurfaces()
     self.setMode(GAME_MODE_PAUSED)
     self.tab_order.append(self.player_indicators)
@@ -115,16 +117,19 @@ class GameView(View):
     self.display.game_error_sound.play()
   
   
-  def onStartSuspend(self):
+  def onStart(self):
     if self.mode == GAME_MODE_PAUSED:
       self.display.factory.client.sendStartGame()
-    else:
+      
+  def onSuspend(self):
+    if self.mode != GAME_MODE_PAUSED:
       self.display.factory.client.sendSuspendGame()
   
   
   def handleEvent(self, event):
     View.handleEvent(self, event)
-    self.button_start_suspend.handleEvent(event)
+    self.button_start.handleEvent(event)
+    self.button_suspend.handleEvent(event)
     self.button_confirm.handleEvent(event)
     self.button_leave.handleEvent(event)
 
@@ -175,7 +180,8 @@ class GameView(View):
       self.cards[i]['card'].render()
       self.display.screen.blit(self.cards[i]['card'], self.cards[i]['position'])
     
-    self.button_start_suspend.render()
+    self.button_start.render()
+    self.button_suspend.render()
     self.button_confirm.render()
     self.button_leave.render()
 
@@ -200,12 +206,12 @@ class GameView(View):
         self.player_indicators.initAll()
         self.black_card.setEnable(False)
         self.black_card.setCard(None)
-        self.button_start_suspend.changeText(self.display.translator.translate("Start game"))
-      else:
-        self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
+        #self.button_start_suspend.changeText(self.display.translator.translate("Start game"))
+      #else:
+        #self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
     else:
       self.button_confirm.setEnable(True)
-      self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
+      #self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
 
 
   def generateCardLambda(self, index):
@@ -283,7 +289,8 @@ class GameView(View):
   def onLeave(self):
 
     self.display.factory.client.sendLeaveGame()
-    self.button_start_suspend.setEnable(False)
+    self.button_start.setEnable(False)
+    self.button_suspend.setEnable(False)
     self.button_confirm.setEnable(False)
     self.button_leave.setEnable(False)
 
