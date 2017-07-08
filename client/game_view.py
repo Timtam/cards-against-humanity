@@ -206,12 +206,12 @@ class GameView(View):
         self.player_indicators.initAll()
         self.black_card.setEnable(False)
         self.black_card.setCard(None)
-        #self.button_start_suspend.changeText(self.display.translator.translate("Start game"))
-      #else:
-        #self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
+        self.button_start.setEnable(True)
+        self.button_suspend.setEnable(False)
     else:
       self.button_confirm.setEnable(True)
-      #self.button_start_suspend.changeText(self.display.translator.translate("Suspend game"))
+      self.button_start.setEnable(False)
+      self.button_suspend.setEnable(True)
 
 
   def generateCardLambda(self, index):

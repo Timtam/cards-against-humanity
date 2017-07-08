@@ -146,11 +146,9 @@ class ClientProtocol(JSONReceiver):
 
   def startedGame(self, user_id, points):
     if user_id == self.user_id:
-      user = 'You'
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("You started the game."))
     else:
-      user = self.factory.findUsername(user_id)
-
-    self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} started the game').format(player = user))
+      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} started the game').format(player = self.factory.findUsername(user_id)))
 
     self.factory.updateGamePoints(self.game_id, points)
     self.factory.display.game_start_sound.stop()
@@ -345,7 +343,7 @@ class ClientProtocol(JSONReceiver):
 
   def connectionLost(self, reason):
 
-    if not self.manual_close and self.factory.display.running and self.getMode() not in [MODE_CLIENT_AUTHENTIFICATION, MODE_USER_AUTHENTICATION, MODE_INITIAL_SYNC]:
+    if not self.manual_close and self.factory.display.running and self.getMode() not in [MODE_CLIENT_AUTHENTIFICATION, MODE_USER_AUTHENTIFICATION, MODE_INITIAL_SYNC]:
       self.factory.display.setView('LoginView')
       self.factory.display.callFunction('self.view.errorMessage', self.factory.display.translator.translate('Lost connection to server')+': '+reason.getErrorMessage())
 

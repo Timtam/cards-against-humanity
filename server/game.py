@@ -301,14 +301,14 @@ class Game(object):
   def decide(self, cards):
 
     # let's see to which user those cards match
-    user = [u for u in self.users if u['chosen_cards'] == cards]
+    possible_users = [u for u in self.users if u['chosen_cards'] == cards]
 
-    if len(user) != 1:
+    if len(possible_users) != 1:
       return self.formatted(success = False, message = "no user found with those cards")
 
     # the user needs to gain one point
 
-    user = user[0]
+    user = possible_users[0]
 
     user['black_cards'] += 1
 
@@ -319,22 +319,22 @@ class Game(object):
 
     # at next, all chosen cards must be removed from the user's white cards pile
     # and the chosen cards must be resetted
-    for user in self.users:
-      for card in user['chosen_cards']:
-        del user['white_cards'][user['white_cards'].index(card)]
-      user['chosen_cards'] = []
+    for u in self.users:
+      for card in u['chosen_cards']:
+        del u['white_cards'][u['white_cards'].index(card)]
+      u['chosen_cards'] = []
 
     # we distribute new white cards to all users
     # all users need to get the same amount
-    for user in self.users:
-      if self.users.index(user) == 0:
+    for u in self.users:
+      if self.users.index(u) == 0:
         continue # the czar didn't lose cards
       for i in range(len(cards)):
         if len(self.white_cards) == 0:
           # we need to load the white cards pile all new
           self.loadCards()
 
-        user['white_cards'].append(self.white_cards[0])
+        u['white_cards'].append(self.white_cards[0])
         del self.white_cards[0]
 
     # and of course the current czar must be moved to the end of the line
@@ -348,9 +348,9 @@ class Game(object):
       self.running = False
       self.white_cards = []
       self.black_cards = []
-      for user in self.users:
-        user['white_cards'] = []
-        user['black_cards'] = 0
+      for u in self.users:
+        u['white_cards'] = []
+        u['black_cards'] = 0
 
       self.loadCards()
 
@@ -358,7 +358,6 @@ class Game(object):
       end = False
 
     return self.formatted(success = True, winner = self.factory.findUser(user['user']), end = end)
-
 
   def isCreator(self, user):
 
