@@ -99,9 +99,9 @@ class ClientProtocol(JSONReceiver):
     self.factory.display.login_sound.stop()
     self.factory.display.login_sound.play()
 
-  def createGame(self, success=True, game_id = '', message = '', name = '', creator = False, users = 0):
+  def createGame(self, success=True, game_id = '', message = '', name = '', creator = False, users = 0, rounds = 0):
     if success:
-      self.factory.addGame(game_id, name, creator)
+      self.factory.addGame(game_id, name, creator, rounds = rounds)
       if self.getMode() == MODE_FREE_TO_JOIN:
         self.factory.display.callFunction('self.view.addGame', game_id)
         self.factory.display.game_created_sound.stop()
@@ -254,7 +254,7 @@ class ClientProtocol(JSONReceiver):
 
     self.factory.display.callFunction('self.view.setChoices', choices)
 
-  def czarDecision(self, success = True, winner = 0, message = '', end = False):
+  def czarDecision(self, success = True, winner = 0, message = '', end = False, rounds = 0):
 
     if not success:
       self.factory.display.callFunction('self.view.writeLogError', message)
@@ -267,6 +267,7 @@ class ClientProtocol(JSONReceiver):
     self.factory.display.callFunction('self.view.writeLog', text)
 
     self.factory.updateGamePoints(self.game_id, [[winner, 1]])
+    self.factory.decrementRounds(self.game_id)
 
     if winner == self.user_id:
       self.factory.display.game_score_sound.stop()
@@ -276,6 +277,8 @@ class ClientProtocol(JSONReceiver):
       self.factory.display.game_score_other_sound.play()
 
     if end == True:
+
+      self.factory.setRounds(self.game_id, rounds)
 
       fmt_winners = lambda w: ', '.join(w[:-1])+' '+self.factory.display.translator.translate('and')+' '+w[-1] if len(w)>1 else w[0]
 
@@ -311,13 +314,16 @@ class ClientProtocol(JSONReceiver):
   def sendCzarDecision(self, cards):
     self.sendMessage(MSG_CZAR_DECISION, cards = [c.id for c in cards])
 
-  def sendCreateGame(self, name, password):
+  def sendCreateGame(self, name, password, rounds):
     cmd = {
            'game_name': name
           }
 
     if password is not None:
       cmd['game_password'] = password
+
+    if rounds is not None:
+      cmd['rounds'] = rounds
 
     self.sendMessage(MSG_CREATE_GAME, **cmd)
 

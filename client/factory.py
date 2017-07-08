@@ -45,13 +45,14 @@ class ClientFactory(Factory):
   def removeUser(self, id):
     self.users = [u for u in self.users if u['id'] != id]
 
-  def addGame(self, id, name, creator, users = 0):
+  def addGame(self, id, name, creator, users = 0, rounds = 0):
     self.games.append({
       'id': id,
       'name': name,
       'points': {},
       'creator': creator,
-      'users': users
+      'users': users,
+      'rounds': rounds
     })
 
   def findGame(self, id):
@@ -121,7 +122,7 @@ class ClientFactory(Factory):
 
     winners = {}
 
-    for pair in table.most_common(reverted_table.most_common(1)[0][0]):
+    for pair in table.most_common(reverted_table.most_common(1)[0][1]):
       winners[pair[0]] = pair[1]
 
     return winners
@@ -145,3 +146,23 @@ class ClientFactory(Factory):
       return
 
     game['users'] -= 1
+
+
+  def decrementRounds(self, id):
+
+    game = self.findGame(id)
+
+    if game is None:
+      return
+
+    game['rounds'] -= 1
+
+
+  def setRounds(self, id, rounds):
+
+    game = self.findGame(id)
+
+    if game is None:
+      return
+
+    game['rounds'] = rounds

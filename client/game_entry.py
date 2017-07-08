@@ -35,4 +35,4 @@ class GameEntry(ScrolledPanelSurface):
     if game is None:
       return
 
-    self.setText(game['name']+', '+self.display.translator.translate('{players} players').format(players = game['users']))
+    self.setText(game['name']+', '+self.display.translator.translate('{players} players').format(players = game['users'])+", "+self.display.translator.translate("{rounds} rounds remaining").format(rounds = game['rounds']))
