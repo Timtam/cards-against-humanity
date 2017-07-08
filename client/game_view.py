@@ -286,3 +286,8 @@ class GameView(View):
     self.button_start_suspend.setEnable(False)
     self.button_confirm.setEnable(False)
     self.button_leave.setEnable(False)
+
+
+  def leave(self):
+    self.setBlackCard(None)
+    self.setCards(*([None]*10))

@@ -98,7 +98,6 @@ class ClientProtocol(JSONReceiver):
     self.factory.display.setView('OverviewView')
 
   def createGame(self, success=True, game_id = '', message = '', name = '', creator = False, users = 0):
-    print creator
     if success:
       self.factory.addGame(game_id, name, creator)
       if self.getMode() == MODE_FREE_TO_JOIN:
