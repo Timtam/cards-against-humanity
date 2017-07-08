@@ -122,7 +122,7 @@ class ClientFactory(Factory):
 
     winners = {}
 
-    for pair in table.most_common(reverted_table.most_common(1)[0][0]):
+    for pair in table.most_common(reverted_table.most_common(1)[0][1]):
       winners[pair[0]] = pair[1]
 
     return winners
