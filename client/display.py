@@ -35,6 +35,7 @@ class Display(object):
     self.login_name = ''
     self.login_password = ''
     self.server_name = ''
+    self.server_port = ''
     
     self.screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Cards Against Humanity Online')
