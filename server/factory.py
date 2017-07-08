@@ -17,8 +17,9 @@ class ServerFactory(Factory):
   serverDatabase = None
   users=[]
 
-  def __init__(self, black_cards):
+  def __init__(self, black_cards, database_file):
     self.black_cards = black_cards
+    self.database_file = database_file
 
   def buildProtocol(self, addr):
     return ServerProtocol(self)
@@ -51,7 +52,7 @@ class ServerFactory(Factory):
 
   def startFactory(self):
     self.card_database = CardDatabaseManager()
-    self.card_database.loadPath('cards.db')
+    self.card_database.loadPath(self.database_file)
     self.card_database.loadCards()
 
     if len(self.card_database.getBlackCards())<self.black_cards:
