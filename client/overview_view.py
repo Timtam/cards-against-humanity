@@ -82,7 +82,15 @@ class OverviewView(MessageView):
       if surface.getId() != game_id:
         self.addGame(surface.getId())
 
+
+  def updateGame(self, game_id):
+
+    for surface in self.game_overview.getSurfaces():
+      if surface.getId() == game_id:
+        surface.updateText()
+        break
   
+
   def handleEventDefault(self, event):
     MessageView.handleEventDefault(self, event)
     

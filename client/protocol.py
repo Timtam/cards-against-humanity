@@ -20,18 +20,17 @@ class ClientProtocol(JSONReceiver):
     self.addCallback(MODE_INITIAL_SYNC, MSG_SYNC_FINISHED, self.syncFinished)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_JOIN_GAME, self.joinGame)
-    self.addCallback(MODE_FREE_TO_JOIN, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LOGGED_OFF, self.loggedOff)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_LEAVE_GAME, self.leaveGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_DELETE_GAME, self.deleteGame)
     self.addCallback(MODE_FREE_TO_JOIN, MSG_SUSPEND_GAME, self.suspendGame)
+    self.addCallback(MODE_IN_GAME, MSG_JOIN_GAME, self.joinGame)
     self.addCallback(MODE_IN_GAME, MSG_START_GAME, self.startGame)
     self.addCallback(MODE_IN_GAME, MSG_STARTED_GAME, self.startedGame)
     self.addCallback(MODE_IN_GAME, MSG_CREATE_GAME, self.createGame)
     self.addCallback(MODE_IN_GAME, MSG_DRAW_CARDS, self.drawCards)
     self.addCallback(MODE_IN_GAME, MSG_CZAR_CHANGE, self.czarChange)
-    self.addCallback(MODE_IN_GAME, MSG_JOINED_GAME, self.joinedGame)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_IN, self.loggedIn)
     self.addCallback(MODE_IN_GAME, MSG_LOGGED_OFF, self.loggedOff)
     self.addCallback(MODE_IN_GAME, MSG_LEAVE_GAME, self.leaveGame)
@@ -98,7 +97,7 @@ class ClientProtocol(JSONReceiver):
     self.setMode(MODE_FREE_TO_JOIN)
     self.factory.display.setView('OverviewView')
 
-  def createGame(self, success=True, game_id = '', message = '', name = '', creator = False):
+  def createGame(self, success=True, game_id = '', message = '', name = '', creator = False, users = 0):
     print creator
     if success:
       self.factory.addGame(game_id, name, creator)
@@ -109,29 +108,34 @@ class ClientProtocol(JSONReceiver):
     else:
       self.factory.display.callFunction('self.view.errorMessage', message = message)
 
-  def joinGame(self, success, message = '', game_id = 0, users = []):
+  def joinGame(self, success=True, message = '', game_id = 0, user_id = 0, users = []):
     if success:
-      self.game_id = game_id
-      self.setMode(MODE_IN_GAME)
-      self.factory.display.setView('GameView')
-      self.factory.display.callFunction('self.view.player_indicators.addPlayer', self.user_id)
-      for user in users:
-        self.factory.display.callFunction('self.view.player_indicators.addPlayer', user)
-      self.factory.display.game_join_sound.stop()
-      self.factory.display.game_join_sound.play()
+
+      self.factory.incrementUsers(game_id)
+      if self.getMode() == MODE_FREE_TO_JOIN:
+        if user_id == self.user_id:
+          self.game_id = game_id
+          self.setMode(MODE_IN_GAME)
+          self.factory.display.setView('GameView')
+          self.factory.display.callFunction('self.view.player_indicators.addPlayer', self.user_id)
+          for user in users:
+            self.factory.display.callFunction('self.view.player_indicators.addPlayer', user)
+          self.factory.display.game_join_sound.stop()
+          self.factory.display.game_join_sound.play()
+        else:
+          self.factory.display.callFunction('self.view.updateGame', game_id)
+      elif self.getMode() == MODE_IN_GAME and game_id == self.game_id:
+        self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} joined the game').format(player = self.factory.findUsername(user_id)))
+        self.factory.display.callFunction('self.view.player_indicators.addPlayer', user_id)
+        self.factory.display.game_join_sound.stop()
+        self.factory.display.game_join_sound.play()
+
     else:
       self.factory.display.callFunction('self.view.errorMessage', message = message)
 
   def startGame(self, success, message=''):
     if not success:
       self.factory.display.callFunction('self.view.writeLogError', message)
-
-  def joinedGame(self, user_id, game_id):
-    if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
-      self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate('{player} joined the game').format(player = self.factory.findUsername(user_id)))
-      self.factory.display.callFunction('self.view.player_indicators.addPlayer', user_id)
-      self.factory.display.game_join_sound.stop()
-      self.factory.display.game_join_sound.play()
 
   def loggedIn(self, user_id, user_name):
     self.factory.addUser(user_id, user_name)
@@ -177,6 +181,7 @@ class ClientProtocol(JSONReceiver):
       self.factory.addGame(**g)
 
   def leaveGame(self, game_id, user_id):
+    self.factory.decrementUsers(game_id)
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       self.factory.resetGamePoints(self.game_id)
       if user_id != self.user_id:
@@ -189,8 +194,11 @@ class ClientProtocol(JSONReceiver):
         self.game_id = 0
       self.factory.display.game_leave_sound.stop()
       self.factory.display.game_leave_sound.play()
+    elif self.getMode() == MODE_FREE_TO_JOIN:
+      self.factory.display.callFunction('self.view.updateGame', game_id)
 
   def suspendGame(self, user_id, game_id):
+    self.factory.decrementUsers(game_id)
     if self.getMode() == MODE_IN_GAME and game_id == self.game_id:
       self.factory.resetGamePoints(self.game_id)
       if user_id != self.user_id:
@@ -201,6 +209,8 @@ class ClientProtocol(JSONReceiver):
         self.factory.display.setView('OverviewView')
         self.setMode(MODE_FREE_TO_JOIN)
         self.game_id = 0
+    elif self.getMode() == MODE_FREE_TO_JOIN:
+      self.factory.display.callFunction('self.view.updateGame', game_id)
 
   def deleteGame(self, success = True, game_id = 0, message = ''):
     if success:
