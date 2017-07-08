@@ -18,10 +18,12 @@ class OverviewView(MessageView):
     self.screen_size = self.display.getSize()
     self.font = self.display.getFont()
     
-    self.label_game_name = self.font.render(display.translator.translate("Game name")+':', 1, (0, 0, 0))
+    self.label_game_name = self.font.render(display.translator.translate("Game name") + ':', 1, (0, 0, 0))
     self.input_game_name = TextInput(self.display, self.font, (20, 50), 500, self.display.translator.translate("Game name"))
-    self.label_game_password = self.font.render(display.translator.translate("Game password (optional)")+':', 1, (0, 0, 0))
+    self.label_game_password = self.font.render(display.translator.translate("Game password (optional)") + ':', 1, (0, 0, 0))
     self.input_game_password = TextInput(self.display, self.font, (20, 130), 300, self.display.translator.translate("Game password (optional)"), True)
+    self.label_round_limit = self.font.render(display.translator.translate("Round limit") + ':', 1, (0, 0, 0))
+    self.input_round_limit = TextInput(self.display, self.font, (400, 130), 100,self.display.translator.translate("Round limit"))
     
     self.button_create = Button(self.display, display.translator.translate("Create game"), self.font, (20, 200))
     self.button_create.setCallback(self.onCreate)
@@ -97,6 +99,7 @@ class OverviewView(MessageView):
     self.game_selected = False
     self.input_game_name.handleEvent(event)
     self.input_game_password.handleEvent(event)
+    self.input_round_limit.handleEvent(event)
     
     self.button_create.handleEvent(event)
     self.button_join.handleEvent(event)
@@ -110,6 +113,7 @@ class OverviewView(MessageView):
     MessageView.updateDefault(self)
     self.input_game_name.update()
     self.input_game_password.update()
+    self.input_round_limit.update()
   
   
   def renderDefault(self):
@@ -117,6 +121,8 @@ class OverviewView(MessageView):
     self.input_game_name.render()
     self.display.screen.blit(self.label_game_password, (20, 100))
     self.input_game_password.render()
+    self.display.screen.blit(self.label_round_limit, (400, 100))
+    self.input_round_limit.render()
     
     self.button_create.render()
     self.button_join.render()

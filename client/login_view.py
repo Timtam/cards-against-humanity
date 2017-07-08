@@ -32,6 +32,7 @@ class LoginView(MessageView):
     
     # create labels and inputs for server, username and password
     self.server_label = font.render(display.translator.translate("Server")+":", 1, (0, 0, 0))
+    self.port_label = font.render(display.translator.translate("Port") + ":", 1, (0, 0, 0))
     self.uname_label = font.render(display.translator.translate("Username")+":", 1, (0, 0, 0))
     self.pword_label = font.render(display.translator.translate("Password")+":", 1, (0, 0, 0))
     
@@ -40,8 +41,10 @@ class LoginView(MessageView):
     #  among each other)
     self.server_label_x = hmiddle - self.server_label.get_width() - space - 100
     self.server_y = vmiddle - 70
+    self.port_label_x = hmiddle - self.port_label.get_width() - space - 100
+    self.port_y = self.server_y + 35
     self.uname_label_x = hmiddle - self.uname_label.get_width() - space - 100
-    self.uname_y = self.server_y + 70
+    self.uname_y = self.port_y + 70
     self.pword_label_x = hmiddle - self.pword_label.get_width() - space - 100
     self.pword_y = self.uname_y + 35
     self.input_x = hmiddle + space - 100
@@ -50,6 +53,10 @@ class LoginView(MessageView):
     self.server_input = TextInput(display, font, (self.input_x, self.server_y),
                                   TEXT_INPUT_WIDTH, display.translator.translate('Server'))
     self.server_input.input.input_string = self.display.server_name
+    self.port_input = TextInput(display, font, (self.input_x, self.port_y),
+                                  TEXT_INPUT_WIDTH,
+                                  display.translator.translate('Port'))
+    self.port_input.input.input_string = self.display.server_port
     self.uname_input = TextInput(display, font, (self.input_x, self.uname_y),
                                  TEXT_INPUT_WIDTH, display.translator.translate('Username'))
     self.uname_input.input.input_string = self.display.login_name
@@ -69,14 +76,14 @@ class LoginView(MessageView):
     # buttons connect and close (dummy positions, for auto-determine width
     # and height)
     self.button_connect = Button(self.display, display.translator.translate("Connect"), font,
-                                 (hmiddle - 100, vmiddle + 100))
+                                 (hmiddle - 100, self.login_note_y + 70))
     # now calc position with own width
     self.button_connect.setPosition((hmiddle - self.button_connect.getWidth()
-                                     - space, vmiddle + 150))
+                                     - space, self.login_note_y + 70))
     self.button_connect.setCallback(self.onConnect)
     self.button_connect.setEnable(False)
     self.button_close = Button(self.display, display.translator.translate("Close"), font,
-                               (hmiddle, vmiddle + 150))
+                               (hmiddle, self.login_note_y + 70))
     
     self.button_close.setCallback(self.onClose)
     
@@ -103,6 +110,7 @@ class LoginView(MessageView):
     self.language_selected = False
     MessageView.handleEventDefault(self, event)
     self.server_input.handleEvent(event)
+    self.port_input.handleEvent(event)
     self.uname_input.handleEvent(event)
     self.pword_input.handleEvent(event)
     
@@ -118,6 +126,7 @@ class LoginView(MessageView):
     self.display.screen.blit(self.welcome_text, self.welcome_text_pos)
     self.display.screen.blit(self.server_label,
                              (self.server_label_x, self.server_y))
+    self.display.screen.blit(self.port_label, (self.port_label_x, self.port_y))
     self.display.screen.blit(self.uname_label,
                              (self.uname_label_x, self.uname_y))
     self.display.screen.blit(self.pword_label,
@@ -125,6 +134,7 @@ class LoginView(MessageView):
     
     # render text inputs
     self.server_input.render()
+    self.port_input.render()
     self.uname_input.render()
     self.pword_input.render()
     
@@ -147,6 +157,7 @@ class LoginView(MessageView):
   def updateDefault(self):
     MessageView.updateDefault(self)
     self.server_input.update()
+    self.port_input.update()
     self.uname_input.update()
     self.pword_input.update()
     if self.server_input.input.get_text() == '' or \
