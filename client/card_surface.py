@@ -1,8 +1,9 @@
-import pygame
 import random
-from scrolled_text_panel import ScrolledTextPanel
 
-from shared.card import CARD_WHITE, CARD_BLACK
+import pygame
+
+from scrolled_text_panel import ScrolledTextPanel
+from shared.card import CARD_BLACK, CARD_WHITE
 
 BORDER = 5
 COLOR_WHITE = (255, 255, 255)
@@ -132,6 +133,8 @@ class CardSurface(pygame.Surface):
         if self.rect.collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
           if self.callback:
             self.callback()
+            self.hover = False
+            self.focus = False
           else:
           #  self.toggleChosen()
           #if not self.chosen:
