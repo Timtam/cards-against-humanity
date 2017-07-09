@@ -1,5 +1,6 @@
 import os.path
 import pygame.font
+import types
 
 from shared.path import getScriptDirectory
 
@@ -15,9 +16,11 @@ class Font(pygame.font.Font):
 
   def render(self, text, *args, **kwargs):
 
-    encoding = self.display.translator.getLanguageEncoding()
+    if type(text) == types.StringType:
 
-    if encoding is not None:
-      text = text.encode(encoding)
+      encoding = self.display.translator.getLanguageEncoding()
+
+      if encoding is not None:
+        text = text.encode(encoding)
 
     return pygame.font.Font.render(self, text, *args, **kwargs)
