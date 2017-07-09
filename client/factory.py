@@ -45,14 +45,15 @@ class ClientFactory(Factory):
   def removeUser(self, id):
     self.users = [u for u in self.users if u['id'] != id]
 
-  def addGame(self, id, name, creator, users = 0, rounds = 0):
+  def addGame(self, id, name, creator, users = 0, rounds = 0, protected = False):
     self.games.append({
       'id': id,
       'name': name,
       'points': {},
       'creator': creator,
       'users': users,
-      'rounds': rounds
+      'rounds': rounds,
+      'protected': protected
     })
 
   def findGame(self, id):

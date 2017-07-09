@@ -55,7 +55,7 @@ class ServerProtocol(JSONReceiver):
     else:
       users = [{'id': u.id, 'name': u.name} for u in self.factory.getAllUsers() if u.id != self.user.id]
       self.sendMessage(MSG_CURRENT_USERS, users = users)
-      games = [{'id': g.id, 'name': g.name, 'creator': g.isCreator(self.user), 'users': len(g.getAllUsers()), 'rounds': len(g.black_cards)} for g in self.factory.getAllGames() if g.mayJoin(self.user)['join']]
+      games = [{'id': g.id, 'name': g.name, 'creator': g.isCreator(self.user), 'users': len(g.getAllUsers()), 'rounds': len(g.black_cards), 'protected': g.protected} for g in self.factory.getAllGames() if g.mayJoin(self.user)['join']]
       self.sendMessage(MSG_CURRENT_GAMES, games = games)
 
   def clientAuthentification(self, major, minor, revision):
@@ -103,12 +103,11 @@ class ServerProtocol(JSONReceiver):
       self.sendMessage(MSG_CREATE_GAME, success = False, message = 'this game can have a maximum of %d rounds'%(self.factory.black_cards))
       return
 
-
     game = self.factory.createGame(game_name, game_password, rounds)
     self.log.info("{log_source.identification!r} created new game {name} with id {id}", name=game_name, id = game.id)
 
     for user in self.factory.getAllUsers():
-      user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game_name, creator = game.isCreator(user), rounds = len(game.black_cards))
+      user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game_name, creator = game.isCreator(user), rounds = len(game.black_cards), protected = game.protected)
 
     self.joinGame(game.id, game_password)
 
@@ -238,7 +237,7 @@ class ServerProtocol(JSONReceiver):
         user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
       else:
         if joinable[user] != (game.mayJoin(user)['join'] or user.getGame() == game):
-          user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name, creator = game.isCreator(user), rounds = len(game.black_cards))
+          user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name, creator = game.isCreator(user), rounds = len(game.black_cards), protected = game.protected)
 
     self.setMode(MODE_FREE_TO_JOIN)
 
@@ -271,7 +270,7 @@ class ServerProtocol(JSONReceiver):
         user.protocol.sendMessage(MSG_DELETE_GAME, game_id = game.id)
       else:
         if joinable[user] != (game.mayJoin(user)['join'] or user.getGame() == game):
-          user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name, creator = game.isCreator(user), rounds = len(game.black_cards))
+          user.protocol.sendMessage(MSG_CREATE_GAME, game_id = game.id, name = game.name, creator = game.isCreator(user), rounds = len(game.black_cards), protected = game.protected)
 
   def deleteGame(self, game_id):
 
