@@ -224,11 +224,9 @@ class GameView(View):
         self.black_card.setEnable(False)
         self.black_card.setCard(None)
         self.button_start.setEnable(True)
-        self.button_suspend.setEnable(False)
     else:
       self.button_confirm.setEnable(True)
       self.button_start.setEnable(False)
-      self.button_suspend.setEnable(True)
 
 
   def generateCardLambda(self, index):
