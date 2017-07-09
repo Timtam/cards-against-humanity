@@ -62,7 +62,7 @@ class Button:
     self.clicked = False
     
     # calc positions and width + height
-    self.setPosition((x, y))
+    self.setPosition((x, y), width, height)
   
   
   def getWidth(self):
@@ -73,10 +73,10 @@ class Button:
     return self.h
   
   
-  def setPosition(self, (x, y)):
+  def setPosition(self, (x, y), width=-1, height=-1):
     self.x = x
     self.y = y
-    self.setWidthHeight()
+    self.setWidthHeight(width, height)
     
     
   def setWidthHeight(self, width = -1, height = -1):
@@ -89,14 +89,14 @@ class Button:
       self.text_x = self.x + BUTTON_PADDING
     else:
       self.w = self.width
-      self.text_x = self.x + self.width / 2 - self.text.get_width() / 2
+      self.text_x = self.x + self.width / 2 - self.font.size(self.text)[0] / 2
     
     if self.height == -1:
       self.h = self.font.size(self.text)[1] + 2 * BUTTON_PADDING
       self.text_y = self.y + BUTTON_PADDING
     else:
       self.h = self.height
-      self.text_y = self.y + self.height / 2 - self.text.get_height() / 2
+      self.text_y = self.y + self.height / 2 - self.font.size(self.text)[1] / 2
     
     self.button_rect = pygame.Rect(self.x, self.y, self.w, self.h)
     self.border_rect = pygame.Rect(self.x, self.y, self.w, self.h)

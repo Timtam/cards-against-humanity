@@ -27,14 +27,18 @@ class GameView(View):
     self.font = self.display.getFont()
     self.mode = GAME_MODE_PAUSED
     
-    self.button_start = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.85, 30))
+    self.button_start = Button(self.display, self.display.translator.translate("Start game"), self.font, (self.display_size[0] * 0.8, 30), 240)
     self.button_start.setCallback(self.onStart)
-    self.button_suspend = Button(self.display, self.display.translator.translate("Suspend game"), self.font, (self.display_size[0] * 0.85, 80))
+    self.button_suspend = Button(self.display, self.display.translator.translate("Suspend game"), self.font, (self.display_size[0] * 0.8, 80), 240)
     self.button_suspend.setCallback(self.onSuspend)
-    self.button_leave = Button(self.display, self.display.translator.translate("Leave game"), self.font, (self.display_size[0] * 0.85, 130))
+    self.button_leave = Button(self.display, self.display.translator.translate("Leave game"), self.font, (self.display_size[0] * 0.8, 130), 240)
     self.button_leave.setCallback(self.onLeave)
-    self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.85, 220))
+    self.button_confirm = Button(self.display, self.display.translator.translate("Confirm choice"), self.font, (self.display_size[0] * 0.8, 220), 240)
     self.button_confirm.setCallback(self.onConfirmChoice)
+    self.button_start.setPosition((self.display_size[0] - 240 - 30, 30), 240)
+    self.button_suspend.setPosition((self.display_size[0] - 240 - 30, 80), 240)
+    self.button_leave.setPosition((self.display_size[0] - 240 - 30, 130), 240)
+    self.button_confirm.setPosition((self.display_size[0] - 240 - 30, 220), 240)
     
     self.player_indicators = PlayerIndicators(self.display, 5, 5)
     
