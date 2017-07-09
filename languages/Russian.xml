@@ -417,7 +417,7 @@
     </string>
     <string>
       <origin>{rounds} rounds remaining</origin>
-      <translation>{rounds} партии остава́ються</translation>
+      <translation>{rounds} партии оставaються</translation>
     </string>
   </client>
 </translations>
