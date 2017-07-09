@@ -17,6 +17,13 @@ class Font(pygame.font.Font):
 
   def render(self, text, *args, **kwargs):
 
+    return pygame.font.Font.render(self, self.encode(text), *args, **kwargs)
+
+  def size(self, text, *args, **kwargs):
+
+    return pygame.font.Font.size(self, self.encode(text), *args, **kwargs)
+
+  def encode(self, text):
     if type(text) == types.UnicodeType:
 
       if self.encoding is None:
@@ -27,4 +34,4 @@ class Font(pygame.font.Font):
 
         text = text.encode(self.encoding)
 
-    return pygame.font.Font.render(self, text, *args, **kwargs)
+    return text
