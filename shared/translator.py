@@ -3,6 +3,7 @@ from .path import getScriptDirectory
 import lxml.etree as ET
 import os
 import os.path
+import sys
 
 class Translator(object):
 
@@ -29,7 +30,7 @@ class Translator(object):
       self.language = language
       xml = self.openXml(os.path.join(self.getLanguageFolder(), language+'.xml'))
       self.xml = xml.getroot()
-      if not os.path.exists(os.path.join(getScriptDirectory(), 'untranslated')):
+      if not os.path.exists(os.path.join(getScriptDirectory(), 'untranslated')) and not hasattr(sys, 'frozen'):
         os.makedirs(os.path.join(getScriptDirectory(), 'untranslated'))
       self.untranslated_xml = self.openXml(os.path.join(getScriptDirectory(), 'untranslated', language+'.xml'))
 
@@ -55,7 +56,7 @@ class Translator(object):
     return string
 
   def close(self):
-    if self.untranslated_xml is not None and len(self.untranslated_xml.getroot().xpath(self.node)[0])>0:
+    if self.untranslated_xml is not None and len(self.untranslated_xml.getroot().xpath(self.node)[0])>0 and not hasattr(sys, 'frozen'):
       # we got some untranslated strings
       # we will store them inside a file
       self.untranslated_xml.write(os.path.join(getScriptDirectory(), 'untranslated', self.language+'.xml'), pretty_print = True, encoding = 'utf-8', xml_declaration=True)
