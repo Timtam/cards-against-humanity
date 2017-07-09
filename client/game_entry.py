@@ -1,5 +1,7 @@
 from scrolled_panel_surface import ScrolledPanelSurface
-
+import pygame.image
+from shared.path import getScriptDirectory
+import os.path
 
 
 class GameEntry(ScrolledPanelSurface):
@@ -7,6 +9,8 @@ class GameEntry(ScrolledPanelSurface):
     ScrolledPanelSurface.__init__(self, display, x, y, width, height)
     
     self.id = game_id
+    self.lock = pygame.image.load(os.path.join(getScriptDirectory(), 'assets', 'images', 'lock.png'))
+    self.game = self.display.factory.findGame(self.id)
     self.updateText()
   
 
@@ -20,19 +24,23 @@ class GameEntry(ScrolledPanelSurface):
   
   def render(self):
     ScrolledPanelSurface.render(self)
-    self.blit(self.rendered_text, (10, (self.height - self.rendered_text.get_height()) / 2))
+    if self.game['protected']:
+      self.blit(self.lock, (20, (self.height - self.lock.get_height()) / 2))
+      self.blit(self.rendered_text, (self.lock.get_width() + 40, 5 + (self.height - self.rendered_text.get_height()) / 2))
+    else:
+      self.blit(self.rendered_text, (10, (self.height - self.rendered_text.get_height()) / 2))
     
 
   def setText(self, text):
     self.text = text
     self.rendered_text = self.display.getFont().render(text, 1, (0, 0, 0))
+    #if self.game['protected']:
+    #  self.text += ', game requires password'
 
 
   def updateText(self):
 
-    game = self.display.factory.findGame(self.id)
-
-    if game is None:
+    if self.game is None:
       return
 
-    self.setText(game['name']+', '+self.display.translator.translate('{players} players').format(players = game['users'])+", "+self.display.translator.translate("{rounds} rounds remaining").format(rounds = game['rounds']))
+    self.setText(self.game['name']+', '+self.display.translator.translate('{players} players').format(players = self.game['users'])+", "+self.display.translator.translate("{rounds} rounds remaining").format(rounds = self.game['rounds']))
