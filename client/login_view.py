@@ -5,6 +5,8 @@ from .language_entry import LanguageEntry
 
 SPACE_BETWEEN_LABEL_AND_INPUT = 20
 TEXT_INPUT_WIDTH = 300
+COLOR_BLACK = (0, 0, 0)
+COLOR_RED = (255, 0, 0)
 
 
 
@@ -96,6 +98,7 @@ class LoginView(MessageView):
     self.languages_border = pygame.Rect(0, 0, self.surface_languages.get_width(), self.surface_languages.get_height())
     self.languages = ScrolledPanel(self.display, self.display_size[0] - self.button_select_language.getWidth(), self.display_size[1] - self.button_select_language.getHeight() - self.surface_languages.get_height() - 20, self.surface_languages.get_width() - 40, self.surface_languages.get_height() - 40)
     self.languages.setLabel(self.display.translator.translate("Language selection"))
+    self.border_color = COLOR_BLACK
     
     self.next_surface_pos_y = self.languages.getPos()[1]
 
@@ -147,7 +150,7 @@ class LoginView(MessageView):
     self.button_close.render()
     
     self.surface_languages.fill((255, 255, 255))
-    pygame.draw.rect(self.surface_languages, (0, 0, 0), self.languages_border, 1)
+    pygame.draw.rect(self.surface_languages, self.border_color, self.languages_border, 1)
     self.display.screen.blit(self.surface_languages, (self.display_size[0] - self.button_select_language.getWidth() - 20, self.display_size[1] - self.button_select_language.getHeight() - self.surface_languages.get_height() - 40))
     self.languages.render()
     self.display.screen.blit(self.languages, self.languages.getPos())
@@ -172,7 +175,11 @@ class LoginView(MessageView):
     self.button_connect.update()
     self.button_close.update()
     self.button_select_language.update()
-  
+    if self.languages.getFocus():
+      self.border_color = COLOR_RED
+    else:
+      self.border_color = COLOR_BLACK
+      
   
   def firstUpdate(self):
     self.speak(self.display.translator.translate("Welcome to Cards Against Humanity Online!"))

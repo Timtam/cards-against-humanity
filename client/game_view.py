@@ -14,6 +14,8 @@ import pygame.locals as pl
 CARD_PADDING = 10
 TEXT_PADDING = 10
 CARD_SIZE = (160, 200)
+COLOR_BLACK = (0, 0, 0)
+COLOR_RED = (255, 0, 0)
 
 
 
@@ -48,6 +50,7 @@ class GameView(View):
     self.gamelog_text.setFont(self.display.getFont(16))
     self.writeLog(self.display.translator.translate('You joined the game'))
     self.gamelog_text.setLabel(self.display.translator.translate('Game log'))
+    self.border_color = COLOR_BLACK
 
     self.cards = []
 
@@ -171,12 +174,18 @@ class GameView(View):
     self.button_suspend.update()
     self.button_leave.update()
     self.button_confirm.update()
+    if self.gamelog_text.getFocus():
+      self.border_color = COLOR_RED
+    else:
+      self.border_color = COLOR_BLACK
+    for i in range(len(self.cards)):
+      self.cards[i]['card'].update()
   
   
   def render(self):
     self.surface_gamelog.fill((255, 255, 255))
     
-    pygame.draw.rect(self.surface_gamelog, (0, 0, 0), self.gamelog_border, 5)
+    pygame.draw.rect(self.surface_gamelog, self.border_color, self.gamelog_border, 5)
     self.gamelog_text.render()
     self.display.screen.blit(self.surface_gamelog, (0, 65))
     self.display.screen.blit(self.gamelog_text, (TEXT_PADDING, 65 + TEXT_PADDING))

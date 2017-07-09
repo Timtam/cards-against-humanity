@@ -7,6 +7,7 @@ from shared.card import CARD_WHITE, CARD_BLACK
 BORDER = 5
 COLOR_WHITE = (255, 255, 255)
 COLOR_BLACK = (0, 0, 0)
+BORDER_COLOR_FOCUS = (0, 0, 255)
 BORDER_COLOR_HOVER = (255, 0, 0)
 BORDER_COLOR_CHOSEN = (0, 255, 0)
 
@@ -22,6 +23,7 @@ class CardSurface(pygame.Surface):
     self.display = display
     self.enabled = True
     self.label = ""
+    self.focus = False
     self.x = x
     self.y = y
     self.width = width
@@ -29,6 +31,7 @@ class CardSurface(pygame.Surface):
     self.card_type = card_type
     self.card = None
     self.chosen = False
+    self.hover = False
     
     self.border = pygame.Rect(0, 0, self.width, self.height)
     if self.card_type is CARD_WHITE:
@@ -120,9 +123,9 @@ class CardSurface(pygame.Surface):
     # hover
       if event.type == pygame.MOUSEMOTION and not self.chosen:
         if self.rect.collidepoint(event.pos[0] - self.x, event.pos[1] - self.y):
-          self.border_color = BORDER_COLOR_HOVER
+          self.hover = True
         else:
-          self.border_color = COLOR_BLACK
+          self.hover = False
       
       # click / chose
       if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -130,9 +133,10 @@ class CardSurface(pygame.Surface):
           if self.callback:
             self.callback()
           else:
-            self.toggleChosen()
-          if not self.chosen:
-            self.border_color = BORDER_COLOR_HOVER
+          #  self.toggleChosen()
+          #if not self.chosen:
+          #  self.border_color = BORDER_COLOR_HOVER
+            self.chosen = not self.chosen
           sound = self.getClickSound()
           sound.stop()
           sound.play()
@@ -142,7 +146,14 @@ class CardSurface(pygame.Surface):
   
   
   def update(self):
-    pass
+    if self.chosen:
+      self.border_color = BORDER_COLOR_CHOSEN
+    elif self.hover:
+      self.border_color = BORDER_COLOR_HOVER
+    elif self.card_text.getFocus():
+      self.border_color = BORDER_COLOR_FOCUS
+    else:
+      self.border_color = COLOR_BLACK
   
   
   def render(self):

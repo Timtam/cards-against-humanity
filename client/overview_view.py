@@ -8,6 +8,8 @@ from .game_entry import GameEntry
 import pygame
 
 PADDING = 20
+COLOR_BLACK = (0, 0, 0)
+COLOR_RED = (255, 0, 0)
 
 
 
@@ -39,6 +41,7 @@ class OverviewView(MessageView):
     self.overview_border = pygame.Rect(0, 0, self.surface_overview.get_width(), self.surface_overview.get_height())
     self.game_overview = ScrolledPanel(self.display, 540 + PADDING, PADDING, self.surface_overview.get_width() - 2 * PADDING, self.surface_overview.get_height() - 2 * PADDING)
     self.game_overview.setLabel(display.translator.translate('Games to join'))
+    self.border_color = COLOR_BLACK
 
     self.next_surface_pos_y = self.game_overview.getPos()[1]
     
@@ -118,6 +121,10 @@ class OverviewView(MessageView):
     self.button_join.update()
     self.button_delete.update()
     self.button_disconnect.update()
+    if self.game_overview.getFocus():
+      self.border_color = COLOR_RED
+    else:
+      self.border_color = COLOR_BLACK
   
   
   def renderDefault(self):
@@ -134,7 +141,7 @@ class OverviewView(MessageView):
     self.button_disconnect.render()
     
     self.surface_overview.fill((255, 255, 255))
-    pygame.draw.rect(self.surface_overview, (0, 0, 0), self.overview_border, 5)
+    pygame.draw.rect(self.surface_overview, self.border_color, self.overview_border, 5)
     self.display.screen.blit(self.surface_overview, (540, 0))
     self.game_overview.render()
     self.display.screen.blit(self.game_overview, self.game_overview.getPos())
