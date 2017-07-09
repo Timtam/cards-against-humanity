@@ -11,16 +11,20 @@ from shared.path import getScriptDirectory
 class Font(pygame.font.Font):
   def __init__(self, display, size):
     self.display = display
+    self.encoding = None
     pygame.font.Font.__init__(self, os.path.join(getScriptDirectory(), 'assets', 'font', display.translator.getLanguageFont()+'.ttf'), size)
 
 
   def render(self, text, *args, **kwargs):
 
-    if type(text) == types.StringType:
+    if type(text) == types.UnicodeType:
 
-      encoding = self.display.translator.getLanguageEncoding()
+      if self.encoding is None:
 
-      if encoding is not None:
-        text = text.encode(encoding)
+        self.encoding = self.display.translator.getLanguageEncoding()
+
+      if self.encoding is not None:
+
+        text = text.encode(self.encoding)
 
     return pygame.font.Font.render(self, text, *args, **kwargs)
