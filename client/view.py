@@ -97,3 +97,11 @@ class View(object):
   # will be called each time the view will be removed
   def leave(self):
     pass
+
+
+  def setNewTabPosition(self, position):
+    self.tab_position = position
+    
+    
+  def getTabOrder(self):
+    return self.tab_order

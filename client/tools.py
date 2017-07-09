@@ -138,7 +138,11 @@ class Button:
         if self.callback:
           self.callback()
         self.clicked = False
-    
+        
+    elif event.type == pygame.MOUSEBUTTONDOWN and event.button == \
+            MOUSE_BUTTON_LEFT and not self.button_rect.collidepoint(event.pos):
+      self.focus = False
+      
     else:
       self.color = BUTTON_COLOR
       self.clicked = False
@@ -250,6 +254,7 @@ class TextInput:
     if event.type == pygame.MOUSEBUTTONDOWN and event.button == \
             MOUSE_BUTTON_LEFT and self.input_rect.collidepoint(event.pos):
       self.clicked = True
+      self.display.view.setNewTabPosition(self.display.view.getTabOrder().index(self))
     elif event.type == pygame.MOUSEBUTTONUP and event.button == 1 and \
             self.input_rect.collidepoint(event.pos):
       if self.clicked:
