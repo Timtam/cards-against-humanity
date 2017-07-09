@@ -347,5 +347,77 @@
       <origin>{player} left the game.</origin>
       <translation>{player} hat das Spiel verlassen.</translation>
     </string>
+    <string>
+      <origin>Language selection</origin>
+      <translation>Sprachauswahl</translation>
+    </string>
+    <string>
+      <origin>free space</origin>
+      <translation>Freier Platz</translation>
+    </string>
+    <string>
+      <origin>{players} players</origin>
+      <translation>{players} Spieler</translation>
+    </string>
+    <string>
+      <origin>Start game</origin>
+      <translation>Spiel starten</translation>
+    </string>
+    <string>
+      <origin>Leave game</origin>
+      <translation>Spiel verlassen</translation>
+    </string>
+    <string>
+      <origin>{player} put his chosen cards onto the table.</origin>
+      <translation>{player} hat seine ausgewählten Karten auf den Tisch gelegt.</translation>
+    </string>
+    <string>
+      <origin>You put your chosen cards onto the table.</origin>
+      <translation>Du hast deine ausgewählten Karten auf den Tisch gelegt.</translation>
+    </string>
+    <string>
+      <origin>This ends the game.</origin>
+      <translation>Das beendet das Spiel.</translation>
+    </string>
+    <string>
+      <origin>You win this game with {points} points. Congratulations!</origin>
+      <translation>Du hast mit {points} Punkten gewonnen. Glückwunsch!</translation>
+    </string>
+    <string>
+      <origin>selected</origin>
+      <translation>ausgewählt</translation>
+    </string>
+    <string>
+      <origin>You are one of the proud winners of this game and ended up gaining {points} points. Congratulations! But {players} gained the same amount of points.</origin>
+      <translation>Du zählst zu den glorreichen Siegern dieses Spiels mit {points} Punkten. Glückwunsch! Doch {players} hat/haben dieselbe Punktzahl erreicht.</translation>
+    </string>
+    <string>
+      <origin>You didn't select your favorite yet.</origin>
+      <translation>Du hast deinen Favoriten noch nicht ausgewählt.</translation>
+    </string>
+    <string>
+      <origin>Sad, but true. You didn't win anything. {players} scored {points} points and made the game.</origin>
+      <translation>Das war wohl nichts. Du gehst leer aus. {players} erreichte(n) {points} Punkte und damit den Sieg.</translation>
+    </string>
+    <string>
+      <origin>You started the game.</origin>
+      <translation>Spiel gestartet</translation>
+    </string>
+    <string>
+      <origin>You didn't select enough white cards yet.</origin>
+      <translation>Du hast noch nicht genügend weiße Karten ausgewählt.</translation>
+    </string>
+    <string>
+      <origin>Port</origin>
+      <translation>Port</translation>
+    </string>
+    <string>
+      <origin>Round limit</origin>
+      <translation>Rundenlimit</translation>
+    </string>
+    <string>
+      <origin>{rounds} rounds remaining</origin>
+      <translation>{rounds} Runden verbleibend</translation>
+    </string>
   </client>
 </translations>

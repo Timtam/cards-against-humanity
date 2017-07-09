@@ -120,7 +120,7 @@ class ScrolledPanel(pygame.Surface):
       label += ': '
 
     if self.cursor == -1:
-      label += 'empty'
+      label += self.display.translator.translate('empty')
     else:
       try:
         label += self.surfaces[self.cursor].getLabel()
