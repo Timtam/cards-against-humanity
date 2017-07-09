@@ -167,6 +167,10 @@ class GameView(View):
   def update(self):
     View.update(self)
     self.player_indicators.update()
+    self.button_start.update()
+    self.button_suspend.update()
+    self.button_leave.update()
+    self.button_confirm.update()
   
   
   def render(self):

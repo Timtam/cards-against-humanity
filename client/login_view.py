@@ -102,7 +102,7 @@ class LoginView(MessageView):
     self.addLanguageEntries()
 
     self.tab_order = [self.server_input, self.port_input, self.uname_input, self.pword_input,
-                      self.button_connect, self.languages, self.button_select_language, self.button_close]
+                      self.button_connect, self.button_close, self.languages, self.button_select_language]
     self.language_selected = False
   
   
@@ -168,6 +168,10 @@ class LoginView(MessageView):
       self.button_connect.setEnable(False)
     else:
       self.button_connect.setEnable(True)
+      
+    self.button_connect.update()
+    self.button_close.update()
+    self.button_select_language.update()
   
   
   def firstUpdate(self):

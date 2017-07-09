@@ -185,6 +185,8 @@ class MessageView(View):
 
   def updateMessage(self):
     View.update(self)
+    if self.button is not None:
+      self.button.update()
 
 
   def updateDefault(self):

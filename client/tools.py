@@ -45,6 +45,7 @@ class Button:
     # label used for accessibility purposes
     # init values
     self.enable = True
+    self.focus = False
     self.display = display
     self.text = text
     self.font = font
@@ -59,6 +60,7 @@ class Button:
     self.button_rect = pygame.Rect(self.x, self.y, self.w, self.h)
     self.border_rect = pygame.Rect(self.x, self.y, self.w, self.h)
     self.color = BUTTON_COLOR
+    self.mouse_hover = False
     self.clicked = False
     
     # calc positions and width + height
@@ -98,7 +100,7 @@ class Button:
       self.h = self.height
       self.text_y = self.y + self.height / 2 - self.font.size(self.text)[1] / 2
     
-    self.button_rect = pygame.Rect(self.x, self.y, self.w, self.h)
+    self.button_rect = pygame.Rect(self.x+1, self.y+1, self.w-2, self.h-2)
     self.border_rect = pygame.Rect(self.x, self.y, self.w, self.h)
   
   
@@ -114,25 +116,24 @@ class Button:
       self.text_color = BUTTON_TEXT_COLOR_DISABLED
       return
     else:
+      self.color = BUTTON_COLOR
       self.text_color = BUTTON_TEXT_COLOR
     
     # hover over button and click events
     if event.type == pygame.MOUSEMOTION and self.button_rect.collidepoint(
             event.pos):
-      self.color = BUTTON_COLOR_HOVER
+      self.mouse_hover = True
     
     elif event.type == pygame.MOUSEBUTTONDOWN and event.button == \
             MOUSE_BUTTON_LEFT and self.button_rect.collidepoint(event.pos):
       self.getClickSound().stop()
       self.getClickSound().play()
-      self.color = BUTTON_COLOR_HOVER
       self.clicked = True
     
     elif event.type == pygame.MOUSEBUTTONUP and event.button == \
             MOUSE_BUTTON_LEFT and self.button_rect.collidepoint(event.pos):
       self.display.button_down_sound.stop()
       self.display.button_down_sound.play()
-      self.color = BUTTON_COLOR_HOVER
       if self.clicked:
         if self.callback:
           self.callback()
@@ -141,13 +142,26 @@ class Button:
     else:
       self.color = BUTTON_COLOR
       self.clicked = False
+      self.mouse_hover = False
+  
+  
+  def update(self):
+    if self.enable:
+      if self.focus or self.mouse_hover:
+        self.color = BUTTON_COLOR_HOVER
+      else:
+        self.color = BUTTON_COLOR
   
   
   def render(self):
     text = self.font.render(self.text, 1, self.text_color)
-    pygame.draw.rect(self.display.screen, self.color, self.button_rect, 0)
-    pygame.draw.rect(self.display.screen, (0, 0, 0), self.border_rect, 1)
-    self.display.screen.blit(text, (self.text_x, self.text_y))
+    pygame.draw.rect(self.display.screen, (0, 0, 0), self.border_rect, 2)
+    if self.clicked:
+      pygame.draw.rect(self.display.screen, self.color, (self.button_rect[0] +1, self.button_rect[1] +1, self.button_rect[2], self.button_rect[3]), 0)
+      self.display.screen.blit(text, (self.text_x+1, self.text_y+1))
+    else:
+      pygame.draw.rect(self.display.screen, self.color, self.button_rect, 0)
+      self.display.screen.blit(text, (self.text_x, self.text_y))
   
   
   def getLabel(self):
@@ -174,6 +188,15 @@ class Button:
 
   def getClickSound(self):
     return self.display.button_up_sound
+  
+  
+  def setFocus(self, flag):
+    self.focus = flag
+    
+    
+  def getFocus(self):
+    return self.focus
+
 
 
 # own TextInput class, which we added a rectangle
