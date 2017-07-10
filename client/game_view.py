@@ -129,8 +129,7 @@ class GameView(View):
       self.display.factory.client.sendStartGame()
       
   def onSuspend(self):
-    if self.mode != GAME_MODE_PAUSED:
-      self.display.factory.client.sendSuspendGame()
+    self.display.factory.client.sendSuspendGame()
   
   
   def handleEvent(self, event):

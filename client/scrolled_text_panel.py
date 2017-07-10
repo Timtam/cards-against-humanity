@@ -1,6 +1,7 @@
 import pygame
 from itertools import chain
 import pygame.locals as pl
+import re
 
 BUTTON_SCROLL_WHEEL_UP = 4
 BUTTON_SCROLL_WHEEL_DOWN = 5
@@ -47,6 +48,8 @@ class ScrolledTextPanel(pygame.Surface):
 
   @staticmethod
   def truncline(text, font, maxwidth):
+    rex = re.compile(r"^( +).*$")
+    rsplit=lambda w,a: rex.search(w).groups()[0]+w.rsplit(None, a)[0] if len(w.rsplit(None, a)) == len(w.rsplit(None, a-1)) and rex.search(w) is not None else w.rsplit(None, a)[0]
     real = len(text)
     stext = text
     l = font.size(text)[0]
@@ -55,7 +58,7 @@ class ScrolledTextPanel(pygame.Surface):
     done = True
     while l > maxwidth:
       a = a + 1
-      n = text.rsplit(None, a)[0]
+      n = rsplit(text, a)
       if stext == n:
         cut += 1
         stext = n[:-cut]
