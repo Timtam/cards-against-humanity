@@ -159,6 +159,10 @@ class ScrolledPanel(pygame.Surface):
   
     elif event.type == pygame.MOUSEBUTTONUP:
       self.scrolling = False
+
+    if event.type == pygame.MOUSEBUTTONDOWN and not self.knob.collidepoint(
+                    event.pos[0] - self.x, event.pos[1] - self.y):
+      self.focus = False
   
     if event.type == pygame.MOUSEMOTION and self.rect.collidepoint(
                     event.pos[0] - self.x, event.pos[1] - self.y):
