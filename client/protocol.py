@@ -3,6 +3,7 @@ from .constants import *
 from shared.messages import *
 from shared.protocol import JSONReceiver
 
+from collections import Counter
 import random
 
 class ClientProtocol(JSONReceiver):
@@ -304,6 +305,18 @@ class ClientProtocol(JSONReceiver):
         self.factory.display.callFunction('self.view.writeLog', self.factory.display.translator.translate("Sad, but true. You didn't win anything. {players} scored {points} points and made the game.").format(points = winners.values()[0], players = fmt_winners(resolved_winners_without_me)))
         self.factory.display.game_lose_sound.stop()
         self.factory.display.game_lose_sound.play()
+
+      game = self.factory.findGame(self.game_id)
+
+      score_table = Counter(game['points'])
+
+      text = ''
+
+      for score in score_table.most_common(10):
+
+        text += self.factory.display.translator.translate('{player}: {points} points').format(player = self.factory.display.translator.translate('You') if score[0] == self.user_id else self.factory.findUsername(score[0]), points = score[1])+'\n'
+
+      self.factory.display.callFunction('self.view.writeLog', text[:-1])
 
       self.factory.display.callFunction('self.view.setMode', GAME_MODE_PAUSED)
       self.factory.resetGamePoints(self.game_id)
