@@ -15,7 +15,9 @@ After finishing development at the end of the summer semester this code will be 
 # Licensing
 The code found under this project stands under the MIT license which can be found [inside of this repository too](./LICENSE).
 The only exception is the accessible_output library, which contains an enhanced version of the accessible_output library by Christopher Toth, which is licensed under a Python Software Foundation License (PSF) and therefore needs to be handled as such.
+
 All sound effects are licensed under a Royalty-Free License and are licensed to Toni Barth and may therefore not be used in cloned projects, you'll have to replace them in order to continue development of this project elsewhere.
+
 The lock icon found [here](./assets/images/lock.png) is licensed under a Creative Commons (Attribution-Share Alike 3.0 Unported) license by WPZOOM and can be found on [IconFinder](https://iconfinder.com) too.
 
 # Dependencies
@@ -49,9 +51,11 @@ Keep in mind that the accessibility features are only enabled if using the clien
 * Return to submit buttons
 * Backspace and delete to handle input fields (same as usual)
 * Letters and digits to enter into input fields
+
 Take note that some input fields may be digit-only input fields and therefore only accept numbers.
 ### Game view Keys
 The game view specifies some additional keys to navigate more quickly:
 * Number keys 1 through 0 to select white cards 1 to 10
 * B to select the black card immediately
+
 Keep in mind that this list could change at any time and if you miss some keys here which you think could be helpful, just add an issue and we'll do our best.
