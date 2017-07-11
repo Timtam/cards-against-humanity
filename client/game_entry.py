@@ -19,7 +19,10 @@ class GameEntry(ScrolledPanelSurface):
     
   
   def getLabel(self):
-    return self.text
+    label = self.text
+    if self.game['protected']:
+      label += ' ('+self.display.translator.translate('password required')+')'
+    return label
   
   
   def render(self):
@@ -34,8 +37,6 @@ class GameEntry(ScrolledPanelSurface):
   def setText(self, text):
     self.text = text
     self.rendered_text = self.display.getFont().render(text, 1, (0, 0, 0))
-    #if self.game['protected']:
-    #  self.text += ', game requires password'
 
 
   def updateText(self):
